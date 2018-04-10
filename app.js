@@ -40,5 +40,6 @@ app.get("/getInfo", function(req, res){
 })
 
 app.get("/getBalancOf", function(req, res){
-  res.send(erc20.balanceOf(req.query.address));
+  var balance = erc20.balanceOf(req.query.address);
+  res.send(balance.toFormat(0));
 })
