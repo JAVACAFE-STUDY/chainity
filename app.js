@@ -15,6 +15,13 @@ app.get("/balance", function(req, res){
 	res.sendFile(__dirname + "/public/html/balance.html");
 })
 
+app.get("/transaction", function(req, res){
+	res.sendFile(__dirname + "/public/html/transaction.html");
+})
+
+app.get("/approve", function(req, res){
+	res.sendFile(__dirname + "/public/html/approve.html");
+})
 
 var Web3 = require("web3");
 
@@ -42,4 +49,12 @@ app.get("/getInfo", function(req, res){
 app.get("/getBalancOf", function(req, res){
   var balance = erc20.balanceOf(req.query.address);
   res.send(balance.toFormat(0));
+})
+
+app.get("/sendTransaction", function(req, res) {
+  res.send(erc20.transferFrom(req.query.from, req.query.to, req.query.value));
+})
+
+app.get("/sendApprove", function(req, res) {
+  res.send(erc20.approve(req.query.spender, req.query.value));
 })
