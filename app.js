@@ -2,6 +2,7 @@ var express = require("express");
 var app = express();
 var server = require("http").createServer(app);
 var io = require("socket.io")(server);
+var Web3EthAccounts = require('web3-eth-accounts');
 
 server.listen(8080);
 
@@ -52,9 +53,9 @@ app.get("/getBalancOf", function(req, res){
 })
 
 app.get("/sendTransaction", function(req, res) {
-  res.send(erc20.transferFrom(req.query.from, req.query.to, req.query.value));
+  res.send(erc20.transferFrom({from: req.query.from, to:req.query.to, value:req.query.value}));
 })
 
 app.get("/sendApprove", function(req, res) {
-  res.send(erc20.approve(req.query.spender, req.query.value));
+  res.send(erc20.approve({spender: req.query.spender, value:req.query.value}));
 })
