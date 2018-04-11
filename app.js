@@ -2,7 +2,6 @@ var express = require("express");
 var app = express();
 var server = require("http").createServer(app);
 var io = require("socket.io")(server);
-var Web3EthAccounts = require('web3-eth-accounts');
 
 server.listen(8080);
 
