@@ -49,21 +49,8 @@ app.get("/sendApprove", function(req, res) {
 })
 
 app.get("/getTransactions", function(req, res){
-	var filter = web3.eth.filter({
-		fromBlock: process.env.BLOCK_BEGIN_NUMBER,
-		address: process.env.CONTRACT_ACCOUNT
-	});
-
-	filter.get(function(error, logs){
-		var results = [];
-		for (var idx in logs) {
-			var result = {};
-			var log = logs[idx];
-			result.from = log.topics[1].replace('0x000000000000000000000000', '');
-			result.to = log.topics[2].replace('0x000000000000000000000000', '');
-			result.token = web3.toBigNumber(log.data).toNumber();
-			results.push(result);
-		}
-		res.send(results);
+	var events = erc20.allEvents({fromBlock: process.env.BLOCK_BEGIN_NUMBER, toBlock: 'latest'});
+	events.get(function(error, logs){
+		res.send(logs);
 	});
 })
