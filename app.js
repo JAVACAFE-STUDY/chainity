@@ -4,9 +4,8 @@ var express = require("express");
 var app = express();
 var server = require("http").createServer(app);
 var io = require("socket.io")(server);
+var Web3 = require("web3");
 var Web3EthAccounts = require('web3-eth-accounts');
-var account = new Web3EthAccounts('ws://localhost:8546');
-var bignumber = require('bignumber.js');
 
 server.listen(8080);
 
@@ -48,11 +47,18 @@ app.get("/getBalancOf", function(req, res){
 })
 
 app.get("/sendTransaction", function(req, res) {
-	res.send(erc20.transferFrom(req.query.from, req.query.to, req.query.value, {from: req.query.from}));
+	res.send(erc20.transfer(req.query.to, req.query.value, {from: req.query.from, gas: 143397}));
 })
 
 app.get("/sendApprove", function(req, res) {
-	res.send(erc20.approve(req.query.spender, req.query.value, {from: web3.eth.accounts[0]}));
+    res.send(erc20.approve(req.query.spender, req.query.value, {from: web3.eth.accounts[0], gas: 143397}));
+})
+
+app.get("/getTransactions", function(req, res){
+	var events = erc20.allEvents({fromBlock: process.env.BLOCK_BEGIN_NUMBER, toBlock: 'latest'});
+	events.get(function(error, logs){
+		res.send(logs);
+	});
 })
 
 app.get("/getTransactions", function(req, res){
@@ -63,7 +69,6 @@ app.get("/getTransactions", function(req, res){
 })
 
 var account = new Web3EthAccounts('ws://localhost:8546');
-
 
 app.get('/create', function (req, res) {
 	console.log(account.create());
