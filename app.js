@@ -5,6 +5,7 @@ var app = express();
 var server = require("http").createServer(app);
 var io = require("socket.io")(server);
 var Web3 = require("web3");
+var Web3EthAccounts = require('web3-eth-accounts');
 
 server.listen(8080);
 
@@ -73,12 +74,9 @@ app.get("/getTransactions", function(req, res){
 	});
 })
 
-var Web3EthAccounts = require('web3-eth-accounts');
 var account = new Web3EthAccounts('ws://localhost:8546');
 
-console.log(account.create());
 
-// app.post('/result', function (req, res) {
-//   account_info = account.create();
-//   res.send(account_info);
-// });
+app.get('/create', function (req, res) {
+	console.log(account.create());
+});
