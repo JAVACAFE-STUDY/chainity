@@ -1,20 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="stylesheet" href="/css/bootstrap.min.css">
-    	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script>
-        $(function() {
-			$('#btn_create').click(function(){
-				$.get('/create');
-			});
-        });
-        </script>
-    </head>
-    <body>
-      <div class="container">
-        <h2>Create Account</h2>
-        <button id="btn_create">계정 생성</button>
-    </body>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+    <h2>Create Account</h2>
+    <button id="btn_create">계정 생성</button>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script>
+    $('#btn_create').click(function(){
+        $.get('/createAccount', function(msg) {
+            if(msg == "success") {
+                alert("계정이 생성되었습니다.");
+            } else {
+                alert("계정 생성 실패: " + msg);
+            }
+      })
+      .fail(function(xhr, status, error) {
+          alert(xhr.responseText);
+      });
+    });
+    </script>
+</body>
 </html>
