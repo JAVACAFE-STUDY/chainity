@@ -25,9 +25,13 @@ app.get("/transactions", function(req, res){
 	res.sendFile(__dirname + "/public/html/transactions.html");
 });
 
-app.get("/transaction", function(req, res){
-	res.sendFile(__dirname + "/public/html/transaction.html");
+app.get("/transfer", function(req, res){
+	res.sendFile(__dirname + "/public/html/transfer.html");
 });
+
+app.get("/transfer_from", function(req, res){
+	res.sendFile(__dirname + "/public/html/transfer_from.html");
+})
 
 app.get("/approve", function(req, res){
 	res.sendFile(__dirname + "/public/html/approve.html");
@@ -52,12 +56,16 @@ app.get("/getBalancOf", function(req, res){
 });
 
 app.get("/sendTransaction", function(req, res) {
-	res.send(erc20.transfer(req.query.to, req.query.value, {from: req.query.from, gas: 143397}));
+	res.send(erc20.transfer(req.query.to, req.query.value, {from: req.query.from, gas: 250000}));
 });
 
+app.get("/sendTransferFrom", function(req, res) {
+	res.send(erc20.transferFrom(req.query.from, req.query.to, req.query.value, {from: req.query.my, gas: 250000}));
+})
+
 app.get("/sendApprove", function(req, res) {
-    res.send(erc20.approve(req.query.spender, req.query.value, {from: web3.eth.accounts[0], gas: 143397}));
-});
+    res.send(erc20.approve(req.query.spender, req.query.value, {from: req.query.from, gas: 250000}));
+})
 
 app.get("/getTransactions", function(req, res){
 	var events = erc20.allEvents({fromBlock: process.env.BLOCK_BEGIN_NUMBER, toBlock: 'latest'});
@@ -97,10 +105,10 @@ app.get('/getAccounts', function (req, res) {
 	    	res.status(500).json({ error: err.message });
 	    	return;
 	    }
-	    filesPath = filesPath.map(function(filePath) { 
+	    filesPath = filesPath.map(function(filePath) {
 	        return dirPath + filePath;
 	    });
-	    async.map(filesPath, function(filePath, cb) { 
+	    async.map(filesPath, function(filePath, cb) {
 	        fs.readFile(filePath, 'utf8', cb);
 	    }, function(err, contentList) {
 	    	contentList.forEach( function(element, index) {
