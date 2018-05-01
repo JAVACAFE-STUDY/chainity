@@ -6,6 +6,7 @@ import Full from '@/containers/Full'
 
 // Views
 import Dashboard from '@/views/Dashboard'
+import Login from '@/views/Login'
 
 Vue.use(Router)
 
@@ -27,6 +28,11 @@ export default new Router({
         }
 
       ]
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: Login
     }
   ]
 })
