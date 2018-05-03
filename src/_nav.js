@@ -9,6 +9,11 @@ export default {
       name: 'Users',
       url: '/users',
       icon: 'icon-people'
+    },
+    {
+      name: 'MyTokenBalance',
+      url: '/myTokenBalance',
+      icon: 'icon-speedometer'
     }
   ]
 }
