@@ -9,7 +9,6 @@ import Dashboard from '@/views/Dashboard'
 import Login from '@/views/Login'
 import Users from '@/views/Users'
 
-
 Vue.use(Router)
 
 export default new Router({
