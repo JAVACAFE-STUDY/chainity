@@ -26,7 +26,6 @@
                 </b-row>
               </b-card-body>
             </b-card>
-            
           </b-card-group>
         </b-col>
       </b-row>
