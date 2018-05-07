@@ -16,6 +16,12 @@ import cTable from './base/Table.vue'
 
 export default {
   name: 'tables',
-  components: {cTable}
+  components: {cTable},
+  mounted: function () {
+    this.$http.get('http://localhost:3000/api/users')
+      .then((response) => {
+        this.$children[0].items = response.data
+      })
+  }
 }
 </script>
