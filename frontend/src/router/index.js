@@ -13,7 +13,7 @@ import MyTokenBalance from '@/views/MyTokenBalance'
 Vue.use(Router)
 
 export default new Router({
-  mode: 'hash',
+  mode: 'history',
   linkActiveClass: 'open active',
   scrollBehavior: () => ({ y: 0 }),
   routes: [
