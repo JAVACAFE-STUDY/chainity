@@ -12,7 +12,7 @@ export default {
     },
     {
       name: 'MyTokenBalance',
-      url: '/myTokenBalance',
+      url: 'my/balance',
       icon: 'icon-speedometer'
     }
   ]

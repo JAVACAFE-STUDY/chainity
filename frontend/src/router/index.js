@@ -34,7 +34,7 @@ export default new Router({
           component: Users
         },
         {
-          path: 'myTokenBalance',
+          path: 'my/balance',
           name: 'MyTokenBalance',
           component: MyTokenBalance
         }
