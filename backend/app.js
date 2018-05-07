@@ -6,6 +6,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var users = require('./routes/users');
+var balance = require('./routes/balance');
+var purchase = require('./routes/purchase');
 
 var app = express();
 
@@ -42,6 +44,9 @@ app.use(function (req, res, next) {
 });
 
 app.use('/api/users', users);
+app.use('/api/balance', balance)
+app.use('/api/purchase', purchase)
+
 app.use(require('connect-history-api-fallback')())
 
 // catch 404 and forward to error handler

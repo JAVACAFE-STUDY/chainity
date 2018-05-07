@@ -8,7 +8,8 @@ import Full from '@/containers/Full'
 import Dashboard from '@/views/Dashboard'
 import Login from '@/views/Login'
 import Users from '@/views/Users'
-import MyTokenBalance from '@/views/MyTokenBalance'
+import MyTokenBalance from '@/views/MyBalance'
+import Purchase from '@/views/Purchase'
 
 Vue.use(Router)
 
@@ -34,9 +35,14 @@ export default new Router({
           component: Users
         },
         {
-          path: 'my/balance',
-          name: 'MyTokenBalance',
+          path: 'mybalance',
+          name: 'MyBalance',
           component: MyTokenBalance
+        },
+        {
+          path: 'purchase',
+          name: 'Purchase',
+          component: Purchase
         }
       ]
     },

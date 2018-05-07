@@ -1,59 +1,74 @@
 [
   {
+    "id": 1,
     "username": "Samppa Nori",
     "registered": "2012/01/01",
     "role": "Member",
-    "status": "Active"
+    "status": "Active",
+    "balance": 30000
   },
   {
+    "id": 2,
     "username": "Estavan Lykos",
     "registered": "2012/02/01",
     "role": "Staff",
-    "status": "Banned"
+    "status": "Banned",
+    "balance": 40000
   },
   {
+    "id": 2,
     "username": "Chetan Mohamed",
     "registered": "2012/02/01",
     "role": "Admin",
-    "status": "Inactive"
+    "status": "Inactive",
+    "balance": 50000
   },
   {
+    "id": 3,
     "username": "Derick Maximinus",
     "registered": "2012/03/01",
     "role": "Member",
-    "status": "Pending"
+    "status": "Pending",
+    "balance": 60000
   },
   {
+    "id": 4,
     "username": "Friderik Dávid",
     "registered": "2012/01/21",
     "role": "Staff",
-    "status": "Active"
+    "status": "Active",
+    "balance": 30000
   },
   {
+    "id": 5,
     "username": "Yiorgos Avraamu",
     "registered": "2012/01/01",
     "role": "Member",
     "status": "Active"
   },
   {
+    "id": 6,
     "username": "Avram Tarasios",
     "registered": "2012/02/01",
     "role": "Staff",
     "status": "Banned"
   },
   {
+    "id": 7,
     "username": "Quintin Ed",
     "registered": "2012/02/01",
     "role": "Admin",
     "status": "Inactive"
   },
   {
+    "id": 8,
     "username": "Enéas Kwadwo",
     "registered": "2012/03/01",
     "role": "Member",
     "status": "Pending"
   },
   {
+    "id": 9,
     "username": "Agapetus Tadeáš",
     "registered": "2012/01/21",
     "role": "Staff",

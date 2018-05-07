@@ -11,8 +11,13 @@ export default {
       icon: 'icon-people'
     },
     {
-      name: 'MyTokenBalance',
-      url: 'my/balance',
+      name: 'MyBalance',
+      url: 'mybalance',
+      icon: 'icon-speedometer'
+    },
+    {
+      name: 'Purchase',
+      url: 'purchase',
       icon: 'icon-speedometer'
     }
   ]
