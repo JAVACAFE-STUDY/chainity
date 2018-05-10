@@ -24,7 +24,7 @@ export default {
   mounted: function () {
     this.$http.get('http://localhost:3000/api/balance/1')
       .then((response) => {
-        data.value = response.data[0].balance
+        this.value = response.data[0].balance
       })
   }
 }

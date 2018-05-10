@@ -49,7 +49,7 @@
     },
     methods: {
       onSubmit(evt) {
-        evt.preventDefault();
+        evt.preventDefault()
         if(this.form.name != '' && this.form.balance != '') {
           this.$http.post('http://localhost:3000/api/purchase', this.form)
             .then((response) => {
@@ -58,10 +58,10 @@
         }
       },
       onReset(evt) {
-        evt.preventDefault();
+        evt.preventDefault()
         /* Reset our form values */
-        this.form.name = '';
-        this.form.balance = '';
+        this.form.name = ''
+        this.form.balance = ''
       }
     }
   }
