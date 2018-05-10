@@ -26,11 +26,11 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use(require('connect-history-api-fallback')());
-
 // API
 app.use('/api/users', users);
 app.use('/api/issues', issues);
+
+app.use(require('connect-history-api-fallback')());
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
