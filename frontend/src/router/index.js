@@ -8,6 +8,7 @@ import Full from '@/containers/Full'
 import Dashboard from '@/views/Dashboard'
 import Login from '@/views/Login'
 import Users from '@/views/Users'
+import Issues from '@/views/Issues'
 
 Vue.use(Router)
 
@@ -31,6 +32,11 @@ export default new Router({
           path: 'users',
           name: 'Users',
           component: Users
+        },
+        {
+          path: 'issues',
+          name: 'Issues',
+          component: Issues
         }
       ]
     },
