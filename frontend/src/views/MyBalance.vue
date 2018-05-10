@@ -16,17 +16,15 @@
 <script>
 export default {
   name: 'Balance',
+  data: () => {
+    return {
+      value: '0'
+    }
+  },
   mounted: function () {
     this.$http.get('http://localhost:3000/api/balance/1')
       .then((response) => {
-        var example2 = new Vue({
-          el: '#balance',
-          data: {
-            value: response.data[0].balance
-          }
-        })
-
-        console.log(response.data[0].balance)
+        data.value = response.data[0].balance
       })
   }
 }

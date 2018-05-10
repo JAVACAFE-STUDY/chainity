@@ -5,7 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var users = require('./api/users');
-var issues = require('./api/issues');
 var balance = require('./api/balance');
 var purchase = require('./api/purchase');
 var app = express();
@@ -28,7 +27,6 @@ app.use(require('connect-history-api-fallback')());
 
 // API
 app.use('/api/users', users);
-app.use('/api/issues', issues);
 app.use('/api/balance', balance)
 app.use('/api/purchase', purchase)
 
