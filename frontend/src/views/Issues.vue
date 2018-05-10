@@ -1,14 +1,12 @@
 <template>
   <div class="animated fadeIn">
-
     <b-row>
       <b-col sm="12">
         <c-table striped caption="<i class='fa fa-align-justify'></i> 이슈 리스트"></c-table>
       </b-col><!--/.col-->
     </b-row><!--/.row-->
-
+    <router-link to="./addIssue">이슈 등록</router-link>
   </div>
-
 </template>
 
 <script>

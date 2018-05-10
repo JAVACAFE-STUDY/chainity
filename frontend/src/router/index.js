@@ -9,6 +9,7 @@ import Dashboard from '@/views/Dashboard'
 import Login from '@/views/Login'
 import Users from '@/views/Users'
 import Issues from '@/views/Issues'
+import AddIssue from '@/views/AddIssue'
 
 Vue.use(Router)
 
@@ -37,6 +38,11 @@ export default new Router({
           path: 'issues',
           name: 'Issues',
           component: Issues
+        },
+        {
+          path: 'addIssue',
+          name: 'AddIssue',
+          component: AddIssue
         }
       ]
     },
