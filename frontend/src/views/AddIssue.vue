@@ -39,5 +39,4 @@
       </b-card>
     </b-col>
   </b-row>
-  </b-row>
 </template>
