@@ -4,9 +4,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
 var users = require('./api/users');
-
+var issues = require('./api/issues');
 var app = express();
 
 // Middlewares
@@ -23,10 +22,11 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use(require('connect-history-api-fallback')())
+app.use(require('connect-history-api-fallback')());
 
 // API
 app.use('/api/users', users);
+app.use('/api/issues', issues);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
