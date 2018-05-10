@@ -4,9 +4,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
 var users = require('./routes/users');
-
+var issues = require('./routes/issues');
 var app = express();
 
 // view engine setup
@@ -42,6 +41,7 @@ app.use(function (req, res, next) {
 });
 
 app.use('/api/users', users);
+app.use('/api/issues', issues);
 app.use(require('connect-history-api-fallback')())
 
 // catch 404 and forward to error handler
