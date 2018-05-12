@@ -38,7 +38,7 @@
 <script>
 export default {
   name: 'Login',
-  data() {
+  data () {
     return {
       form: {
         email: '',
@@ -47,15 +47,15 @@ export default {
     }
   },
   methods: {
-    onSubmit(evt) {
+    onSubmit (evt) {
       evt.preventDefault()
-      if(this.form.email != '' && this.form.password != '') {
+      if (this.form.email !== '' && this.form.password !== '') {
         this.$http.post('/api/auth/login', this.form)
           .then((response) => {
             if (response.status === 200) {
               this.$session.start()
               this.$session.set('user-token', response.data.data)
-              this.$http.defaults.headers.common['x-access-token'] = response.data.data;
+              this.$http.defaults.headers.common['x-access-token'] = response.data.data
               this.$router.push('/')
             }
           }).catch((error) => {
