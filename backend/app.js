@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var auth = require('./api/auth');
 var users = require('./api/users');
 var balance = require('./api/balance');
 var purchase = require('./api/purchase');
@@ -28,9 +29,8 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use(require('connect-history-api-fallback')());
-
 // API
+app.use('/api/auth', auth);
 app.use('/api/users', users);
 app.use('/api/issues', issues);
 app.use('/api/balance', balance)
