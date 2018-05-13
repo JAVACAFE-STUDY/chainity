@@ -1,6 +1,16 @@
 
+$.get("/api/getAccounts", function(accounts) {
+  console.log(accounts);
+  $.each(accounts, function( index, value ) {
+    $('#'+value.toUpperCase()).append(' (mine)');
+  });
+})
+.fail(function(xhr, status, error) {
+    alert(xhr.responseText);
+});
+
 function setBalanceOfAccount(id, address) {
-  $.get("/getBalancOf?address=" + address, function(data){
+  $.get("/api/getBalancOf?address=" + address, function(data){
     $("#"+id).text(data);
   });
 }
