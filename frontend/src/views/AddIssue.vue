@@ -11,10 +11,7 @@
         </b-form-group>
         <b-form-group>
           <label for="content">내용</label>
-          <b-form-textarea id="textarea1"
-                     v-model="text"
-                     :rows="8"
-                     :max-rows="8">
+          <b-form-textarea id="textarea1" v-model="text" :rows="8" :max-rows="8">
     </b-form-textarea>
         </b-form-group>
         <b-form-group>
@@ -40,7 +37,18 @@
           <b-form-input type="text" id="assignee"></b-form-input>
         </b-form-group>
         <b-button variant="primary">등록</b-button>
+        <b-button variant="primary" v-on:click="back">뒤로</b-button>
       </b-card>
     </b-col>
   </b-row>
 </template>
+
+<script>
+export default {
+  methods: {
+    back: function (event) {
+      this.$router.go(-1)
+    }
+  }
+}
+</script>

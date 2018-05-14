@@ -5,7 +5,8 @@
         <c-table striped caption="<i class='fa fa-align-justify'></i> 이슈 리스트"></c-table>
       </b-col><!--/.col-->
     </b-row><!--/.row-->
-    <router-link to="./addIssue">이슈 등록</router-link>
+    <!-- <router-link to="./addIssue">이슈 등록</router-link> -->
+    <b-button variant="primary" v-on:click="addIssue">이슈 등록</b-button>
   </div>
 </template>
 
@@ -16,11 +17,15 @@ export default {
   name: 'tables',
   components: {cTable},
   mounted: function () {
-    this.$http.get('http://localhost:3000/api/issues')
+    this.$http.get('http://localhost:3000/api/issue/list')
       .then((response) => {
-        console.log(response.data)
         this.$children[0].items = response.data
       })
+  },
+  methods: {
+    addIssue: function (event) {
+      this.$router.push('/addIssue')
+    }
   }
 }
 </script>

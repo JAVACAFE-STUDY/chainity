@@ -70,8 +70,7 @@ export default {
       return items.length
     },
     rowClickHandler(record, index) {
-      alert("record.no:"+record.no);
-      this.$router.push('/issueDetail')
+      this.$router.push({ path: 'issueDetail', query: { no: record.no }})
     }
   }
 }
