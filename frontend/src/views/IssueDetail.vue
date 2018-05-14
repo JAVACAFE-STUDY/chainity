@@ -3,7 +3,7 @@
     <b-col sm="8">
       <b-card>
         <div slot="header">
-          <strong>이슈 등록</strong>
+          <strong>이슈 상세</strong>
         </div>
         <b-form-group>
           <label for="title">제목</label>
@@ -39,8 +39,20 @@
           <label for="assignee">Assignee</label>
           <b-form-input type="text" id="assignee"></b-form-input>
         </b-form-group>
-        <b-button variant="primary">등록</b-button>
       </b-card>
     </b-col>
   </b-row>
 </template>
+
+<script>
+export default {
+  name: 'tables',
+  mounted: function () {
+    this.$http.get('http://localhost:3000/api/issues')
+      .then((response) => {
+        console.log(response.data)
+        this.$children[0].items = response.data
+      })
+  }
+}
+</script>

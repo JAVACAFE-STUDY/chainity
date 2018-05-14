@@ -14,6 +14,13 @@ import cTable from './base/IssueTable.vue'
 
 export default {
   name: 'tables',
-  components: {cTable}
+  components: {cTable},
+  mounted: function () {
+    this.$http.get('http://localhost:3000/api/issues')
+      .then((response) => {
+        console.log(response.data)
+        this.$children[0].items = response.data
+      })
+  }
 }
 </script>
