@@ -23,4 +23,22 @@ router.get('/list', function(req, res, next) {
 	});
 });
 
+router.post('/add', function(req, res, next) {
+	var sql = 'INSERT INTO issues (title, content, count, rewards, writer, due_date) VALUES ?';
+	var values = [[
+					req.body.title, 
+					req.body.content,
+					req.body.count,
+					req.body.rewards,
+					1,
+					req.body.due_date
+				]];
+	
+	connection.query(sql, [values], function(err, result) {
+		if(err) throw err;
+
+		res.send(result);
+	});
+});
+
 module.exports = router;

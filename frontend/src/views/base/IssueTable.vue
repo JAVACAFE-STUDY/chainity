@@ -62,15 +62,15 @@ export default {
       ],
       currentPage: 1,
       perPage: 5,
-      totalRows: 0,
+      totalRows: 0
     }
   },
   methods: {
     getRowCount (items) {
       return items.length
     },
-    rowClickHandler(record, index) {
-      this.$router.push({ path: 'issueDetail', query: { no: record.no }})
+    rowClickHandler (record, index) {
+      this.$router.push({path: 'issueDetail', query: { no: record.no }})
     }
   }
 }
