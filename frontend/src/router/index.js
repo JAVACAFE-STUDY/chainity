@@ -11,6 +11,7 @@ import Users from '@/views/Users'
 import MyTokenBalance from '@/views/MyBalance'
 import Purchase from '@/views/Purchase'
 import Issues from '@/views/Issues'
+import IssueDetail from '@/views/IssueDetail'
 import AddIssue from '@/views/AddIssue'
 
 Vue.use(Router)
@@ -65,6 +66,11 @@ export default new Router({
           path: 'issues',
           name: 'Issues',
           component: Issues
+        },
+        {
+          path: 'issueDetail',
+          name: 'IssueDetail',
+          component: IssueDetail
         },
         {
           path: 'addIssue',

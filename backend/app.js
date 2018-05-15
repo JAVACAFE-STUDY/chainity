@@ -8,7 +8,7 @@ var auth = require('./api/auth');
 var users = require('./api/users');
 var balance = require('./api/balance');
 var purchase = require('./api/purchase');
-var issues = require('./api/issues');
+var issue = require('./api/issue');
 var app = express();
 
 // view engine setup
@@ -32,7 +32,7 @@ app.use(function (req, res, next) {
 // API
 app.use('/api/auth', auth);
 app.use('/api/users', users);
-app.use('/api/issues', issues);
+app.use('/api/issue', issue);
 app.use('/api/balance', balance)
 app.use('/api/purchase', purchase)
 
