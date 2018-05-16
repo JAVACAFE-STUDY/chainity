@@ -6,7 +6,7 @@
             style="max-width: 20rem;"
             class="mb-2">
       <h1 style="text-align:  right;">
-        {{ value }}
+        {{ value }} JC
       </h1>
     </b-card>
   </div>
@@ -24,8 +24,13 @@ export default {
   mounted: function () {
     this.$http.get('http://localhost:3000/api/balance/1')
       .then((response) => {
-        this.value = response.data[0].balance
+        this.value = numberWithCommas(response.data[0].balance)
       })
   }
 }
+
+function numberWithCommas (x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}
+
 </script>
