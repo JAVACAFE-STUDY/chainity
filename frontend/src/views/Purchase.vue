@@ -32,37 +32,37 @@
 </template>
 
 <script>
-  export default {
-    computed: {
-      nameState () {
-        return this.name.length > 2 ? true : false
-      }
-    },
-    data() {
-      return {
-        form: {
-          id: '1',
-          name: '',
-          balance: ''
-        }
-      }
-    },
-    methods: {
-      onSubmit(evt) {
-        evt.preventDefault()
-        if(this.form.name != '' && this.form.balance != '') {
-          this.$http.post('http://localhost:3000/api/purchase', this.form)
-            .then((response) => {
-              alert(JSON.stringify(response.data));
-            })
-        }
-      },
-      onReset(evt) {
-        evt.preventDefault()
-        /* Reset our form values */
-        this.form.name = ''
-        this.form.balance = ''
+export default {
+  computed: {
+    nameState () {
+      return this.name.length > 2
+    }
+  },
+  data () {
+    return {
+      form: {
+        id: '1',
+        name: '',
+        balance: ''
       }
     }
+  },
+  methods: {
+    onSubmit (evt) {
+      evt.preventDefault()
+      if (this.form.name !== '' && this.form.balance !== '') {
+        this.$http.post('http://localhost:3000/api/purchase', this.form)
+          .then((response) => {
+            alert(JSON.stringify(response.data))
+          })
+      }
+    },
+    onReset (evt) {
+      evt.preventDefault()
+      /* Reset our form values */
+      this.form.name = ''
+      this.form.balance = ''
+    }
   }
+}
 </script>
