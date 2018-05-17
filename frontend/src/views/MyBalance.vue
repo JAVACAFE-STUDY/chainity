@@ -22,15 +22,10 @@ export default {
     }
   },
   mounted: function () {
-    this.$http.get('http://localhost:3000/api/balance/1')
+    this.$http.get('http://localhost:3000/api/balance/0xA5C4B67A464AA5A511f0C8B360b2e8Ad83a49A06')
       .then((response) => {
-        this.value = numberWithCommas(response.data[0].balance)
+        this.value = response.data
       })
   }
 }
-
-function numberWithCommas (x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-}
-
 </script>
