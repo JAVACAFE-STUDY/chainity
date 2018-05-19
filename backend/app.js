@@ -4,12 +4,17 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var auth = require('./api/auth');
-var users = require('./api/users');
-var balance = require('./api/balance');
-var purchase = require('./api/purchase');
-var issue = require('./api/issue');
+var config = require('./config/config');
+var routes = require('./routes/index.route');
+
 var app = express();
+
+var Web3 = require('web3');
+var web3 = new Web3(config.web3Provider);
+
+web3.eth.getCoinbase().then(coinbase => {
+  console.log("Coinbase:", coinbase)
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -29,12 +34,18 @@ app.use(function (req, res, next) {
   next();
 });
 
+/**
+ *  To be removed
+ */
+// var balance = require('./api/balance');
+// var purchase = require('./api/purchase');
+// var issue = require('./api/issue');
+// app.use('/api/issue', issue);
+// app.use('/api/balance', balance)
+// app.use('/api/purchase', purchase)
+
 // API
-app.use('/api/auth', auth);
-app.use('/api/users', users);
-app.use('/api/issue', issue);
-app.use('/api/balance', balance)
-app.use('/api/purchase', purchase)
+app.use('/api', routes);
 
 app.use(require('connect-history-api-fallback')());
 
