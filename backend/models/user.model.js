@@ -63,6 +63,23 @@ UserSchema.statics = {
   },
 
   /**
+   * Get user by email
+   * @param {ObjectId} email - The email of user.
+   * @returns {Promise<User, APIError>}
+   */
+  getByEmail(email) {
+    return this.findOne({'email' : email})
+      .exec()
+      .then((user) => {
+        if (user) {
+          return user;
+        }
+        const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
+        return Promise.reject(err);
+      });
+  },
+
+  /**
    * List users in descending order of 'createdAt' timestamp.
    * @param {number} skip - Number of users to be skipped.
    * @param {number} limit - Limit number of users to be returned.
