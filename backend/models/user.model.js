@@ -10,11 +10,19 @@ mongoose.connect('mongodb://' + config.mongo.host + ':' + config.mongo.port);
  * User Schema
  */
 const UserSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    required: true,
+    unique : true
+  },
   name: {
+    type: String
+  },
+  status: {
     type: String,
     required: true
   },
-  email: {
+  role: {
     type: String,
     required: true
   },
@@ -23,8 +31,7 @@ const UserSchema = new mongoose.Schema({
     default: Date.now
   },
   keyStore: {
-    type: JSON,
-    required: true
+    type: JSON
   }
 });
 
