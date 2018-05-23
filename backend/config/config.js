@@ -10,7 +10,7 @@ const envVarsSchema = Joi.object({
     .default('development'),
   SERVER_PORT: Joi.number()
     .default(4040),
-  DOMAIN: Joi.required()
+  DOMAIN: Joi.string()
     .default('localhost:8080'),
   MONGOOSE_DEBUG: Joi.boolean()
     .when('NODE_ENV', {
@@ -27,7 +27,11 @@ const envVarsSchema = Joi.object({
   MONGO_HOST: Joi.string().required()
     .description('Mongo DB host url'),
   MONGO_PORT: Joi.number()
-    .default(27017)
+    .default(27017),
+  ROOT_ID: Joi.string()
+  .default('system'),
+  ROOT_PASSWORD: Joi.string()
+  .default('system')
 }).unknown()
   .required();
 
@@ -50,7 +54,11 @@ const config = {
     user: envVars.SMTP_USER,
     pass: envVars.SMTP_PASSWORD
   },
-  web3Provider: envVars.WEB3_PROVIDER
+  web3Provider: envVars.WEB3_PROVIDER,
+  root: {
+    id: envVars.ROOT_ID,
+    password: envVars.ROOT_PASSWORD
+  }
 };
 
 module.exports = config;
