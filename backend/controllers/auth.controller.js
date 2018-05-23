@@ -7,8 +7,7 @@ var Web3 = require('web3');
 
 var web3 = new Web3(config.web3Provider);
 
-// sample user, used for authentication
-const user = {
+const root = {
   email: 'system',
   password: 'system'
 };
@@ -21,31 +20,40 @@ const user = {
  * @returns {*}
  */
 function login(req, res, next) {
-  if (req.body.email === user.email && req.body.password === user.password) {
-    var options = {expiresIn: 60*60*24};
-    const token = jwt.sign({
-      email: user.email
-    }, config.jwtSecret, options);
-    return res.json({
-      token,
-      name: user.email
-    });
-  }
+  // if (req.body.email === user.email && req.body.password === user.password) {
+  //   var options = {expiresIn: 60*60*24};
+  //   const token = jwt.sign({
+  //     _id: user.email
+  //   }, config.jwtSecret, options);
+  //   return res.json({
+  //     token,
+  //     name: user.email
+  //   });
+  // }
 
   User.getByEmail(req.body.email)
     .then((user) => {
-      var walletInfo = web3.eth.accounts.decrypt(user.keyStore, req.body.password);
+      var walletInfo = {};
+      if(root.email === user.email) {
+        if(root.password === req.body.password) {
+          walletInfo.address = '';
+        } else {
+          throw new APIError('password invalid.', httpStatus.UNAUTHORIZED, true);
+        }
+      } else {
+        walletInfo = web3.eth.accounts.decrypt(user.keyStore, req.body.password);
+      }
 
       var options = {expiresIn: 60*60*24};
       const token = jwt.sign({
-        email: req.body.email,
+        _id: user._id,
         address: walletInfo.address
       }, config.jwtSecret, options);
       
       return res.json({
         token,
-        address: walletInfo.address,
-        username: user.name
+        email: user.email,
+        name: user.name
       });
     })
     .catch((e) => {
