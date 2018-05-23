@@ -19,8 +19,8 @@
     </b-form-textarea>
         </b-form-group>
         <b-form-group>
-          <label for="due_date">마감일</label>
-          <b-form-input type="text" v-model="item.due_date" readonly></b-form-input>
+          <label for="dueDate">마감일</label>
+          <b-form-input type="text" v-model="item.dueDate" :formatter="format" readonly></b-form-input>
         </b-form-group>
         <b-row>
           <b-col sm="6">
@@ -50,7 +50,7 @@
 <script>
 export default {
   mounted: function () {
-    this.$http.get('http://localhost:3000/api/issue/detail/' + this.$route.query.no)
+    this.$http.get('/api/issue/' + this.$route.query.id)
       .then((response) => {
         this.item = response.data[0]
       })
@@ -63,6 +63,9 @@ export default {
   methods: {
     back: function (event) {
       this.$router.go(-1)
+    },
+    format (value, event) {
+      // return moment(value).format('YYYY-MM-DD')
     }
   }
 }
