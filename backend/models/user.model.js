@@ -30,6 +30,9 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  registeredAt: {
+    type: Date
+  },
   keyStore: {
     type: JSON
   }

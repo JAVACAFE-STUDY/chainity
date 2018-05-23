@@ -19,7 +19,7 @@
                   <b-input-group-prepend>
                     <b-input-group-text><i class="icon-user"></i></b-input-group-text>
                   </b-input-group-prepend>
-                  <input v-model="form.userName" type="text" class="form-control" placeholder="Username">
+                  <input v-model="form.name" type="text" class="form-control" placeholder="Name">
                 </b-input-group>
 
                 <b-input-group class="mb-3">
@@ -36,7 +36,7 @@
                   <input v-model="form.repeatPassword" type="password" class="form-control" placeholder="Repeat password">
                 </b-input-group>
 
-                <b-button variant="success" block>Create Account</b-button>
+                <b-button type="submit" variant="success" block>Create Account</b-button>
               </b-form>
             </b-card-body>
           </b-card>
@@ -53,8 +53,9 @@ export default {
   data () {
     return {
       form: {
+        _id: this.$route.params._id,
         email: this.$route.params.email,
-        userName: '',
+        name: '',
         password: '',
         repeatPassword: ''
       }
@@ -63,23 +64,17 @@ export default {
   methods: {
     onSubmit (evt) {
       evt.preventDefault()
-      if (this.form.email !== '' && this.form.name !== '' && this.form.password !== '') {
-        if (this.form.password !== this.form.repeatPassword) {
-          alert('Repeat your password again!')
-          return
-        }
-        this.$http.put('/api/auth/users/' + this.form.email, this.form)
-          .then((response) => {
-            if (response.status === 200) {
-              this.$session.start()
-              this.$session.set('user-token', response.data.token)
-              this.$http.defaults.headers.common['Authorization'] = response.data.token
-              this.$router.push('/')
-            }
-          }).catch((error) => {
-            alert(error.response.data.message)
-          })
+      if (this.form.password !== this.form.repeatPassword) {
+        alert('Repeat your password again!')
+        return
       }
+      this.$http.post('/api/auth/register', this.form)
+        .then((response) => {
+          alert('User registered.')
+          this.$router.push('/login')
+        }).catch((error) => {
+          alert(error.response.data.message)
+        })
     }
   }
 }

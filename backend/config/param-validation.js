@@ -26,6 +26,14 @@ module.exports = {
       password: Joi.string().required()
     }
   },
+  // POST /api/auth/register
+  register: {
+    body: {
+      email: Joi.string().required(),
+      password: Joi.string().required(),
+      repeatPassword: Joi.string().required()
+    }
+  },
   // POST /api/mail/invitation/users/:userId
   sendInvitation: {
     params: {

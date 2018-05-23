@@ -14,9 +14,9 @@ const transporter = nodemailer.createTransport({
      }
  });
 
- const encode = function(email) {
+ const encode = function(_id, email) {
   var cipher = crypto.createCipher('aes-256-cbc', 'CHANGE_THIS_TO_SOMETHING_RANDOM') // TODO
-  var result = cipher.update(email + '::' + Date.now, 'utf8', 'base64')
+  var result = cipher.update(_id + '::' + email + '::' + Date.now(), 'utf8', 'base64')
   return result += cipher.final('base64')
  }
  
@@ -28,10 +28,8 @@ const transporter = nodemailer.createTransport({
  * @returns {*}
  */
 function sendInvitation(req, res, next) {
-  console.log(req.receiver)
-  console.log(req.user)
   var invitationFrom = req.user.email + '(' + req.user.name + ')';
-  var invitationLink = 'http://' + config.domain  + '/invitation/' + encode(req.receiver.email);
+  var invitationLink = 'http://' + config.domain  + '/invitation/' + encode(req.receiver._id, req.receiver.email);
   var mailOptions = {
     from: 'no-reply@community.com', // sender address
     to: req.receiver.email, // list of receivers

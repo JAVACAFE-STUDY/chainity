@@ -10,7 +10,7 @@
                 <b-form-input v-model="form.email" type="email" placeholder="Email"></b-form-input>
                 <!-- Attach Right button -->
                 <b-input-group-append>
-                  <b-button type="submit" variant="primary">Send</b-button>
+                  <b-button type="submit" variant="primary">Send invitation</b-button>
                 </b-input-group-append>
               </b-input-group>
             </b-form-group>
@@ -67,7 +67,7 @@ export default {
             this.fetchData() // TODO: refreh data in table
             _this.$http.post('/api/mails/invitation/users/' + response.data._id)
               .then((response) => {
-                alert('Invitation has sent.')
+                alert('Invitation has been sent.')
               })
           })
           .catch((error) => {

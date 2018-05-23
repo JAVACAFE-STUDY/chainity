@@ -62,10 +62,9 @@ function create(req, res, next) {
  * @returns {User}
  */
 function update(req, res, next) {
-  const user = req.user;
-  user.email = req.body.email;
+  const user = new User(req.user);
 
-  user.save()
+  User.update({_id: user.id}, user)
     .then(savedUser => res.json(savedUser))
     .catch(e => next(e));
 }

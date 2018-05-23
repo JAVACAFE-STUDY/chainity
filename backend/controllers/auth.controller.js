@@ -20,19 +20,12 @@ const root = {
  * @returns {*}
  */
 function login(req, res, next) {
-  // if (req.body.email === user.email && req.body.password === user.password) {
-  //   var options = {expiresIn: 60*60*24};
-  //   const token = jwt.sign({
-  //     _id: user.email
-  //   }, config.jwtSecret, options);
-  //   return res.json({
-  //     token,
-  //     name: user.email
-  //   });
-  // }
 
   User.getByEmail(req.body.email)
     .then((user) => {
+      if(user.status !== 'active') {
+        throw new APIError('User status: ' + user.status, httpStatus.UNAUTHORIZED, true);
+      }
       var walletInfo = {};
       if(root.email === user.email) {
         if(root.password === req.body.password) {
@@ -62,6 +55,27 @@ function login(req, res, next) {
 }
 
 /**
+ * Create user for registration and append to req.
+ * @param req
+ * @param res
+ * @param next
+ * @returns {*}
+ */
+function loadUserToRegister(req, res, next) {
+  var account = web3.eth.accounts.create();
+	var encryption = web3.eth.accounts.encrypt(account.privateKey, req.body.password);
+  const user = {
+    _id: req.body._id,
+    name: req.body.name,
+    status: 'active',
+    registeredAt: Date.now(),
+    keyStore: encryption
+  }
+  req.user = user;
+  return next();
+}
+
+/**
  * This is a protected route. Will return random number only if jwt token is provided in header.
  * @param req
  * @param res
@@ -75,4 +89,4 @@ function getRandomNumber(req, res) {
   });
 }
 
-module.exports = { login, getRandomNumber };
+module.exports = { login, loadUserToRegister, getRandomNumber };
