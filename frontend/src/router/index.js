@@ -13,6 +13,8 @@ import Purchase from '@/views/Purchase'
 import Issues from '@/views/Issues'
 import IssueDetail from '@/views/IssueDetail'
 import AddIssue from '@/views/AddIssue'
+import PurchaseList from '@/views/PurchaseList'
+import PurchaseDetail from '@/views/PurchaseDetail'
 
 Vue.use(Router)
 
@@ -61,6 +63,16 @@ export default new Router({
           path: 'purchase',
           name: 'Purchase',
           component: Purchase
+        },
+        {
+          path: 'purchaseList',
+          name: 'PurchaseList',
+          component: PurchaseList
+        },
+        {
+          path: 'purchaseDetail',
+          name: 'PurchaseDetail',
+          component: PurchaseDetail
         },
         {
           path: 'issues',
