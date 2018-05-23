@@ -15,6 +15,7 @@ import IssueDetail from '@/views/IssueDetail'
 import AddIssue from '@/views/AddIssue'
 import PurchaseList from '@/views/PurchaseList'
 import PurchaseDetail from '@/views/PurchaseDetail'
+import Profile from '@/views/Profile'
 
 Vue.use(Router)
 
@@ -88,6 +89,11 @@ export default new Router({
           path: 'addIssue',
           name: 'AddIssue',
           component: AddIssue
+        },
+        {
+          path: 'profile',
+          name: 'Profile',
+          component: Profile
         }
       ]
     },
