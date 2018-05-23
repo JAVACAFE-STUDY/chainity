@@ -99,15 +99,12 @@ export default new Router({
     {
       path: '/invitation/*',
       beforeEnter: function (to, from, next) {
-        var email
         try {
           var decodedArray = decode(to.params[0]).split('::')
-          email = decodedArray[0]
+          next({name: 'Register', params: {_id: decodedArray[0], email: decodedArray[1]}})
         } catch (error) {
           next({name: 'Page500', params: {msg: error.message}})
         }
-
-        next({name: 'Register', params: {email: email}})
       }
     },
     {
@@ -115,7 +112,7 @@ export default new Router({
       name: 'Register',
       component: Register,
       beforeEnter: function (to, from, next) {
-        if (to.params.email) {
+        if (to.params._id && to.params.email) {
           next()
         } else {
           next({name: 'Page500', params: {msg: 'Invalid access.'}})
