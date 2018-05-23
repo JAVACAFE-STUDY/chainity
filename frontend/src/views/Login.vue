@@ -54,8 +54,8 @@ export default {
           .then((response) => {
             if (response.status === 200) {
               this.$session.start()
-              this.$session.set('user-token', response.data.data)
-              this.$http.defaults.headers.common['x-access-token'] = response.data.data
+              this.$session.set('user-token', response.data.token)
+              this.$http.defaults.headers.common['Authorization'] = response.data.token
               this.$router.push('/')
             }
           }).catch((error) => {

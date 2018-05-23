@@ -25,7 +25,7 @@ new Vue({
   created: function () {
     var _this = this
     axios.interceptors.request.use(function (config) {
-      config.headers['x-access-token'] = _this.$session.get('user-token')
+      config.headers['Authorization'] = 'Bearer ' + _this.$session.get('user-token')
       return config
     }, function (error) {
       return Promise.reject(error)
