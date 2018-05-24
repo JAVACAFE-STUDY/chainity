@@ -20,7 +20,7 @@
         </b-form-group>
         <b-form-group>
           <label for="dueDate">마감일</label>
-          <b-form-input type="text" v-model="item.dueDate" :formatter="format" readonly></b-form-input>
+          <b-form-input type="text" v-model="item.dueDate" readonly></b-form-input>
         </b-form-group>
         <b-row>
           <b-col sm="6">
@@ -38,12 +38,15 @@
         </b-row>
         <b-form-group>
           <label for="assignee">Assignee</label>
-          <b-form-input type="text" id="assignee"></b-form-input>
+          <b-form-input type="text" id="assignee" @click.native="modalShow = !modalShow"></b-form-input>
         </b-form-group>
-        <b-button variant="primary">저장</b-button>
+        <b-button variant="primary" v-on:click="save">저장</b-button>
         <b-button variant="primary" v-on:click="back">뒤로</b-button>
       </b-card>
     </b-col>
+    <b-modal v-model="modalShow">
+      test
+    </b-modal>
   </b-row>
 </template>
 
@@ -57,15 +60,24 @@ export default {
   },
   data: () => {
     return {
-      item: []
+      item: [],
+      users: null,
+      userFields: [{key: 'name'}],
+      modalShow: false
     }
   },
   methods: {
+    save: function (event) {
+      this.$router.go(-1)
+    },
     back: function (event) {
       this.$router.go(-1)
     },
-    format (value, event) {
-      // return moment(value).format('YYYY-MM-DD')
+    getUsers: function (event) {
+      this.$http.get('/api/users')
+        .then((response) => {
+          this.users = response.data
+        })
     }
   }
 }
