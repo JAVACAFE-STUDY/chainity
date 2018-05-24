@@ -56,7 +56,7 @@ export default {
           sortable: true
         },
         {
-          key: 'due_date',
+          key: 'dueDate',
           sortable: true
         }
       ],
@@ -70,7 +70,7 @@ export default {
       return items.length
     },
     rowClickHandler (record, index) {
-      this.$router.push({path: 'issueDetail', query: { no: record.no }})
+      this.$router.push({path: 'issueDetail', query: { id: record.id }})
     }
   }
 }
