@@ -17,7 +17,7 @@
           </b-form-group>
           <b-form-group>
             <label for="due_date">마감일</label>
-            <b-form-input type="text" id="due_date"  v-model="due_date" placeholder="예: 2018-05-10"></b-form-input>
+            <b-form-input type="text" id="dueDate"  v-model="dueDate" placeholder="예: 2018-05-10"></b-form-input>
           </b-form-group>
           <b-row>
             <b-col sm="6">
@@ -57,7 +57,7 @@ export default {
         alert('내용을 입력해주세요.')
         return true
       }
-      if (!this.due_date) {
+      if (!this.dueDate) {
         alert('마감일을 입력해주세요.')
         return true
       }
@@ -69,10 +69,10 @@ export default {
         alert('보상금액을 입력해주세요.')
         return true
       }
-      this.$http.post('http://localhost:3000/api/issue/add', {
+      this.$http.post('/api/issue', {
         title: this.title,
         content: this.content,
-        due_date: this.due_date,
+        dueDate: this.dueDate,
         count: this.count,
         rewards: this.rewards
       })
