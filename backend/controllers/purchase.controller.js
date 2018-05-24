@@ -27,7 +27,8 @@ function create(req, res, next) {
     email: req.body.email,
     name: req.body.name,
     balance: req.body.balance,
-    status: 'active'
+    status: 'active',
+    registered: Date()
   });
 
   purchase.save()

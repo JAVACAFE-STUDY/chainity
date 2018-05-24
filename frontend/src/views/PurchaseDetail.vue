@@ -7,7 +7,7 @@
         </div>
         <b-form-group>
           <label for="title">이름</label>
-          <b-form-input type="text" v-model="item.username" readonly></b-form-input>
+          <b-form-input type="text" v-model="item.name" readonly></b-form-input>
         </b-form-group>
               <b-form-group>
           <label for="due_date">신청금액</label>

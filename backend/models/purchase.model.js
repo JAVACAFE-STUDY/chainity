@@ -23,7 +23,7 @@ const PurchaseSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  registeredAt: {
+  registered: {
     type: Date
   },
   status: {
