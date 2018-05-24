@@ -84,7 +84,7 @@ export default {
         {username: 'Aulus Agmundr', registered: '2012/01/01', role: 'Member', status: 'Pending'}
       ]),
       fields: [
-        {key: 'username'},
+        {key: 'name'},
         {key: 'registered'},
         {key: 'balance'},
         {key: 'status'}
