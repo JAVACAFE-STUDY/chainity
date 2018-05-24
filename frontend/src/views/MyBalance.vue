@@ -22,7 +22,7 @@ export default {
     }
   },
   mounted: function () {
-    this.$http.get('http://localhost:3000/api/balance/0xA5C4B67A464AA5A511f0C8B360b2e8Ad83a49A06')
+    this.$http.get('/api/balance/0xA5C4B67A464AA5A511f0C8B360b2e8Ad83a49A06')
       .then((response) => {
         this.value = response.data
       })
