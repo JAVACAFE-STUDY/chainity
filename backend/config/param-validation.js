@@ -4,15 +4,16 @@ module.exports = {
   // POST /api/users
   createUser: {
     body: {
-      name: Joi.string().required(),
-      email: Joi.string().required()
+      email: Joi.string().email().required(),
+      status: Joi.string().required(),
+      role: Joi.string().required()
     }
   },
   // UPDATE /api/users/:userId
   updateUser: {
     body: {
-      name: Joi.string().required(),
-      email: Joi.string().required()
+      email: Joi.string().email().required(),
+      name: Joi.string().required()
     },
     params: {
       userId: Joi.string().hex().required()
@@ -23,6 +24,20 @@ module.exports = {
     body: {
       email: Joi.string().required(),
       password: Joi.string().required()
+    }
+  },
+  // POST /api/auth/register
+  register: {
+    body: {
+      email: Joi.string().required(),
+      password: Joi.string().required(),
+      repeatPassword: Joi.string().required()
+    }
+  },
+  // POST /api/mail/invitation/users/:userId
+  sendInvitation: {
+    params: {
+      userId: Joi.string().required()
     }
   }
 };

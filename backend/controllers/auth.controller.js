@@ -7,8 +7,7 @@ var Web3 = require('web3');
 
 var web3 = new Web3(config.web3Provider);
 
-// sample user, used for authentication
-const user = {
+const root = {
   email: 'system',
   password: 'system'
 };
@@ -21,36 +20,59 @@ const user = {
  * @returns {*}
  */
 function login(req, res, next) {
-  if (req.body.email === user.email && req.body.password === user.password) {
-    var options = {expiresIn: 60*60*24};
-    const token = jwt.sign({
-      email: user.email
-    }, config.jwtSecret, options);
-    return res.json({
-      token,
-      name: user.email
-    });
-  }
 
   User.getByEmail(req.body.email)
     .then((user) => {
-      var walletInfo = web3.eth.accounts.decrypt(user.keyStore, req.body.password);
+      if(user.status !== 'active') {
+        throw new APIError('User status: ' + user.status, httpStatus.UNAUTHORIZED, true);
+      }
+      var walletInfo = {};
+      if(root.email === user.email) {
+        if(root.password === req.body.password) {
+          walletInfo.address = '';
+        } else {
+          throw new APIError('password invalid.', httpStatus.UNAUTHORIZED, true);
+        }
+      } else {
+        walletInfo = web3.eth.accounts.decrypt(user.keyStore, req.body.password);
+      }
 
       var options = {expiresIn: 60*60*24};
       const token = jwt.sign({
-        email: req.body.email,
+        _id: user._id,
         address: walletInfo.address
       }, config.jwtSecret, options);
       
       return res.json({
         token,
-        address: walletInfo.address,
-        username: user.name
+        email: user.email,
+        name: user.name
       });
     })
     .catch((e) => {
       next(new APIError(e.message, httpStatus.UNAUTHORIZED, true));
     });
+}
+
+/**
+ * Create user for registration and append to req.
+ * @param req
+ * @param res
+ * @param next
+ * @returns {*}
+ */
+function loadUserToRegister(req, res, next) {
+  var account = web3.eth.accounts.create();
+	var encryption = web3.eth.accounts.encrypt(account.privateKey, req.body.password);
+  const user = {
+    _id: req.body._id,
+    name: req.body.name,
+    status: 'active',
+    registeredAt: Date.now(),
+    keyStore: encryption
+  }
+  req.user = user;
+  return next();
 }
 
 /**
@@ -67,4 +89,4 @@ function getRandomNumber(req, res) {
   });
 }
 
-module.exports = { login, getRandomNumber };
+module.exports = { login, loadUserToRegister, getRandomNumber };
