@@ -55,6 +55,8 @@ const config = {
     pass: envVars.SMTP_PASSWORD
   },
   web3Provider: envVars.WEB3_PROVIDER,
+  contractABI: envVars.CONTRACT_ABI,
+  contractAccount: envVars.CONTRACT_ACCOUNT,
   root: {
     id: envVars.ROOT_ID,
     password: envVars.ROOT_PASSWORD

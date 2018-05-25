@@ -4,7 +4,7 @@
           <img src="static/img/avatars/6.jpg" class="img-avatar" alt="admin@bootstrapmaster.com">
         </template>
         <b-dropdown-header tag="div" class="text-center"><strong>Settings</strong></b-dropdown-header>
-        <b-dropdown-item><i class="fa fa-user"></i> Profile</b-dropdown-item>
+        <b-dropdown-item @click="profile"><i class="fa fa-user"></i> Profile</b-dropdown-item>
         <b-dropdown-item><i class="fa fa-wrench"></i> Settings</b-dropdown-item>
         <b-dropdown-item><i class="fa fa-usd"></i> Payments<b-badge variant="secondary">{{itemsCount}}</b-badge></b-dropdown-item>
         <b-dropdown-divider></b-dropdown-divider>
@@ -22,6 +22,10 @@ export default {
       e.preventDefault()
       this.$session.destroy()
       location.href = 'login'
+    },
+    profile (e) {
+      e.preventDefault()
+      location.href = 'Profile'
     }
   }
 }

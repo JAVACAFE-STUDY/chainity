@@ -21,6 +21,11 @@ export default {
       icon: 'icon-speedometer'
     },
     {
+      name: 'PurchaseList',
+      url: 'purchaseList',
+      icon: 'icon-speedometer'
+    },
+    {
       name: 'Issues',
       url: '/issues',
       icon: 'icon-list'
