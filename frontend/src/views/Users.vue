@@ -44,7 +44,7 @@ export default {
         email: ''
       },
       users: null,
-      userFields: [{key: 'name'}, {key: 'email'}, {key: 'role'}, {key: 'status'}, {key: 'createdAt'}]
+      userFields: [{key: 'name'}, {key: 'email'}, {key: 'role'}, {key: 'status'}, {key: 'createdAt'}, {key: 'balance'}]
     }
   },
   methods: {

@@ -3,8 +3,11 @@ var mongoose = require('mongoose');
 var httpStatus = require('http-status');
 var APIError = require('../helpers/APIError');
 var config = require('../config/config');
+var Web3 = require('web3');
 
 mongoose.connect('mongodb://' + config.mongo.host + ':' + config.mongo.port);
+var web3 = new Web3(new Web3.providers.HttpProvider(config.web3Provider));
+var erc20 = new web3.eth.Contract(JSON.parse(config.contractABI), config.contractAccount);
 
 /**
  * User Schema
@@ -36,6 +39,13 @@ const UserSchema = new mongoose.Schema({
   keyStore: {
     type: JSON
   }
+}, {
+  toObject: {
+    virtuals: true
+  },
+  toJSON: {
+    virtuals: true 
+  }
 });
 
 /**
@@ -44,6 +54,19 @@ const UserSchema = new mongoose.Schema({
  * - validations
  * - virtuals
  */
+
+UserSchema.virtual('balance')
+.get(function() { 
+  var balance = 0;
+  if(this.keyStore) {
+    var address =this.keyStore.address;
+    erc20.methods.balanceOf(address).call().then(function(result){
+      console.debug('address:', address, 'balance:', result);
+      balance = result;
+    });
+  }
+  return balance;
+});
 
 /**
  * Methods
