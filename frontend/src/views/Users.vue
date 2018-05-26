@@ -44,14 +44,21 @@ export default {
         email: ''
       },
       users: null,
-      userFields: [{key: 'name'}, {key: 'email'}, {key: 'role'}, {key: 'status'}, {key: 'createdAt'}, {key: 'balance'}]
+      userFields: [{key: 'name', sortable: true}, {key: 'email', sortable: true}, {key: 'role', sortable: true}, {key: 'status', sortable: true}, {key: 'createdAt', sortable: true}, {key: 'balance', sortable: true}]
     }
   },
   methods: {
     fetchData () {
       this.$http.get('/api/users')
-        .then((response) => {
-          this.users = response.data
+        .then((response) => { this.users = response.data })
+        .then(() => {
+          for (let i = 0; i < this.users.length; i++) {
+            const user = this.users[i]
+            if (user.keyStore) {
+              this.$http.get('/api/balance/' + user.keyStore.address)
+                .then((response) => { this.users[i].balance = response.data })
+            }
+          }
         })
     },
     onSubmit (evt) {
@@ -64,14 +71,12 @@ export default {
         this.$http.post('/api/users', this.form)
           .then((response) => {
             this.form.email = ''
-            this.fetchData() // TODO: refreh data in table
             _this.$http.post('/api/mails/invitation/users/' + response.data._id)
-              .then((response) => {
-                alert('Invitation has been sent.')
-              })
+              .then((response) => { alert('Invitation has been sent.') })
+              .then(() => { this.users.unshift(response.data) })
           })
           .catch((error) => {
-            console.error(error)
+            console.error(error.response)
             alert(error.response.data.message)
           })
       }
