@@ -7,11 +7,6 @@ var Web3 = require('web3');
 
 var web3 = new Web3(config.web3Provider);
 
-const root = {
-  email: 'system',
-  password: 'system'
-};
-
 /**
  * Returns jwt token if valid email and password is provided
  * @param req
@@ -27,9 +22,9 @@ function login(req, res, next) {
         throw new APIError('User status: ' + user.status, httpStatus.UNAUTHORIZED, true);
       }
       var walletInfo = {};
-      if(root.email === user.email) {
-        if(root.password === req.body.password) {
-          walletInfo.address = '';
+      if(config.root.id === user.email) {
+        if(config.root.password === req.body.password) {
+          walletInfo.address = user.keyStore.address;
         } else {
           throw new APIError('password invalid.', httpStatus.UNAUTHORIZED, true);
         }
