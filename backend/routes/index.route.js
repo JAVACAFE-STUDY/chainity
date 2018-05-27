@@ -16,7 +16,39 @@ router.get('/health-check', (req, res) =>
 // mount auth routes at /auth
 router.use('/auth', authRoutes);
 
-// mount user routes at /users
+/**
+* @swagger
+* tags:
+*   name: User
+*   description: User management
+* definitions:
+*   User:
+*     required:
+*       - _id
+*       - email
+*       - status
+*       - role
+*       - createdAt
+*     properties:
+*       _id:
+*         type: string
+*         uniqueItems: true
+*       email:
+*         type: string
+*         uniqueItems: true
+*       name: 
+*         type: string
+*       status:
+*         type: string
+*       role:
+*         type: string
+*       createdAt:
+*         type: integer
+*       registeredAt:
+*         type: integer
+*       keyStore:
+*         type: object
+*/
 router.use('/users', userRoutes);
 
 // mount issue routes at /issue
