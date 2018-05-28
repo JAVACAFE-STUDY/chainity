@@ -16,6 +16,9 @@ import Purchase from '@/views/Purchase'
 import Issues from '@/views/Issues'
 import IssueDetail from '@/views/IssueDetail'
 import AddIssue from '@/views/AddIssue'
+import PurchaseList from '@/views/PurchaseList'
+import PurchaseDetail from '@/views/PurchaseDetail'
+import Profile from '@/views/Profile'
 
 import crypto from 'crypto'
 
@@ -75,6 +78,16 @@ export default new Router({
           component: Purchase
         },
         {
+          path: 'purchaseList',
+          name: 'PurchaseList',
+          component: PurchaseList
+        },
+        {
+          path: 'purchaseDetail',
+          name: 'PurchaseDetail',
+          component: PurchaseDetail
+        },
+        {
           path: 'issues',
           name: 'Issues',
           component: Issues
@@ -88,6 +101,11 @@ export default new Router({
           path: 'addIssue',
           name: 'AddIssue',
           component: AddIssue
+        },
+        {
+          path: 'profile',
+          name: 'Profile',
+          component: Profile
         }
       ]
     },

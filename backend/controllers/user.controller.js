@@ -1,13 +1,15 @@
 var User = require('../models/user.model');
+var config = require('../config/config');
 
 User.list()
     .then(users => {
       if (users.length < 1) {
         const user = new User({
-          email: 'system',
-          name: 'system',
+          email: config.root.id,
+          name: config.root.id,
           status: 'active',
-          role: 'admin'
+          role: 'admin',
+          keyStore: JSON.parse(config.root.keyStore)
         });
         
         user.save()

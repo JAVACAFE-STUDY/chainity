@@ -41,7 +41,7 @@ export default {
   data () {
     return {
       form: {
-        email: 'test@gmail.com',
+        id: '1',
         name: '',
         balance: ''
       }

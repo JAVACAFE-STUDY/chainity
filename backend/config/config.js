@@ -24,6 +24,12 @@ const envVarsSchema = Joi.object({
   .description('SMTP user required to send gmail'),
   SMTP_PASSWORD: Joi.required()
     .description('SMTP password required to send gmail'),
+  WEB3_PROVIDER: Joi.required()
+    .description('Web3 provier required to connect etherem network'),
+  CONTRACT_ACCOUNT: Joi.required()
+    .description('Contract account required for smart contract'),
+  CONTRACT_ABI: Joi.required()
+    .description('Contract ABI required for smart contract'),
   MONGO_HOST: Joi.string().required()
     .description('Mongo DB host url'),
   MONGO_PORT: Joi.number()
@@ -55,9 +61,12 @@ const config = {
     pass: envVars.SMTP_PASSWORD
   },
   web3Provider: envVars.WEB3_PROVIDER,
+  contractABI: envVars.CONTRACT_ABI,
+  contractAccount: envVars.CONTRACT_ACCOUNT,
   root: {
     id: envVars.ROOT_ID,
-    password: envVars.ROOT_PASSWORD
+    password: envVars.ROOT_PASSWORD,
+    keyStore: envVars.ROOT_KEYSTORE
   }
 };
 
