@@ -9,12 +9,58 @@ const router = express.Router(); // eslint-disable-line new-cap
 const auth = expressJwt({secret: config.jwtSecret, requestProperty: 'decoded'})
 
 router.route('/')
-  /** GET /api/users - Get list of users */
+  /**
+  * @swagger
+  * /Users:
+  *   get:
+  *     summary: Get users
+  *     tags: [User]
+  *     responses:
+  *       200:
+  *         description: Users
+  *         schema:
+  *           $ref: '#/definitions/User'
+  */
   .get(auth, userCtrl.list)
 
-  /** POST /api/users - Create new user */
+  /**
+  * @swagger
+  * /Users:
+  *   post:
+  *     summary: Create new user
+  *     tags: [User]
+  *     parameters:
+  *       - name: user
+  *         in: body
+  *         required: true
+  *         description: User that we want to create
+  *         schema: 
+  *           type: object
+  *           required:
+  *           - email
+  *           - status
+  *           - role
+  *           properties:
+  *             email: 
+  *               type: string
+  *               uniqueItems: true
+  *             name: 
+  *               type: string
+  *             status:
+  *              type: string
+  *             role:
+  *               type: string
+  *             registerAt:
+  *               type: integer
+  *             keyStore:
+  *               type: object
+  *     responses:
+  *       200:
+  *         description: User is created
+  *         schema:
+  *           $ref: '#/definitions/User'
+  */
   .post(auth, validate(paramValidation.createUser), userCtrl.create);
-
 
 router.route('/me')
   /** GET /api/users/me - Get current user */
