@@ -35,7 +35,7 @@
           </b-row>
           <b-form-group>
             <label for="assignee">Assignee</label>
-            <b-form-input type="text" id="assignee"></b-form-input>
+            <b-form-input type="text" id="assignee" readonly></b-form-input>
           </b-form-group>
           <b-button variant="primary" v-on:click="addIssue">등록</b-button>
           <b-button variant="primary" v-on:click="back">뒤로</b-button>

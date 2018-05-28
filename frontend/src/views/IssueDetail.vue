@@ -3,7 +3,7 @@
     <b-col sm="8">
       <b-card>
         <div slot="header">
-          <strong>이슈 상세</strong>
+          <strong>이슈</strong>
         </div>
         <b-form-group>
           <label for="title">제목</label>
@@ -38,15 +38,15 @@
         </b-row>
         <b-form-group>
           <label for="assignee">Assignee</label>
-          <b-form-input type="text" id="assignee" @click.native="modalShow = !modalShow"></b-form-input>
+          <b-form-input type="text" id="assignee" readonly></b-form-input>
+        </b-form-group>
+        <b-form-group>
+          <router-link v-on:click.native="assignToMe" to="/">Assign to me</router-link>
         </b-form-group>
         <b-button variant="primary" v-on:click="save">저장</b-button>
         <b-button variant="primary" v-on:click="back">뒤로</b-button>
       </b-card>
     </b-col>
-    <b-modal v-model="modalShow">
-      test
-    </b-modal>
   </b-row>
 </template>
 
@@ -73,7 +73,7 @@ export default {
     back: function (event) {
       this.$router.go(-1)
     },
-    getUsers: function (event) {
+    assignToMe: function (event) {
       this.$http.get('/api/users')
         .then((response) => {
           this.users = response.data
