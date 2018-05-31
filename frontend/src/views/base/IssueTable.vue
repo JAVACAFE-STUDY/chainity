@@ -58,6 +58,10 @@ export default {
         {
           key: 'dueDate',
           sortable: true
+        },
+        {
+          key: 'status',
+          sortable: true
         }
       ],
       currentPage: 1,

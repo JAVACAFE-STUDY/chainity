@@ -31,7 +31,12 @@ const IssueSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
-  assignees: [String] // 할당자
+  status: { // 진행상태
+    type: String,
+    required: true
+  },
+  assignee_email: [String],
+  assignee_name: [String]
 });
 
 /**
