@@ -52,7 +52,7 @@ router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
 
 // mount issue routes at /issue
-router.use('/issue', issueRoutes);
+router.use('/issues', issueRoutes);
 
 // mount mail routes at /mails
 router.use('/mails', mailRoutes);

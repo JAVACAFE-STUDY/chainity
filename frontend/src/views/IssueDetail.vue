@@ -61,7 +61,7 @@ export default {
       })
   },
   mounted: function () {
-    this.$http.get('/api/issue/' + this.$route.query.id)
+    this.$http.get('/api/issues/' + this.$route.query.id)
       .then((response) => {
         this.item = response.data[0]
         // alert('data: ' + JSON.stringify(response.data[0]))
@@ -79,7 +79,7 @@ export default {
   },
   methods: {
     save: function (event) {
-      this.$http.put('/api/issue/' + this.$route.query.id, {
+      this.$http.put('/api/issues/' + this.$route.query.id, {
         issue: this.item
       })
         .then((response) => {
@@ -88,7 +88,7 @@ export default {
         })
     },
     close: function (event) {
-      this.$http.put('/api/issue/' + this.$route.query.id, {
+      this.$http.put('/api/issues/' + this.$route.query.id, {
         issue: this.item,
         status: 'close'
       })
