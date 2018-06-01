@@ -63,5 +63,4 @@ router.use('/balance', balanceRoutes);
 // mount mail routes at /purchase
 router.use('/purchase', purchaseRoutes);
 
-
 module.exports = router;

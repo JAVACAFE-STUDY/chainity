@@ -43,10 +43,10 @@ PurchaseSchema.method({
  */
 PurchaseSchema.statics = {
   /**
-   * List issues in ascending order of 'dueDate'.
+   * List Purchase in ascending order of 'dueDate'.
    * @param {number} skip - Number of issues to be skipped.
    * @param {number} limit - Limit number of issues to be returned.
-   * @returns {Promise<Issue[]>}
+   * @returns {Promise<Purchase[]>}
    */
   list({ skip = 0, limit = 50 } = {}) {
     return this.find()
@@ -57,18 +57,18 @@ PurchaseSchema.statics = {
   },
 
   /**
-   * Get issue
-   * @param {ObjectId} id - The objectId of issue.
+   * Get Purchase
+   * @param {ObjectId} id - The objectId of Purchase.
    * @returns {Promise<Purchase, APIError>}
    */
   get(id) {
     return this.find({ id: parseInt(id) })
       .exec()
-      .then((issue) => {
-        if (issue) {
-          return issue;
+      .then((Purchase) => {
+        if (Purchase) {
+          return Purchase;
         }
-        const err = new APIError('No such issue exists!', httpStatus.NOT_FOUND);
+        const err = new APIError('No such Purchase exists!', httpStatus.NOT_FOUND);
         return Promise.reject(err);
       });
   }

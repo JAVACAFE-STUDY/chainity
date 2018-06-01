@@ -22,8 +22,8 @@
             </fieldset>
           </div>
         </div>
-        <b-button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-dot-circle-o"></i> Submit</b-button>
-        <b-button type="reset" class="btn btn-danger btn-sm"><i class="fa fa-ban"></i> Reset</b-button>
+        <button type="submit" class="btn btn-primary"><i class="fa fa-dot-circle-o"></i> Submit</button>
+        <button type="reset" class="btn btn-danger"><i class="fa fa-ban"></i> Reset</button>
       </b-form>
     </div>
 
@@ -53,7 +53,9 @@ export default {
       if (this.form.name !== '' && this.form.balance !== '') {
         this.$http.post('http://localhost:3000/api/purchase', this.form)
           .then((response) => {
-            alert(JSON.stringify(response.data))
+            alert('충전 요청이 등록되었습니다.')
+            this.form.name = ''
+            this.form.balance = ''
           })
       }
     },
