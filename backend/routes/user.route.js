@@ -78,6 +78,10 @@ router.route('/:userId')
   /** DELETE /api/users/:userId - Delete user */
   .delete(auth, userCtrl.remove);
 
+router.route('/:userId/token')
+  /** GET /api/users/:userId/token - Get user token */
+  .get(userCtrl.getToken)
+
 /** Load user when API with userId route parameter is hit */
 router.param('userId', userCtrl.load);
 
