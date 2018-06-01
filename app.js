@@ -78,6 +78,35 @@ app.get("/getTransactions", function(req, res){
 	});
 });
 
+app.get("/sendTransfer", function(req, res) {
+	var nonce = web3.eth.getTransactionCount(req.query.from);
+	var data = erc20.transfer.getData(req.query.to, req.query.value, {from: req.query.from});
+
+	var Tx = require('ethereumjs-tx');
+	var privateKey = new Buffer('d790bc5a1f0adf09629eaabd2986e431fa795324dbca3191236309aefc03ada0','hex')
+	var rawTx = {
+	  nonce: web3.toHex(nonce),
+	  gasPrice: web3.toHex(1050000),
+	  gasLimit: web3.toHex(1250000),
+	  to: '0x9bf53b7c67b3a43e6982243befc81ade27b7443f',
+	  value: '0x00',
+	  data: data
+	}
+
+	var tx = new Tx(rawTx);
+	tx.sign(privateKey);
+
+	var serializedTx = tx.serialize();
+
+	web3.eth.sendRawTransaction('0x' + serializedTx.toString('hex'), function(err, hash) {
+	  if (!err) {
+			console.log("success : " + hash);
+		} else {
+			console.log("error : " + err);
+		}
+	});
+});
+
 var accounts = new Web3EthAccounts('ws://localhost:8546');
 
 app.get('/createAccount', function (req, res) {
