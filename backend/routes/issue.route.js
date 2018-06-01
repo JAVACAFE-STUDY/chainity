@@ -8,17 +8,17 @@ var issueCtrl = require('../controllers/issue.controller');
 const router = express.Router();
 
 router.route('/')
-  // GET /api/issue - Get list of issue
+  // GET /api/issues - Get list of issue
   .get(issueCtrl.list)
-  // POST /api/issue - Create new issue
+  // POST /api/issues - Create new issue
   .post(issueCtrl.create);
 
 router.route('/:id')
-  // GET /api/issue/:id - Get issue
+  // GET /api/issues/:id - Get issue
   .get(issueCtrl.get)
-  // PUT /api/issue/:id - Update issue
+  // PUT /api/issues/:id - Update issue
   .put(issueCtrl.update)
-  // DELETE /api/issue/:id - Delete issue
+  // DELETE /api/issues/:id - Delete issue
   .delete(issueCtrl.remove);
 
 // Load user when API with userId route parameter is hit

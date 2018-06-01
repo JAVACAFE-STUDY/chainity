@@ -69,7 +69,7 @@ export default {
         alert('보상금액을 입력해주세요.')
         return true
       }
-      this.$http.post('/api/issue', {
+      this.$http.post('/api/issues', {
         title: this.title,
         content: this.content,
         dueDate: this.dueDate,
