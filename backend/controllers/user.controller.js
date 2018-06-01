@@ -95,4 +95,16 @@ function remove(req, res, next) {
     .catch(e => next(e));
 }
 
-module.exports = { load, get, create, update, list, remove };
+/**
+ * Get user token.
+ * @returns {token}
+ */
+function getToken(req, res, next) {
+  var user = new User(req.user);  
+  const token = User.getToken(user.keyStore.address)
+  token.call().then(function(token) {
+    res.json({"token" : Number(token) })
+  });
+}
+
+module.exports = { load, get, create, update, list, remove, getToken };
