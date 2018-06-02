@@ -3,20 +3,20 @@ var validate = require('express-validation');
 var expressJwt = require('express-jwt');
 var paramValidation = require('../config/param-validation');
 var config = require('../config/config');
-var purchaseCtrl = require('../controllers/purchase.controller');
+var purchaseCtrl = require('../controllers/tokenRequests.controller');
 
 const router = express.Router();
 
 router.route('/')
-  // GET /api/purchase - Get list of purchase
+  // GET /api/token-requests - Get list of purchase
   .get(purchaseCtrl.list)
-  // POST /api/purchase - Create new purchase
+  // POST /api/token-requests - Create new purchase
   .post(purchaseCtrl.create);
 
 router.route('/:id')
-  // GET /api/purchase/:id - Get purchase
+  // GET /api/token-requests/:id - Get purchase
   .get(purchaseCtrl.get)
-  // PUT /api/purchase/:id - Update purchase
+  // PUT /api/token-requests/:id - Update purchase
   .put(purchaseCtrl.update)
 
 // Load user when API with userId route parameter is hit

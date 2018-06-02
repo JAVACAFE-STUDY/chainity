@@ -1,27 +1,27 @@
-var Purchase = require('../models/purchase.model');
+var TokenRequest = require('../models/tokenRequests.model');
 
 /**
- * Get Purchase list.
+ * Get TokenRequest list.
  * @property {number} req.query.skip - Number of issues to be skipped.
  * @property {number} req.query.limit - Limit number of issues to be returned.
- * @returns {Purchase[]}
+ * @returns {TokenRequest[]}
  */
 function list(req, res, next) {
   const { limit = 50, skip = 0 } = req.query;
-  Purchase.list({ limit, skip })
+  TokenRequest.list({ limit, skip })
     .then(issues => res.json(issues))
     .catch(e => next(e));
 }
 
 /**
- * Create new Purchase
+ * Create new TokenRequest
  * @property {string} req.body.email
  * @property {string} req.body.name
  * @property {string} req.body.balance
  * @returns {Purchase}
  */
 function create(req, res, next) {
-  const purchase = new Purchase({
+  const tokenRequest = new TokenRequest({
     email: req.body.email,
     name: req.body.name,
     balance: req.body.balance,
@@ -29,42 +29,42 @@ function create(req, res, next) {
     registered: Date()
   });
 
-  purchase.save()
-    .then(savedIssue=> res.json(savedIssue))
+  tokenRequest.save()
+    .then(savedTokenRequest=> res.json(savedTokenRequest))
     .catch(e => next(e));
 }
 
 /**
- * Load Purchase and append to req.
+ * Load TokenRequest and append to req.
  */
 function load(req, res, next, id) {
-  Purchase.get(id)
-    .then((purchase) => {
-      req.purchase = purchase;
+  TokenRequest.get(id)
+    .then((tokenRequest) => {
+      req.tokenRequest = tokenRequest;
       return next();
     })
     .catch(e => next(e));
 }
 
 /**
- * Get Purchase
- * @returns {Purchase}
+ * Get TokenRequest
+ * @returns {TokenRequest}
  */
 function get(req, res) {
-  return res.json(req.purchase);
+  return res.json(req.tokenRequest);
 }
 
 /**
- * Update existing Purchase
- * @property {string} req.body.assignees - The assignees of Purchase.
- * @returns {Purchase}
+ * Update existing TokenRequest
+ * @property {string} req.body.assignees - The assignees of TokenRequest.
+ * @returns {TokenRequest}
  */
 function update(req, res, next) {
-  const purchase = req.purchase[0]
-  purchase.status = req.body.status
+  const tokenRequest = req.tokenRequest[0]
+  tokenRequest.status = req.body.status
 
-  Purchase.update({id: purchase.id}, purchase)
-    .then(purchase => res.json(purchase))
+  TokenRequest.update({id: tokenRequest.id}, tokenRequest)
+    .then(tokenRequest => res.json(tokenRequest))
     .catch(e => next(e));
 }
 
