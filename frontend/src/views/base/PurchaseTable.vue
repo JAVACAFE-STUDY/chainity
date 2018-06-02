@@ -86,7 +86,7 @@ export default {
       fields: [
         {key: 'name'},
         {key: 'registered'},
-        {key: 'balance'},
+        {key: 'tokens'},
         {key: 'status'}
       ],
       currentPage: 1,
