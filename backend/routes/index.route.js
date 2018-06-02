@@ -4,13 +4,9 @@ var userRoutes = require('./user.route');
 var issueRoutes = require('./issue.route');
 var mailRoutes = require('./mail.route');
 var balanceRoutes = require('./balance.route');
-<<<<<<< HEAD
-var purchaseRoutes = require('./purchase.route')
 var bankRoutes = require('./bank.route')
-=======
 var tokenRequestsRoutes = require('./tokenRequests.route')
 var contractRoutes = require('./contract.route')
->>>>>>> 922968ef2ee59301ddb95762e9cc44ff6ff7de18
 
 const router = express.Router(); // eslint-disable-line new-cap
 
