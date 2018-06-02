@@ -10,6 +10,7 @@ const auth = expressJwt({secret: config.jwtSecret, requestProperty: 'decoded'});
 
 router.route('/:id/tokens')
   .get(contractCtrl.getTotalSupply)
+  .post(contractCtrl.sendToken)
 
 router.route('/:id/receipts')
   .get(contractCtrl.getReceiptList)
