@@ -6,7 +6,9 @@
       </b-col><!--/.col-->
     </b-row><!--/.row-->
     <!-- <router-link to="./addIssue">이슈 등록</router-link> -->
-    <b-button variant="primary" v-on:click="addIssue">이슈 등록</b-button>
+    <div class="text-sm-right">
+      <b-button variant="primary" v-on:click="addIssue">이슈 등록</b-button>
+    </div>
   </div>
 </template>
 

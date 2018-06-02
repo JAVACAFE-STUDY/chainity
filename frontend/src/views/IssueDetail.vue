@@ -32,7 +32,7 @@
             <p>{{ item.rewards }}</p>
           </b-col>
         </b-row>
-        <b-form-group>
+        <b-form-group class="text-sm-right">
           <b-button variant="primary" v-on:click="save">Assign</b-button>
           <b-button variant="primary" v-on:click="close">종료</b-button>
           <b-button variant="primary" v-on:click="back">뒤로</b-button>

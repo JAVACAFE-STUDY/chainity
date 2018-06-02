@@ -13,7 +13,7 @@
           <b-form-group>
             <label for="content">내용</label>
             <b-form-textarea id="content" :rows="8" :max-rows="8" v-model="content">
-      </b-form-textarea>
+            </b-form-textarea>
           </b-form-group>
           <b-form-group>
             <label for="due_date">마감일</label>
@@ -33,8 +33,10 @@
               </b-form-group>
             </b-col>
           </b-row>
-          <b-button variant="primary" v-on:click="addIssue">등록</b-button>
-          <b-button variant="primary" v-on:click="back">뒤로</b-button>
+          <b-form-group class="text-sm-right">
+            <b-button variant="primary" v-on:click="addIssue">등록</b-button>
+            <b-button variant="primary" v-on:click="back">뒤로</b-button>
+          </b-form-group>
         </b-card>
       </b-col>
     </b-row>
