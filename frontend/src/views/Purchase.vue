@@ -44,7 +44,6 @@ export default {
         email: 'test@gmail.com',
         name: '',
         tokens: '',
-        tokenRequestId: '',
         status: ''
       }
     }
@@ -53,23 +52,17 @@ export default {
     onSubmit (evt) {
       evt.preventDefault()
       if (this.form.name !== '' && this.form.tokens !== '') {
-        this.$http.post('/api/token-requests', this.form)
+        this.$http.post('/api/banks/nh/transfers', {'value': this.form.tokens})
           .then((response) => {
-            this.form.name = ''
-            this.form.tokens = ''
-            this.form.tokenRequestId = response.data.id
-            this.$http.post('/api/banks/nh/transfers', {'value': this.form.tokens})
+            alert(response.data.Header.Rsms)
+            if (response.status === 200) {
+              this.form.status = 'Bank'
+            } else {
+              this.form.status = 'Fail'
+            }
+            this.$http.post('/api/token-requests', this.form)
               .then((response) => {
-                alert(response.data.Header.Rsms)
-                if (response.status === 200) {
-                  this.form.status = 'Bank'
-                } else {
-                  this.form.status = 'Fail'
-                }
-                this.$http.put('/api/token-requests/' + this.form.tokenRequestId, this.form)
-                  .then((response) => {
-                    this.form.status = ''
-                  })
+                this.form.status = ''
               })
           })
       }

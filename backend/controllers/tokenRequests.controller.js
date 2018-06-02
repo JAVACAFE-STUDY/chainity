@@ -30,12 +30,15 @@ function create(req, res, next) {
     name: req.body.name,
     tokens: req.body.tokens,
     receiver: req.decoded.address,
-    status: 'Pending',
+    status: req.body.status,
     registered: Date()
   });
 
   tokenRequest.save()
-    .then(savedTokenRequest=> res.json(savedTokenRequest))
+    .then(savedTokenRequest=> {
+      console.log(savedTokenRequest)
+      res.json(savedTokenRequest)
+    })
     .catch(e => next(e));
 }
 
