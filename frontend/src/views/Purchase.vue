@@ -43,7 +43,9 @@ export default {
       form: {
         email: 'test@gmail.com',
         name: '',
-        tokens: ''
+        tokens: '',
+        tokenRequestId: '',
+        status: ''
       }
     }
   },
@@ -51,11 +53,24 @@ export default {
     onSubmit (evt) {
       evt.preventDefault()
       if (this.form.name !== '' && this.form.tokens !== '') {
-        this.$http.post('http://localhost:3000/api/token-requests', this.form)
+        this.$http.post('/api/token-requests', this.form)
           .then((response) => {
-            alert('충전 요청이 등록되었습니다.')
             this.form.name = ''
             this.form.tokens = ''
+            this.form.tokenRequestId = response.data.id
+            this.$http.post('/api/banks/nh/transfers', {'value': this.form.tokens})
+              .then((response) => {
+                alert(response.data.Header.Rsms)
+                if (response.status === 200) {
+                  this.form.status = 'Bank'
+                } else {
+                  this.form.status = 'Fail'
+                }
+                this.$http.put('/api/token-requests/' + this.form.tokenRequestId, this.form)
+                  .then((response) => {
+                    this.form.status = ''
+                  })
+              })
           })
       }
     },
