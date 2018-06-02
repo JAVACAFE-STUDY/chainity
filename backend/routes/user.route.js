@@ -23,6 +23,9 @@ router.route('/')
   */
   .get(auth, userCtrl.list)
 
+  router.route('/active')
+.get(auth, userCtrl.activeList)
+
   /**
   * @swagger
   * /Users:

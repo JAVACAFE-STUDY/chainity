@@ -10,9 +10,17 @@ function getTotalSupply(req, res) {
 }
 
 function getReceiptList(req, res) {
-	var events = req.contract.allEvents({fromBlock: process.env.BLOCK_BEGIN_NUMBER, toBlock: 'latest'});
-	events.get(function(error, logs){
-		res.send(logs);
+	// req.contract.events.allEvents({
+	// 	filter: {},
+	// 	fromBlock: 0,
+	// 	toBlock: 'latest'
+	// }, function(error, events){ console.log('events:' + events); });
+	req.contract.getPastEvents('Transfer', {
+		filter: {},
+		fromBlock: 0,
+		toBlock: 'latest'
+	}, function(error, events){ 
+		return res.send(events);
 	});
 }
 
