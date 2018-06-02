@@ -10,7 +10,7 @@
         </b-form-group>
         <b-row>
           <b-col sm="2">
-            <label for="count">마감일</label>
+            <label for="dueDate">마감일</label>
           </b-col>
           <b-col>
             <p>{{ item.dueDate.substr(0, 10) }}</p>
@@ -26,15 +26,15 @@
         </b-row>
         <b-row>
           <b-col sm="2">
-            <label for="count">보상금액</label>
+            <label for="rewards">보상금액</label>
           </b-col>
           <b-col>
             <p>{{ item.rewards }}</p>
           </b-col>
         </b-row>
-        <b-form-group>
-          <b-button v-if="(this.my_email !== 'system' && this.item.status === 'open')" variant="primary" v-on:click="save">Assign</b-button>
-          <b-button v-if="(this.my_email === 'system' && this.item.status === 'open')" variant="primary" v-on:click="close">종료</b-button>
+        <b-form-group class="text-sm-right">
+          <b-button variant="primary" v-on:click="save">Assign</b-button>
+          <b-button variant="primary" v-on:click="close">종료</b-button>
           <b-button variant="primary" v-on:click="back">뒤로</b-button>
         </b-form-group>
       </b-card>
@@ -92,13 +92,35 @@ export default {
         })
     },
     close: function (event) {
-      this.$http.put('/api/issues/' + this.$route.query.id, {
-        issue: this.item,
-        status: 'close'
-      })
+      // address 받아오기
+      this.$http.get('/api/users/address?selected=' + this.selected)
         .then((response) => {
-          alert('이슈가 종료되었습니다.')
-          this.$router.go(-1)
+          var data = response.data
+          this.item.sender = '0xA5C4B67A464AA5A511f0C8B360b2e8Ad83a49A06'
+
+          for (var i = 0; i < data.length; i++) {
+            this.item.receiver = JSON.parse(JSON.stringify(data[i].keyStore)).address
+            this.item.tokens = this.item.rewards
+            // 보상 코인 전송
+            this.$http.post('/api/contracts/0x000/tokens', this.item)
+          }
+        })
+        .then((response) => {
+          if (response.data.result === 'success') {
+            alert(response.data.hash)
+          } else {
+            alert(response.data.error)
+          }
+        })
+        .then((response) => {
+          this.$http.put('/api/issues/' + this.$route.query.id, {
+            issue: this.item,
+            status: 'close'
+          })
+            .then((response) => {
+              alert('이슈가 종료되었습니다.')
+              this.$router.go(-1)
+            })
         })
     },
     back: function (event) {

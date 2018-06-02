@@ -25,6 +25,16 @@ function activeList(req, res) {
     .catch(e => next(e));;
 }
 
+function addressList(req, res) {
+  var array = req.query.selected.split(',');
+  User.find({ email: array })
+    .then(user => {
+      // console.log(user);
+      res.json(user);
+    })
+    .catch(e => next(e));
+}
+
 /**
  * Load user and append to req.
  */
@@ -52,7 +62,6 @@ function get(req, res) {
  * @returns {User}
  */
 function create(req, res, next) {
-
   const user = new User({
     email: req.body.email,
     role: req.body.role,
@@ -123,4 +132,4 @@ function getMyToken(req, res, next) {
   });
 }
 
-module.exports = { load, get, create, update, list, remove, getToken, getMyToken, activeList };
+module.exports = { load, get, create, update, list, remove, getToken, getMyToken, activeList, addressList };
