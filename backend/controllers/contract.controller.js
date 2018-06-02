@@ -36,20 +36,20 @@ function numberWithCommas (x) {
 }
 
 function sendToken(req, res) {
-	var nonce = web3.eth.getTransactionCount(req.body.user.keyStore.address)
+	var nonce = web3.eth.getTransactionCount('0x' + req.body.user.keyStore.address)
     nonce.then(resultNonce => {
     	var Tx = require('ethereumjs-tx');
     	var walletInfo = web3.eth.accounts.decrypt(req.body.user.keyStore, req.body.password);
-		var privateKey = new Buffer(walletInfo.privateKey.replace('0x', ''))
+		var privateKey = new Buffer(walletInfo.privateKey.replace('0x', ''), 'hex')
 
 		// var data = req.contract.methods.transfer(req.body.receiver, req.body.tokens).encodeABI();
-		var data = req.contract.methods.transferFrom(req.body.user.keyStore.address, req.body.receiver, req.body.tokens).encodeABI();
+		var data = req.contract.methods.transferFrom(config.systemAddress, req.body.receiver, req.body.tokens).encodeABI();
 
 		var rawTx = {
 		  nonce: web3.utils.toHex(resultNonce),
 		  gasPrice: web3.utils.toHex(2550000),
 		  gasLimit: web3.utils.toHex(3050000),
-		  from: req.body.user.keyStore.address,
+		  from: '0x' + req.body.user.keyStore.address,
 		  to: config.contractAccount,
 		  value: '0x0',
 		  data: data

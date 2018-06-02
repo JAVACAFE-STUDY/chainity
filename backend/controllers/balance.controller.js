@@ -10,6 +10,7 @@ var erc20 = new web3.eth.Contract(JSON.parse(config.contractABI), config.contrac
  */
 function get(req, res) {
 	var balance = erc20.methods.balanceOf(req.params.id).call().then(function (result) {
+		console.log(result)
 		return res.send(numberWithCommas(result));
     });
 }

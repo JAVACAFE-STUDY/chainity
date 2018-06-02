@@ -26,7 +26,7 @@
           <div class="col-sm-12">
             <fieldset role="group" class="b-form-group form-group">
               <label class="mr-sm-2">패스워드</label>
-              <input v-model="form.password" type="text" placeholder="" required="required" aria-required="true" class="form-control">
+              <input v-model="form.password" type="password" placeholder="" required="required" aria-required="true" class="form-control">
             </fieldset>
           </div>
         </div>
