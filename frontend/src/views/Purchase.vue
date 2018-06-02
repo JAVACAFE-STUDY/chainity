@@ -51,7 +51,7 @@ export default {
     onSubmit (evt) {
       evt.preventDefault()
       if (this.form.name !== '' && this.form.balance !== '') {
-        this.$http.post('http://localhost:3000/api/purchase', this.form)
+        this.$http.post('http://localhost:3000/api/token-requests', this.form)
           .then((response) => {
             alert('충전 요청이 등록되었습니다.')
             this.form.name = ''
