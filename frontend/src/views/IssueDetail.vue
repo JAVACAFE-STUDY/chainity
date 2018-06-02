@@ -33,8 +33,8 @@
           </b-col>
         </b-row>
         <b-form-group>
-          <b-button v-if="(this.my_email !== 'system' && this.item.status === 'open')" variant="primary" v-on:click="save">Assign</b-button>
-          <b-button v-if="(this.my_email === 'system' && this.item.status === 'open')" variant="primary" v-on:click="close">종료</b-button>
+          <b-button variant="primary" v-on:click="save">Assign</b-button>
+          <b-button variant="primary" v-on:click="close">종료</b-button>
           <b-button variant="primary" v-on:click="back">뒤로</b-button>
         </b-form-group>
       </b-card>
