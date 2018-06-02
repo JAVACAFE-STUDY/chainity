@@ -67,6 +67,12 @@ const config = {
     id: envVars.ROOT_ID,
     password: envVars.ROOT_PASSWORD,
     keyStore: envVars.ROOT_KEYSTORE
+  },
+  bank: {
+    nh : {
+      api: envVars.BANK_NH_API,
+      account: envVars.BANK_NH_FIN_ACCOUNT
+    }
   }
 };
 
