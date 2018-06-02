@@ -19,6 +19,7 @@ import AddIssue from '@/views/AddIssue'
 import PurchaseList from '@/views/PurchaseList'
 import PurchaseDetail from '@/views/PurchaseDetail'
 import Profile from '@/views/Profile'
+import Approve from '@/views/Approve'
 
 import crypto from 'crypto'
 
@@ -110,6 +111,12 @@ export default new Router({
           path: 'profile',
           name: 'Profile',
           component: Profile,
+          beforeEnter: requireAuth
+        },
+        {
+          path: 'approve',
+          name: 'Approve',
+          component: Approve,
           beforeEnter: requireAuth
         }
       ]
