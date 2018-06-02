@@ -67,5 +67,4 @@ router.use('/purchase', purchaseRoutes);
 // mount mail routes at /contracts
 router.use('/contracts', contractRoutes);
 
-
 module.exports = router;
