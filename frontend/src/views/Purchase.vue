@@ -63,6 +63,8 @@ export default {
             this.$http.post('/api/token-requests', this.form)
               .then((response) => {
                 this.form.status = ''
+                this.form.name = ''
+                this.form.tokens = ''
               })
           })
       }

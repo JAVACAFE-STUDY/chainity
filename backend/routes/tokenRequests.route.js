@@ -14,6 +14,10 @@ router.route('/')
   // POST /api/token-requests - Create new purchase
   .post(auth, tokenRequestsCtrl.create);
 
+router.route('/me')
+  // GET /api/token-requests/me - Get list of purchase
+  .get(auth, tokenRequestsCtrl.listMe)
+
 router.route('/:id')
   // GET /api/token-requests/:id - Get purchase
   .get(tokenRequestsCtrl.get)

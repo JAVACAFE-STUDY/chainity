@@ -13,7 +13,14 @@ var TokenRequest = require('../models/tokenRequests.model');
 function list(req, res, next) {
   const { limit = 50, skip = 0 } = req.query;
   TokenRequest.list({ limit, skip })
-    .then(issues => res.json(issues))
+    .then(tokenRequest => res.json(tokenRequest))
+    .catch(e => next(e));
+}
+
+function listMe(req, res, next) {
+  const { limit = 50, skip = 0 } = req.query;
+  TokenRequest.listMe(req.decoded._id, { limit, skip })
+    .then(tokenRequest => res.json(tokenRequest))
     .catch(e => next(e));
 }
 
@@ -35,10 +42,7 @@ function create(req, res, next) {
   });
 
   tokenRequest.save()
-    .then(savedTokenRequest=> {
-      console.log(savedTokenRequest)
-      res.json(savedTokenRequest)
-    })
+    .then(savedTokenRequest=> res.json(savedTokenRequest))
     .catch(e => next(e));
 }
 
@@ -94,4 +98,4 @@ function updateBlockNumber(tokenRequest) {
   });
 }
 
-module.exports = { list, create, load, get, update };
+module.exports = { list, create, load, get, update, listMe };

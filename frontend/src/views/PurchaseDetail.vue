@@ -52,7 +52,6 @@ export default {
     approve: function (event) {
       if (this.item.password !== '') {
         this.item.status = 'Success'
-        this.item.sender = '0xA5C4B67A464AA5A511f0C8B360b2e8Ad83a49A06'
         this.item.user = this.user
 
         this.$http.post('/api/contracts/0x000/tokens', this.item)
