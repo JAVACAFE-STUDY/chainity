@@ -19,6 +19,12 @@ User.list()
     })
     .catch(e => console.error);
 
+function activeList(req, res) {
+  User.find({status: 'active'}).select({ "email": 2, "name": 1, "_id": 0})
+    .then(user => res.json(user))
+    .catch(e => next(e));;
+}
+
 /**
  * Load user and append to req.
  */
@@ -107,4 +113,4 @@ function getToken(req, res, next) {
   });
 }
 
-module.exports = { load, get, create, update, list, remove, getToken };
+module.exports = { load, get, create, update, list, remove, getToken, activeList };

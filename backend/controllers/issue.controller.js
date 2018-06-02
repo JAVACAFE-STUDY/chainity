@@ -69,6 +69,7 @@ function get(req, res) {
  */
 function update(req, res, next) {
   const issue = req.issue;
+  issue[0].assignee_email = req.body.selected;
 
   if (req.body.status === 'close') {
     // transaction
@@ -76,9 +77,9 @@ function update(req, res, next) {
     sendToken(issue[0])
   }
 
-  // Issue.update({id: issue[0].id}, issue[0])
-  //   .then(savedIssue => res.json(savedIssue))
-  //   .catch(e => next(e));
+  Issue.update({id: issue[0].id}, issue[0])
+    .then(savedIssue => res.json(savedIssue))
+    .catch(e => next(e));
 }
 
 function sendToken(issue) {
