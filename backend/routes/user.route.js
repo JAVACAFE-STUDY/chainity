@@ -23,8 +23,11 @@ router.route('/')
   */
   .get(auth, userCtrl.list)
 
-  router.route('/active')
+router.route('/active')
 .get(auth, userCtrl.activeList)
+
+router.route('/address')
+.get(auth, userCtrl.addressList)
 
   /**
   * @swagger

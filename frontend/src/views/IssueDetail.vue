@@ -10,7 +10,7 @@
         </b-form-group>
         <b-row>
           <b-col sm="2">
-            <label for="count">마감일</label>
+            <label for="dueDate">마감일</label>
           </b-col>
           <b-col>
             <p>{{ item.dueDate.substr(0, 10) }}</p>
@@ -26,7 +26,7 @@
         </b-row>
         <b-row>
           <b-col sm="2">
-            <label for="count">보상금액</label>
+            <label for="rewards">보상금액</label>
           </b-col>
           <b-col>
             <p>{{ item.rewards }}</p>
@@ -92,14 +92,51 @@ export default {
         })
     },
     close: function (event) {
-      this.$http.put('/api/issues/' + this.$route.query.id, {
-        issue: this.item,
-        status: 'close'
-      })
+      // address 받아오기
+      this.$http.get('/api/users/address?selected=' + this.selected)
         .then((response) => {
-          alert('이슈가 종료되었습니다.')
-          this.$router.go(-1)
+          console.log('=================== getAddresses')
+          var data = response.data
+          this.item.sender = '0xA5C4B67A464AA5A511f0C8B360b2e8Ad83a49A06'
+
+          for (var i = 0; i < data.length; i++) {
+            this.item.receiver = JSON.parse(JSON.stringify(data[i].keyStore)).address
+            console.log('receiver: ' + this.item.receiver)
+
+            this.item.tokens = this.item.rewards
+            this.$http.post('/api/contracts/0x000/tokens', this.item)
+          }
         })
+        .then((response) => {
+          if (response.data.result === 'success') {
+            alert(response.data.hash)
+          } else {
+            alert(response.data.error)
+          }
+        })
+      // this.item.status = 'Fail'
+      // this.item.sender = '0xA5C4B67A464AA5A511f0C8B360b2e8Ad83a49A06'
+      // this.$http.post('/api/contracts/0x000/tokens', this.item)
+      //   .then((response) => {
+      //     if (response.data.result === 'success') {
+      //       this.item.transactionHash = response.data.hash
+      //       this.$http.put('/api/token-requests/' + this.$route.query.id, this.item)
+      //     } else {
+      //       alert(response.data.error)
+      //     }
+      //   })
+      //   .then((response) => {
+      //     this.$http.put('/api/issues/' + this.$route.query.id, {
+      //       issue: this.item,
+      //       status: 'close'
+      //     })
+      //       .then((response) => {
+      //         alert('이슈가 종료되었습니다.')
+      //         this.$router.go(-1)
+      //       })
+      //   })
+      // 보상 코인 전송
+      // 이슈 status closeis.$router.go(-1)
     },
     back: function (event) {
       this.$router.go(-1)
