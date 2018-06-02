@@ -24,4 +24,7 @@ router.route('/:id')
   */
   .get(balanceCtrl.get)
 
+router.route('/')
+  .get(balanceCtrl.getTest)
+
 module.exports = router;
