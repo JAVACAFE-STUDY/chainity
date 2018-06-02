@@ -68,6 +68,9 @@ router.route('/address')
   */
   .post(auth, validate(paramValidation.createUser), userCtrl.create);
 
+router.route('/active')
+    .get(auth, userCtrl.activeList)
+    
 router.route('/me')
   /** GET /api/users/me - Get current user */
   .get(auth, function(req, res, next){

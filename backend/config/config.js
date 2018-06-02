@@ -73,7 +73,8 @@ const config = {
       api: envVars.BANK_NH_API,
       account: envVars.BANK_NH_FIN_ACCOUNT
     }
-  }
+  },
+  systemAddress: envVars.SYSTEM_ADDRESS
 };
 
 module.exports = config;

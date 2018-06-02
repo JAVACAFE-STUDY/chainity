@@ -126,7 +126,6 @@ function getToken(req, res, next) {
  * @returns {token}
  */
 function getMyToken(req, res, next) {
-  console.log(req.decoded.address)
   const token = User.getToken(req.decoded.address)
   token.call().then(function(token) {
     res.json({"token" : Number(token) })

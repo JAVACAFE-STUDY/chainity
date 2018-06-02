@@ -72,7 +72,7 @@ function update(req, res, next) {
   TokenRequest.update({id: tokenRequest.id}, tokenRequest)
     .then(tokenRequest => {
       res.json(tokenRequest)
-      updateBlockNumber(tokenRequest)
+      // updateBlockNumber(tokenRequest)
     })
     .catch(e => next(e));
 }
