@@ -4,6 +4,7 @@ var expressJwt = require('express-jwt');
 var paramValidation = require('../config/param-validation');
 var config = require('../config/config');
 var purchaseCtrl = require('../controllers/tokenRequests.controller');
+const auth = expressJwt({secret: config.jwtSecret, requestProperty: 'decoded'})
 
 const router = express.Router();
 
@@ -11,7 +12,7 @@ router.route('/')
   // GET /api/token-requests - Get list of purchase
   .get(purchaseCtrl.list)
   // POST /api/token-requests - Create new purchase
-  .post(purchaseCtrl.create);
+  .post(auth, purchaseCtrl.create);
 
 router.route('/:id')
   // GET /api/token-requests/:id - Get purchase

@@ -17,7 +17,7 @@ function getReceiptList(req, res) {
 }
 
 function load(req, res, next, id) {
-	var erc20 = new web3.eth.Contract(JSON.parse(config.contractABI), id);
+	var erc20 = new web3.eth.Contract(JSON.parse(config.contractABI), config.contractAccount);
 	req.contract = erc20;
     return next();
 }
@@ -27,18 +27,19 @@ function numberWithCommas (x) {
 }
 
 function sendToken(req, res) {
-	var nonce = web3.eth.getTransactionCount("0xA5C4B67A464AA5A511f0C8B360b2e8Ad83a49A06")
+	var nonce = web3.eth.getTransactionCount(req.body.sender)
     nonce.then(resultNonce => {
     	var Tx = require('ethereumjs-tx');
 		var privateKey = new Buffer('d790bc5a1f0adf09629eaabd2986e431fa795324dbca3191236309aefc03ada0','hex')
-		var data = req.contract.methods.transfer("0x7cef57fd7faa78c4132e7c748115528e187042a4", "10").encodeABI();
+		var data = req.contract.methods.transfer(req.body.receiver, req.body.tokens).encodeABI();
 
 		var rawTx = {
 		  nonce: web3.utils.toHex(resultNonce),
-		  gasPrice: web3.utils.toHex(250000),
-		  gasLimit: web3.utils.toHex(550000),
+		  gasPrice: web3.utils.toHex(2550000),
+		  gasLimit: web3.utils.toHex(3050000),
+		  from: req.body.sender,
 		  to: config.contractAccount,
-		  value: '0x00',
+		  value: '0x0',
 		  data: data
 		}
 
@@ -46,14 +47,11 @@ function sendToken(req, res) {
 		tx.sign(privateKey);
 
 		var serializedTx = tx.serialize();
-
-		web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), function(err, hash) {
-		  if (!err) {
-				console.log("success : " + hash);
-				return hash
+		web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), function(error, hash) {
+		  if (!error) {
+				return res.send({"result" : "success", "hash" : hash})
 			} else {
-				console.log("zzz : " + err);
-				return err
+				return res.send({"result" : "error", "errorMessage" : error})
 			}
 		});
     })

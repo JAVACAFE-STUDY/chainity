@@ -70,22 +70,26 @@ export default new Router({
         {
           path: 'mybalance',
           name: 'MyBalance',
-          component: MyTokenBalance
+          component: MyTokenBalance,
+          beforeEnter: requireAuth
         },
         {
           path: 'purchase',
           name: 'Purchase',
-          component: Purchase
+          component: Purchase,
+          beforeEnter: requireAuth
         },
         {
           path: 'purchaseList',
           name: 'PurchaseList',
-          component: PurchaseList
+          component: PurchaseList,
+          beforeEnter: requireAuth
         },
         {
           path: 'purchaseDetail',
           name: 'PurchaseDetail',
-          component: PurchaseDetail
+          component: PurchaseDetail,
+          beforeEnter: requireAuth
         },
         {
           path: 'issues',
@@ -105,7 +109,8 @@ export default new Router({
         {
           path: 'profile',
           name: 'Profile',
-          component: Profile
+          component: Profile,
+          beforeEnter: requireAuth
         }
       ]
     },

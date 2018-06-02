@@ -68,6 +68,10 @@ router.route('/me')
     userCtrl.load(req, res, next, req.decoded._id)
   }, userCtrl.get)
 
+router.route('/token')
+  /** GET /api/users/:userId/token - Get user token */
+  .get(auth, userCtrl.getMyToken)
+
 router.route('/:userId')
   /** GET /api/users/:userId - Get user */
   .get(auth, userCtrl.get)
@@ -80,7 +84,7 @@ router.route('/:userId')
 
 router.route('/:userId/token')
   /** GET /api/users/:userId/token - Get user token */
-  .get(userCtrl.getToken)
+  .get(auth, userCtrl.getToken)
 
 /** Load user when API with userId route parameter is hit */
 router.param('userId', userCtrl.load);

@@ -7,6 +7,9 @@ var balanceCtrl = require('../controllers/balance.controller');
 
 const router = express.Router();
 
+router.route('/test')
+  .get(balanceCtrl.getTest2)
+  
 router.route('/:id')
   /**
   * @swagger
@@ -25,6 +28,6 @@ router.route('/:id')
   .get(balanceCtrl.get)
 
 router.route('/')
-  .get(balanceCtrl.getTest)
+  .post(balanceCtrl.getTest)
 
 module.exports = router;

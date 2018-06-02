@@ -18,7 +18,7 @@
           <div class="col-sm-12">
             <fieldset role="group" class="b-form-group form-group">
               <label class="mr-sm-2">충전금액</label>
-              <input v-model="form.balance" type="number" placeholder="" required="required" aria-required="true" class="form-control">
+              <input v-model="form.tokens" type="number" placeholder="" required="required" aria-required="true" class="form-control">
             </fieldset>
           </div>
         </div>
@@ -43,19 +43,19 @@ export default {
       form: {
         email: 'test@gmail.com',
         name: '',
-        balance: ''
+        tokens: ''
       }
     }
   },
   methods: {
     onSubmit (evt) {
       evt.preventDefault()
-      if (this.form.name !== '' && this.form.balance !== '') {
+      if (this.form.name !== '' && this.form.tokens !== '') {
         this.$http.post('http://localhost:3000/api/token-requests', this.form)
           .then((response) => {
             alert('충전 요청이 등록되었습니다.')
             this.form.name = ''
-            this.form.balance = ''
+            this.form.tokens = ''
           })
       }
     },
@@ -63,7 +63,7 @@ export default {
       evt.preventDefault()
       /* Reset our form values */
       this.form.name = ''
-      this.form.balance = ''
+      this.form.tokens = ''
     }
   }
 }

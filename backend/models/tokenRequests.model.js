@@ -11,7 +11,7 @@ mongoose.connect('mongodb://' + config.mongo.host + ':' + config.mongo.port);
  * TokenRequest Schema
  */
 const TokenRequestSchema = new mongoose.Schema({
-  email: {
+  userId: {
     type: String,
     required: true
   },
@@ -19,8 +19,12 @@ const TokenRequestSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  balance: {
+  tokens: {
     type: Number,
+    required: true
+  },
+  receiver: {
+    type: String,
     required: true
   },
   registered: {
@@ -29,6 +33,18 @@ const TokenRequestSchema = new mongoose.Schema({
   status: {
     type: String,
     required: true
+  },
+  transactionHash: {
+    type: String,
+  },
+  blockNumber: {
+    type: Date
+  },
+  accountId: {
+    type: String,
+  },
+  accountDate: {
+    type: Date
   }
 });
 
