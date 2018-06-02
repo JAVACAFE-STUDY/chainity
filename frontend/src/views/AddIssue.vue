@@ -1,7 +1,7 @@
 <template>
   <form id="myForm" @submit.prevent="addIssue">
     <b-row>
-      <b-col sm="8">
+      <b-col sm="12">
         <b-card>
           <div slot="header">
             <strong>이슈 등록</strong>
@@ -33,10 +33,6 @@
               </b-form-group>
             </b-col>
           </b-row>
-          <b-form-group>
-            <label for="assignee">Assignee</label>
-            <b-form-input type="text" id="assignee" readonly></b-form-input>
-          </b-form-group>
           <b-button variant="primary" v-on:click="addIssue">등록</b-button>
           <b-button variant="primary" v-on:click="back">뒤로</b-button>
         </b-card>
@@ -69,7 +65,7 @@ export default {
         alert('보상금액을 입력해주세요.')
         return true
       }
-      this.$http.post('/api/issue', {
+      this.$http.post('/api/issues', {
         title: this.title,
         content: this.content,
         dueDate: this.dueDate,

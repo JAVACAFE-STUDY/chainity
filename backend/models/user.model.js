@@ -55,18 +55,18 @@ const UserSchema = new mongoose.Schema({
  * - virtuals
  */
 
-UserSchema.virtual('balance')
-.get(function() { 
-  var balance = 0;
-  if(this.keyStore) {
-    var address =this.keyStore.address;
-    erc20.methods.balanceOf(address).call().then(function(result){
-      console.debug('address:', address, 'balance:', result);
-      balance = result;
-    });
-  }
-  return balance;
-});
+// UserSchema.virtual('balance')
+// .get(function() { 
+//   var balance = 0;
+//   if(this.keyStore) {
+//     var address =this.keyStore.address;
+//     erc20.methods.balanceOf(address).call().then(function(result){
+//       console.debug('address:', address, 'balance:', result);
+//       balance = result;
+//     });
+//   }
+//   return balance;
+// });
 
 /**
  * Methods
@@ -124,6 +124,15 @@ UserSchema.statics = {
       .skip(+skip)
       .limit(+limit)
       .exec();
+  },
+
+  /**
+   * Get user token
+   * @param {ObjectId} id - The objectId of user.
+   * @retrun Object
+   */
+  getToken(address) {
+    return erc20.methods.balanceOf(address)
   }
 };
 

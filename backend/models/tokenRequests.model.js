@@ -8,10 +8,10 @@ var config = require('../config/config');
 mongoose.connect('mongodb://' + config.mongo.host + ':' + config.mongo.port);
 
 /**
- * Purchase Schema
+ * TokenRequest Schema
  */
-const PurchaseSchema = new mongoose.Schema({
-  email: {
+const TokenRequestSchema = new mongoose.Schema({
+  userId: {
     type: String,
     required: true
   },
@@ -19,8 +19,12 @@ const PurchaseSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  balance: {
+  tokens: {
     type: Number,
+    required: true
+  },
+  receiver: {
+    type: String,
     required: true
   },
   registered: {
@@ -29,24 +33,36 @@ const PurchaseSchema = new mongoose.Schema({
   status: {
     type: String,
     required: true
+  },
+  transactionHash: {
+    type: String,
+  },
+  blockNumber: {
+    type: Date
+  },
+  accountId: {
+    type: String,
+  },
+  accountDate: {
+    type: Date
   }
 });
 
 /**
  * Methods
  */
-PurchaseSchema.method({
+TokenRequestSchema.method({
 });
 
 /**
  * Statics
  */
-PurchaseSchema.statics = {
+TokenRequestSchema.statics = {
   /**
-   * List issues in ascending order of 'dueDate'.
+   * List TokenRequest in ascending order of 'dueDate'.
    * @param {number} skip - Number of issues to be skipped.
    * @param {number} limit - Limit number of issues to be returned.
-   * @returns {Promise<Issue[]>}
+   * @returns {Promise<TokenRequest[]>}
    */
   list({ skip = 0, limit = 50 } = {}) {
     return this.find()
@@ -57,27 +73,27 @@ PurchaseSchema.statics = {
   },
 
   /**
-   * Get issue
-   * @param {ObjectId} id - The objectId of issue.
-   * @returns {Promise<Purchase, APIError>}
+   * Get TokenRequest
+   * @param {ObjectId} id - The objectId of TokenRequest.
+   * @returns {Promise<TokenRequest, APIError>}
    */
   get(id) {
     return this.find({ id: parseInt(id) })
       .exec()
-      .then((issue) => {
-        if (issue) {
-          return issue;
+      .then((tokenRequest) => {
+        if (tokenRequest) {
+          return tokenRequest;
         }
-        const err = new APIError('No such issue exists!', httpStatus.NOT_FOUND);
+        const err = new APIError('No such TokenRequest exists!', httpStatus.NOT_FOUND);
         return Promise.reject(err);
       });
   }
 };
 
 /**
- * @typedef Purchase
+ * @typedef TokenRequest
  */
-module.exports = mongoose.model('Purchase', PurchaseSchema);
+module.exports = mongoose.model('TokenRequest', TokenRequestSchema);
 autoIncrement.initialize(mongoose.connection);
 /**
  * 1씩 증가하는 primary Key 생성
@@ -85,8 +101,8 @@ autoIncrement.initialize(mongoose.connection);
  * field : primary key
  * startAt : 1부터 시작
  */
-PurchaseSchema.plugin(autoIncrement.plugin , { 
-  model: 'Purchase', 
+TokenRequestSchema.plugin(autoIncrement.plugin , { 
+  model: 'TokenRequest', 
   field: 'id', 
   startAt: 1,
   incrementBy: 1

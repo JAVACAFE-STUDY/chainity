@@ -23,6 +23,9 @@ router.route('/')
   */
   .get(auth, userCtrl.list)
 
+  router.route('/active')
+.get(auth, userCtrl.activeList)
+
   /**
   * @swagger
   * /Users:
@@ -68,6 +71,10 @@ router.route('/me')
     userCtrl.load(req, res, next, req.decoded._id)
   }, userCtrl.get)
 
+router.route('/token')
+  /** GET /api/users/:userId/token - Get user token */
+  .get(auth, userCtrl.getMyToken)
+
 router.route('/:userId')
   /** GET /api/users/:userId - Get user */
   .get(auth, userCtrl.get)
@@ -77,6 +84,10 @@ router.route('/:userId')
 
   /** DELETE /api/users/:userId - Delete user */
   .delete(auth, userCtrl.remove);
+
+router.route('/:userId/token')
+  /** GET /api/users/:userId/token - Get user token */
+  .get(auth, userCtrl.getToken)
 
 /** Load user when API with userId route parameter is hit */
 router.param('userId', userCtrl.load);

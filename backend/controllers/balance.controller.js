@@ -14,8 +14,54 @@ function get(req, res) {
     });
 }
 
+function getTest(req, res) {
+	console.log(req.body._id)
+
+    var nonce = web3.eth.getTransactionCount("0xA5C4B67A464AA5A511f0C8B360b2e8Ad83a49A06")
+    nonce.then(resultNonce => {
+    	var Tx = require('ethereumjs-tx');
+		var privateKey = new Buffer('d790bc5a1f0adf09629eaabd2986e431fa795324dbca3191236309aefc03ada0','hex')
+		var data = erc20.methods.transfer("0x7cef57fd7faa78c4132e7c748115528e187042a4", "100").encodeABI();
+
+		var rawTx = {
+		  nonce: web3.utils.toHex(resultNonce),
+		  gasPrice: web3.utils.toHex(2550000),
+		  gasLimit: web3.utils.toHex(3050000),
+		  from: "0xA5C4B67A464AA5A511f0C8B360b2e8Ad83a49A06",
+		  to: config.contractAccount,
+		  value: '0x0',
+		  data: data
+		}
+
+		var tx = new Tx(rawTx);
+		tx.sign(privateKey);
+
+		var serializedTx = tx.serialize();
+
+		web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), function(err, hash) {
+		  if (!err) {
+				console.log("success : " + hash);
+				return res.send(hash)
+			} else {
+				console.log("zzz : " + err);
+				return res.send(err)
+			}
+		});
+    })
+}
+
+function getTest2(req, res) {
+	web3.eth.subscribe('newBlockHeaders', function(e, r) {
+		web3.eth.getTransaction('0x4ebf14b169f9e40bcdfe3bb1815a6fb89734d856c4643d006603c3f62f447e9c', function(e,r) {
+		  if (r != null && r.blockNumber > 0) {
+		    console.log("r.blockNumber : " + r.blockNumber)
+		  }
+		});
+	});
+}
+
 function numberWithCommas (x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 
-module.exports = { get };
+module.exports = { get, getTest, getTest2 };

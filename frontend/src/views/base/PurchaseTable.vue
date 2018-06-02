@@ -96,10 +96,7 @@ export default {
   },
   methods: {
     getBadge (status) {
-      return status === 'Active' ? 'success'
-        : status === 'Inactive' ? 'secondary'
-          : status === 'Pending' ? 'warning'
-            : status === 'Banned' ? 'danger' : 'primary'
+      return status === 'Success' ? 'success' : status === 'Pending' ? 'warning' : status === 'Fail' ? 'danger' : 'primary'
     },
     getRowCount (items) {
       return items.length

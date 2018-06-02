@@ -17,7 +17,7 @@ export default {
   name: 'tables',
   components: {cTable},
   mounted: function () {
-    this.$http.get('/api/issue')
+    this.$http.get('/api/issues')
       .then((response) => {
         this.$children[0].items = response.data
       })
