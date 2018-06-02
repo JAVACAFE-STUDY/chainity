@@ -6,22 +6,23 @@ var config = require('../config/config');
 var issueCtrl = require('../controllers/issue.controller');
 
 const router = express.Router();
+const auth = expressJwt({secret: config.jwtSecret, requestProperty: 'decoded'});
 
 router.route('/')
   // GET /api/issues - Get list of issue
-  .get(issueCtrl.list)
+  .get(auth, issueCtrl.list)
   // POST /api/issues - Create new issue
-  .post(issueCtrl.create);
+  .post(auth, issueCtrl.create);
 
 router.route('/:id')
   // GET /api/issues/:id - Get issue
-  .get(issueCtrl.get)
+  .get(auth, issueCtrl.get)
   // PUT /api/issues/:id - Update issue
-  .put(issueCtrl.update)
+  .put(auth, issueCtrl.update)
   // DELETE /api/issues/:id - Delete issue
-  .delete(issueCtrl.remove);
+  .delete(auth, issueCtrl.remove);
 
-// Load user when API with userId route parameter is hit
+// Load issue when API with issueId route parameter is hit
 router.param('id', issueCtrl.load);
 
 module.exports = router;
