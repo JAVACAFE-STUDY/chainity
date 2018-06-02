@@ -56,13 +56,13 @@ function sendToken(req, res) {
 
 		var serializedTx = tx.serialize();
 		web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), function(error, hash) {
-			console.log('# hash: ' + hash);
-			console.log('error: ' + error);
+			console.log('hash: ' + hash);
+			console.log('error message: ' + error);
 			if (!error) {
 				return res.send({"result" : "success", "hash" : hash})
 			} else {
 				return res.send({"result" : "error", "errorMessage" : error})
-		}
+			}
 		});
     })
 }
