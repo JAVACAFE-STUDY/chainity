@@ -21,8 +21,8 @@
           <label for="due_date">패스워드</label>
           <b-form-input type="password" v-model="item.password"></b-form-input>
         </b-form-group>
-        <b-button id="bt_approve" variant="success" v-on:click="approve" :disabled="item.status != 'Pending'">승인</b-button>
-        <b-button id="bt_reject" variant="danger" v-on:click="reject" :disabled="item.status != 'Pending'">반려</b-button>
+        <b-button id="bt_approve" variant="success" v-on:click="approve" :disabled="item.status != 'Bank'">승인</b-button>
+        <b-button id="bt_reject" variant="danger" v-on:click="reject" :disabled="item.status != 'Bank'">반려</b-button>
         <b-button variant="primary" v-on:click="back">뒤로</b-button>
       </b-card>
     </b-col>
@@ -52,7 +52,6 @@ export default {
     approve: function (event) {
       if (this.item.password !== '') {
         this.item.status = 'Success'
-        this.item.sender = '0xA5C4B67A464AA5A511f0C8B360b2e8Ad83a49A06'
         this.item.user = this.user
 
         this.$http.post('/api/contracts/0x000/tokens', this.item)

@@ -17,7 +17,7 @@ function getReceiptList(req, res) {
 	// 	toBlock: 'latest'
 	// }, function(error, events){ console.log('events:' + events); });
 	req.contract.getPastEvents('Transfer', {
-		filter: {},
+		filter: {to: req.decoded.address},
 		fromBlock: 0,
 		toBlock: 'latest'
 	}, function(error, events){ 

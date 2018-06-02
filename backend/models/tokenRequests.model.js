@@ -73,6 +73,21 @@ TokenRequestSchema.statics = {
   },
 
   /**
+   * List TokenRequest in ascending order of 'dueDate'.
+   * @param {number} skip - Number of issues to be skipped.
+   * @param {number} limit - Limit number of issues to be returned.
+   * @returns {Promise<TokenRequest[]>}
+   */
+  listMe(id, {skip = 0, limit = 50 } = {}) {
+    console.log('test ' + id)
+    return this.find({ userId: id})
+      .sort({ dueDate: 1 })
+      .skip(+skip)
+      .limit(+limit)
+      .exec();
+  },
+
+  /**
    * Get TokenRequest
    * @param {ObjectId} id - The objectId of TokenRequest.
    * @returns {Promise<TokenRequest, APIError>}
