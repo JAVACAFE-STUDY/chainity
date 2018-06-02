@@ -17,7 +17,8 @@
           <label for="due_date">신청일</label>
           <b-form-input type="text" v-model="item.registered" readonly></b-form-input>
         </b-form-group>
-        <b-button variant="primary" v-on:click="approve">승인</b-button>
+        <b-button id="bt_approve" variant="success" v-on:click="approve" :disabled="item.status != 'Pending'">승인</b-button>
+        <b-button id="bt_reject" variant="danger" v-on:click="reject" :disabled="item.status != 'Pending'">반려</b-button>
         <b-button variant="primary" v-on:click="back">뒤로</b-button>
       </b-card>
     </b-col>
@@ -39,9 +40,18 @@ export default {
   },
   methods: {
     approve: function (event) {
-      this.$http.put('/api/purchase/' + this.$route.query.id)
+      this.item.status = 'Success'
+      this.$http.put('/api/purchase/' + this.$route.query.id, this.item)
         .then((response) => {
-          alert(response.data)
+          alert('승인 되었습니다.')
+          this.$router.go(-1)
+        })
+    },
+    reject: function (event) {
+      this.item.status = 'Fail'
+      this.$http.put('/api/purchase/' + this.$route.query.id, this.item)
+        .then((response) => {
+          alert('반려 되었습니다.')
           this.$router.go(-1)
         })
     },
