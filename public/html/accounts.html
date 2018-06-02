@@ -7,24 +7,12 @@
 <body>
   <div class="container">
     <h2>Accounts</h2>
-    
-    <!-- <form>
-      <div class="form-group">
-        <label for="keystore-dir">Keystore direcotry</label>
-        <input type="text" class="form-control" id="keystore-dir" placeholder="Keystore direcotry" value="/Users/cho/Library/Ethereum/rinkeby/keystore">
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" placeholder="Password" value="">
-      </div>
-      <button type="button" class="btn btn-primary" onclick="getAccounts()">List accounts</button>
-    </form> -->
-    <br/>
+
     <table class="table">
       <thead>
         <tr>
           <th>Address</th>
-          <th>Link</th>
+          <th>privateKey</th>
         </tr>
       </thead>
       <tbody>
@@ -34,40 +22,19 @@
     </div>
     <script type="text/javascript" src="/js/jquery.min.js"></script>
     <script type="text/javascript">
-
-    $.get("/api/getAccounts", function(accounts) {
-      // var data = JSON.parse(accounts);
-      $('tbody').html('');
-      $.each(accounts, function( index, value ) {
-        var tr = $('<tr>');
-        $('<td>'+value+'</a></td>').appendTo(tr);
-        $('<td><a target="_blank" href="https://rinkeby.etherscan.io/address/'+value+'">https://rinkeby.etherscan.io/address/'+value+'</a></td>').appendTo(tr);
-        tr.appendTo('tbody');
-      });
-    })
-    .fail(function(xhr, status, error) {
-        alert(xhr.responseText);
-    });
-
     function getAccounts() {
-      var password = $('#password').val();
-      var dir = $('#keystore-dir').val();
-      if(password == '' || dir == '') return;
-      
-      $.post("/api/getAccounts", {
-        "password" : password,
-        "dir" : dir
-      }, function(accounts) {
+      $.get("/getAccounts", function(accounts) {
         var data = JSON.parse(accounts);
-        $('tbody').html('');
         $.each(data, function( index, value ) {
-          $('<tr><td><a target="_blank" href="https://rinkeby.etherscan.io/address/'+value.address+'">'+value.address+'</a></td><td>'+value.privateKey+'</td></tr>').appendTo('tbody');
+          $('<tr><td>'+value.address+'</td><td>'+value.privateKey+'</td></tr>').appendTo('tbody');
         });
       })
       .fail(function(xhr, status, error) {
           alert(xhr.responseText);
       });
     }
+
+    getAccounts();
 </script>
 </body>
 </html>

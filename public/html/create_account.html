@@ -7,36 +7,21 @@
 <body>
     <div class="container">
     <h2>Create Account</h2>
-
-    <form>
-        <div class="form-group">
-            <label for="keystore-dir">Keystore direcotry</label>
-            <input type="text" class="form-control" id="keystore-dir" placeholder="Keystore direcotry" value="/Users/cho/Library/Ethereum/rinkeby/keystore">
-        </div>
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" placeholder="Password" value="">
-        </div>
-        <button type="button" class="btn btn-primary" onclick="createAccount()">Create Account</button>
-    </form>
-
+    <button id="btn_create">계정 생성</button>
     <script type="text/javascript" src="/js/jquery.min.js"></script>
     <script>
-    function createAccount() {
-        var password = $('#password').val();
-        var dir = $('#keystore-dir').val();
-        if(password == '' || dir == '') return;
-
-        $.post('/api/createAccount', {
-            "password" : password,
-            "dir" : dir
-        }, function(data) {
-            alert(JSON.stringify(data));
-        })
-        .fail(function(xhr, status, error) {
-            alert(xhr.responseText);
-        });
-    }
+    $('#btn_create').click(function(){
+        $.get('/createAccount', function(msg) {
+            if(msg == "success") {
+                alert("계정이 생성되었습니다.");
+            } else {
+                alert("계정 생성 실패: " + msg);
+            }
+      })
+      .fail(function(xhr, status, error) {
+          alert(xhr.responseText);
+      });
+    });
     </script>
 </body>
 </html>
