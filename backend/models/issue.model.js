@@ -35,8 +35,7 @@ const IssueSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  assignee_email: [String],
-  assignee_name: [String]
+  assignee_email: [String]
 });
 
 /**
