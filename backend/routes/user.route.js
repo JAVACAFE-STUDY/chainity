@@ -23,9 +23,6 @@ router.route('/')
   */
   .get(auth, userCtrl.list)
 
-  router.route('/active')
-.get(auth, userCtrl.activeList)
-
   /**
   * @swagger
   * /Users:
@@ -65,6 +62,9 @@ router.route('/')
   */
   .post(auth, validate(paramValidation.createUser), userCtrl.create);
 
+router.route('/active')
+    .get(auth, userCtrl.activeList)
+    
 router.route('/me')
   /** GET /api/users/me - Get current user */
   .get(auth, function(req, res, next){

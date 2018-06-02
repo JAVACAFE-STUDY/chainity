@@ -29,6 +29,11 @@ export default {
       name: 'Issues',
       url: '/issues',
       icon: 'icon-list'
+    },
+    {
+      name: 'Approve',
+      url: '/approve',
+      icon: 'icon-list'
     }
   ]
 }
