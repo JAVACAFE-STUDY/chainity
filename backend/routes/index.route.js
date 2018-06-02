@@ -5,6 +5,7 @@ var issueRoutes = require('./issue.route');
 var mailRoutes = require('./mail.route');
 var balanceRoutes = require('./balance.route');
 var purchaseRoutes = require('./purchase.route')
+var contractRoutes = require('./contract.route')
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -51,7 +52,7 @@ router.use('/auth', authRoutes);
 */
 router.use('/users', userRoutes);
 
-// mount issue routes at /issue
+// mount issue routes at /issues
 router.use('/issues', issueRoutes);
 
 // mount mail routes at /mails
@@ -62,6 +63,9 @@ router.use('/balance', balanceRoutes);
 
 // mount mail routes at /purchase
 router.use('/purchase', purchaseRoutes);
+
+// mount mail routes at /contracts
+router.use('/contracts', contractRoutes);
 
 
 module.exports = router;
