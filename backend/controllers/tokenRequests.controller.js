@@ -1,3 +1,7 @@
+var config = require('../config/config');
+var Web3 = require('web3');
+
+var web3 = new Web3(new Web3.providers.HttpProvider(config.web3Provider));
 var TokenRequest = require('../models/tokenRequests.model');
 
 /**
@@ -22,9 +26,10 @@ function list(req, res, next) {
  */
 function create(req, res, next) {
   const tokenRequest = new TokenRequest({
-    email: req.body.email,
+    userId: req.decoded._id,
     name: req.body.name,
-    balance: req.body.balance,
+    tokens: req.body.tokens,
+    receiver: req.decoded.address,
     status: 'Pending',
     registered: Date()
   });
@@ -62,10 +67,28 @@ function get(req, res) {
 function update(req, res, next) {
   const tokenRequest = req.tokenRequest[0]
   tokenRequest.status = req.body.status
+  tokenRequest.transactionHash = req.body.transactionHash
 
   TokenRequest.update({id: tokenRequest.id}, tokenRequest)
-    .then(tokenRequest => res.json(tokenRequest))
+    .then(tokenRequest => {
+      res.json(tokenRequest)
+      updateBlockNumber(tokenRequest)
+    })
     .catch(e => next(e));
+}
+
+function updateBlockNumber(tokenRequest) {
+  web3.eth.subscribe('newBlockHeaders', function(e, r) {
+    web3.eth.getTransaction(tokenRequest.transactionHash, function(e,r) {
+      if (r != null && r.blockNumber > 0) {
+        tokenRequest.status = 'Success'
+        tokenRequest.blockNumber = r.blockNumber
+        TokenRequest.update({id: tokenRequest.id}, tokenRequest)
+          .then(tokenRequest => console.log("r.blockNumber"))
+          .catch(e => next(e));
+      }
+    });
+  });
 }
 
 module.exports = { list, create, load, get, update };

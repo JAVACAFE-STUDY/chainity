@@ -18,13 +18,14 @@ export default {
   name: 'Balance',
   data: () => {
     return {
-      value: '0'
+      value: '0',
+      my_id: null
     }
   },
   mounted: function () {
-    this.$http.get('/api/balance/0xA5C4B67A464AA5A511f0C8B360b2e8Ad83a49A06')
+    this.$http.get('/api/users/token')
       .then((response) => {
-        this.value = response.data
+        this.value = response.data.token
       })
   }
 }

@@ -15,6 +15,8 @@ function get(req, res) {
 }
 
 function getTest(req, res) {
+	console.log(req.body._id)
+
     var nonce = web3.eth.getTransactionCount("0xA5C4B67A464AA5A511f0C8B360b2e8Ad83a49A06")
     nonce.then(resultNonce => {
     	var Tx = require('ethereumjs-tx');
@@ -48,8 +50,18 @@ function getTest(req, res) {
     })
 }
 
+function getTest2(req, res) {
+	web3.eth.subscribe('newBlockHeaders', function(e, r) {
+		web3.eth.getTransaction('0x4ebf14b169f9e40bcdfe3bb1815a6fb89734d856c4643d006603c3f62f447e9c', function(e,r) {
+		  if (r != null && r.blockNumber > 0) {
+		    console.log("r.blockNumber : " + r.blockNumber)
+		  }
+		});
+	});
+}
+
 function numberWithCommas (x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 
-module.exports = { get, getTest };
+module.exports = { get, getTest, getTest2 };
