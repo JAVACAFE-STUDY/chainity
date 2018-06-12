@@ -70,7 +70,7 @@ export default {
       item: [],
       tokens: 0,
       tokensRequest: null,
-      tokensRequestFields: [{key: 'name', sortable: true}, {key: 'registered', sortable: true}, {key: 'tokens', sortable: true}, {key: 'status', sortable: true}],
+      tokensRequestFields: [{key: 'name', sortable: true}, {key: 'registered', sortable: true}, {key: 'tokens', sortable: true}, {key: 'status', sortable: true}]
     }
   },
   mounted: function () {
