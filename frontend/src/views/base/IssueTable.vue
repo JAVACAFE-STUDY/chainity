@@ -1,7 +1,8 @@
 <template>
   <b-card :header="caption">
     <b-table :hover="hover" :striped="striped" :bordered="bordered" :small="small" :fixed="fixed" responsive="sm" :items="items" :fields="fields" :current-page="currentPage" :per-page="perPage" @row-clicked="rowClickHandler">
-      <template slot-scope="data">
+      <template slot="status" slot-scope="data">
+        <b-badge :variant="getBadge(data.item.status)">{{data.item.status}}</b-badge>
       </template>
     </b-table>
     <nav>
@@ -70,6 +71,9 @@ export default {
     }
   },
   methods: {
+    getBadge (status) {
+      return status === 'open' ? 'success' : status === 'Pending' ? 'warning' : status === 'close' ? 'danger' : 'primary'
+    },
     getRowCount (items) {
       return items.length
     },

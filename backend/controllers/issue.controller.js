@@ -70,6 +70,7 @@ function get(req, res) {
 function update(req, res, next) {
   const issue = req.issue;
   issue[0].assignee_email = req.body.selected;
+  issue[0].status = req.body.status;
 
   Issue.update({id: issue[0].id}, issue[0])
     .then(savedIssue => res.json(savedIssue))
