@@ -22,13 +22,6 @@ router.route('/')
   *           $ref: '#/definitions/User'
   */
   .get(auth, userCtrl.list)
-
-router.route('/active')
-.get(auth, userCtrl.activeList)
-
-router.route('/address')
-.get(auth, userCtrl.addressList)
-
   /**
   * @swagger
   * /Users:
@@ -67,6 +60,13 @@ router.route('/address')
   *           $ref: '#/definitions/User'
   */
   .post(auth, validate(paramValidation.createUser), userCtrl.create);
+
+
+router.route('/active')
+  .get(auth, userCtrl.activeList)
+
+router.route('/address')
+  .get(auth, userCtrl.addressList)
 
 router.route('/active')
     .get(auth, userCtrl.activeList)
