@@ -34,6 +34,11 @@ export default {
       name: 'Approve',
       url: '/approve',
       icon: 'icon-list'
+    },
+    {
+      name: 'Receipt',
+      url: '/receipt',
+      icon: 'icon-list'
     }
   ]
 }

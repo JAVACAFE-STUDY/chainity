@@ -20,6 +20,7 @@ import PurchaseList from '@/views/PurchaseList'
 import PurchaseDetail from '@/views/PurchaseDetail'
 import Profile from '@/views/Profile'
 import Approve from '@/views/Approve'
+import Receipt from '@/views/Receipt'
 
 import crypto from 'crypto'
 
@@ -117,6 +118,12 @@ export default new Router({
           path: 'approve',
           name: 'Approve',
           component: Approve,
+          beforeEnter: requireAuth
+        },
+        {
+          path: 'receipt',
+          name: 'Receipt',
+          component: Receipt,
           beforeEnter: requireAuth
         }
       ]
