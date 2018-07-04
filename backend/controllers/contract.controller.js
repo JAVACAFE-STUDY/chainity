@@ -11,18 +11,23 @@ function getTotalSupply(req, res) {
 }
 
 function getReceiptList(req, res) {
-	// req.contract.events.allEvents({
-	// 	filter: {},
-	// 	fromBlock: 0,
-	// 	toBlock: 'latest'
-	// }, function(error, events){ console.log('events:' + events); });
 	req.contract.getPastEvents('Transfer', {
-		filter: {to: req.decoded.address},
 		fromBlock: 0,
 		toBlock: 'latest'
-	}, function(error, events){ 
-		return res.send(events);
-	});
+	}, function(error, events){
+		var eventsArray = []
+		for (i in events) {
+			eventsArray.push({"from" : events[i].returnValues.from, "to" : events[i].returnValues.to, "value" : events[i].returnValues.value})
+		}
+		return res.send(eventsArray);
+	})
+	// req.contract.getPastEvents('Transfer', {
+	// 	filter: {to: req.decoded.address},
+	// 	fromBlock: 0,
+	// 	toBlock: 'latest'
+	// }, function(error, events){ 
+	// 	return res.send(events);
+	// });
 }
 
 function load(req, res, next, id) {

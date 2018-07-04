@@ -27,6 +27,10 @@ router.route('/me')
   .get(auth, function(req, res, next){
     userCtrl.load(req, res, next, req.decoded._id)
   }, userCtrl.get)
+  /** PUT /api/users/me - Update current user */
+  .put(auth, function(req, res, next){
+    userCtrl.load(req, res, next, req.decoded._id)
+  }, userCtrl.update)
 
 router.route('/token')
   /** GET /api/users/:userId/token - Get user token */

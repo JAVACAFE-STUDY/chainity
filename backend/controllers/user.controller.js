@@ -80,6 +80,7 @@ function create(req, res, next) {
  */
 function update(req, res, next) {
   const user = new User(req.user);
+  user.name = req.body.name
 
   User.update({_id: user.id}, user)
     .then(savedUser => res.json(savedUser))
