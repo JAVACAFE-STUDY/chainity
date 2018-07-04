@@ -11,7 +11,6 @@ import Register from '@/views/Register'
 import Page404 from '@/views/Page404'
 import Page500 from '@/views/Page500'
 import Users from '@/views/Users'
-import MyTokenBalance from '@/views/MyBalance'
 import Purchase from '@/views/Purchase'
 import Issues from '@/views/Issues'
 import IssueDetail from '@/views/IssueDetail'
@@ -68,12 +67,6 @@ export default new Router({
           path: 'users',
           name: 'Users',
           component: Users,
-          beforeEnter: requireAuth
-        },
-        {
-          path: 'mybalance',
-          name: 'MyBalance',
-          component: MyTokenBalance,
           beforeEnter: requireAuth
         },
         {
