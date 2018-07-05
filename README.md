@@ -1,16 +1,72 @@
+English | [한국어](./docs/ko/README-ko.md)
+
 # Community rewards
-양질의 정보 공유를 원하는 커뮤니티 멤버들을 위한 블록체인 기반의 커뮤니티 활동 보상 플랫폼
 
-커뮤니티 멤버의 활동 또는 참여를 독려하기 위한 핵심 요소는 각 커뮤니티 멤버의 기여도를 일관되게 반영할 수 있는 공정한 회계 제도이다. Community rewards는 커뮤니티 멤버의 개인 기여도를 정확하고 투명하게 보상하고자 이더리움 블록체인 기반의 DApp(탈중앙 애플리케이션)으로 제공되는 서비스이다.
+This is a platform that rewards members with tokens based on community activity. And Members are allowed to spend their tokens for membership fee.
+So it encourages members of your community to fully participate by giving reward and improve the success of your community.
 
-## 핵심 목표
-커뮤니티 멤버들 중에서 기여도가 높은 사람들을 암호화폐로 보상함으로써 커뮤니티 활동을 적극 장려하는 것이 목표
+## Getting Started
 
-## 기여 방법
-커뮤니티에는 하나 또는 이상의 관리자가 있기 마련이다. 관리자는 커뮤니티에 기여 할 수 있는 이벤트를 등록하고, 커뮤니티 멤버들은 그 이벤트에 참여할지 말지를 결정한다. 이벤트에 참여함으로써, 그 요구에 맞는 활동을 하게되고 그 대가로 보상을 받게 된다.
+This is a dApp based on Ethreum block chain. So you need to join a network of Ethereum before running.
 
-## 기여도 평가 방법
-관리자는 이벤트의 성격이나 요구되는 수행량에 따라 자유롭게 보상량을 결정할 수 있다. 이벤트는 일종의 경매 성격을 뛰게되는데, 이벤트의 수행 내용이나 보상량에 따라 커뮤니티 멤버들의 참여도가 좌지우지 될 수 있다.
+### Prerequisites
 
-## 보상 사용 방법
-커뮤니티 운영에 필요한 자본금은 일반적으로 커뮤니티 멤버로 부터 회비를 걷어 조달하고 있을 것이다. 커뮤니티 멤버는 보상받은 암호화폐를 이용하여 회비를 지불할 수 있기 때문에 커뮤니티 활동에 조금 더 적극적으로 참여할 것이다.
+Install Geth
+```
+wget https://gethstore.blob.core.windows.net/builds/geth-darwin-amd64-1.8.8-2688dab4.tar.gz
+tar -xf geth-darwin-amd64-1.8.8-2688dab4.tar.gz
+```
+
+Start Geth
+```
+geth-darwin-amd64-1.8.8-2688dab4/geth --rpc --rinkeby
+```
+
+Install MongoDB
+```
+wget https://fastdl.mongodb.org/osx/mongodb-osx-ssl-x86_64-3.6.4.tgz
+tar -xf mongodb-osx-ssl-x86_64-3.6.4.tgz
+mkdir [YOUR_DATA_PATH]
+```
+
+Start MongoDB
+```
+mongodb-osx-x86_64-3.6.4/bin/mongod --dbpath [YOUR_DATA_PATH]
+```
+
+### Installing
+
+Clone the repo
+```
+git clone git@github.com:JAVACAFE-STUDY/community-rewards.git
+cd community-rewards
+```
+
+Install dependencies
+```
+npm install
+npm install --prefix backend/
+npm install --prefix frontend/
+```
+
+Set environment (vars)
+```
+cp .env.example backend/.env
+```
+
+Start server
+```
+npm start
+```
+
+## Contributing
+
+Contributions, questions and comments are all welcome and encouraged. For code contributions submit a pull request.
+
+## License
+
+This project is licensed under the MIT License
+
+## Support Development
+
+If this project saved your valuable time in getting your service up, and you feel like buying me coffee, you can donate either at my ETH address: 7cef57fd7faa78c4132e7c748115528e187042a4
