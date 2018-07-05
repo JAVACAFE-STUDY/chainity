@@ -1,3 +1,5 @@
+English | [한국어](./docs/ko/README-ko.md)
+
 # Community rewards
 
 This is a platform that rewards members with tokens based on community activity. And Members are allowed to spend their tokens for membership fee.
