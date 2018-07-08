@@ -1,6 +1,23 @@
 <template>
   <b-card :header="caption">
-    <b-table ref="table" :hover="hover" :striped="striped" :bordered="bordered" :small="small" :fixed="fixed" responsive="sm" :items="items" :fields="fields" :current-page="currentPage" :per-page="perPage">
+    <b-table ref="table"
+             :hover="hover"
+             :striped="striped"
+             :bordered="bordered"
+             :small="small"
+             :fixed="fixed"
+             responsive="sm"
+             :items="items"
+             :fields="fields"
+             :current-page="currentPage"
+             :per-page="perPage">
+      <template slot="role" slot-scope="data">
+        <select class="form-control" v-model="data.item.role">
+            <option value="user">user</option>
+            <option value="admin">admin</option>
+            <option value="system">system</option>
+        </select>
+      </template>
       <template slot="status" slot-scope="data">
         <b-badge :variant="getBadge(data.item.status)">{{data.item.status}}</b-badge>
       </template>

@@ -44,7 +44,14 @@ export default {
         email: ''
       },
       users: null,
-      userFields: [{key: 'name', sortable: true}, {key: 'email', sortable: true}, {key: 'role', sortable: true}, {key: 'status', sortable: true}, {key: 'createdAt', sortable: true}, {key: 'balance', sortable: true}]
+      userFields: [
+        {key: 'name', sortable: true},
+        {key: 'email', sortable: true},
+        {key: 'role', sortable: true},
+        {key: 'status', sortable: true},
+        {key: 'createdAt', sortable: true},
+        {key: 'balance', sortable: true}
+      ]
     }
   },
   methods: {
