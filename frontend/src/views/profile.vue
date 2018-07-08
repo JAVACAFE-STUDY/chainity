@@ -47,7 +47,7 @@
           <input type="text" class="form-control" v-model="item.role" placeholder="Role" readonly>
         </div>
 
-        <button type="button" class="btn btn-block btn-success">Update Profile</button>
+        <button type="button" v-on:click="updateProfile" class="btn btn-block btn-success">Update Profile</button>
       </div>
     </div>
 
@@ -89,6 +89,14 @@ export default {
       .then((response) => {
         this.tokensRequest = response.data
       })
+  },
+  methods: {
+    updateProfile: function (event) {
+      this.$http.put('/api/users/me', this.item)
+        .then((response) => {
+          alert('업데이트 완료')
+        })
+    }
   }
 }
 

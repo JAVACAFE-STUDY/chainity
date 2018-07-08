@@ -21,8 +21,8 @@
           <label for="due_date">패스워드</label>
           <b-form-input type="password" v-model="item.password"></b-form-input>
         </b-form-group>
-        <b-button id="bt_approve" variant="success" v-on:click="approve" :disabled="item.status != 'Bank'">승인</b-button>
-        <b-button id="bt_reject" variant="danger" v-on:click="reject" :disabled="item.status != 'Bank'">반려</b-button>
+        <b-button id="bt_approve" variant="success" v-on:click="approve" :disabled="item.status != 'pending'">승인</b-button>
+        <b-button id="bt_reject" variant="danger" v-on:click="reject" :disabled="item.status != 'pending'">반려</b-button>
         <b-button variant="primary" v-on:click="back">뒤로</b-button>
       </b-card>
     </b-col>
@@ -54,7 +54,7 @@ export default {
         this.item.status = 'Success'
         this.item.user = this.user
 
-        this.$http.post('/api/contracts/0x000/tokens', this.item)
+        this.$http.post('/api/contracts/0x000/tokens', this.item) // TODO: 로그인 후 CA 로컬 스토리지에 저장하여 불러오기
           .then((response) => {
             console.log(response.data)
             if (response.data.result === 'success') {

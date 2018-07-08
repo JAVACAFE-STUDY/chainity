@@ -16,7 +16,7 @@ var appRoot = require('app-root-path');
 var favicon = require('serve-favicon');
 
 var swaggerUi = require('swagger-ui-express');
-var swaggerJSDoc = require('swagger-jsdoc')
+var swaggerDocument = require('./swagger.json');
 
 const app = express();
 
@@ -41,21 +41,7 @@ app.use(cors());
 // Middlewares
 app.use(express.static(path.join(appRoot.path, 'public')));
 
-var swaggerSpec = swaggerJSDoc({
-  swaggerDefinition: {
-    info: {
-      title: 'Community-rewards API',
-      version: '1.0.0',
-      description: 'Community-rewards backend API'
-    },
-    host: 'localhost:3000',
-    basePath: '/api'
-  },
-  apis: ['./routes/*.route.js']
-})
-
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api', routes);
 
 app.get('*', (req, res) => {
