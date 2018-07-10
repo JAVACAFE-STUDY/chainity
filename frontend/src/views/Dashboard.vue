@@ -1,6 +1,7 @@
 <template>
   <div class="animated fadeIn">
     <p class="text-info">Hello World</p>
+    
     <vue-tags-input
       class="tags-input"
       v-model="tag"
@@ -24,29 +25,35 @@
         </div>
       </div>
     </vue-tags-input>
+
+    <datepicker :language="ko"></datepicker>
   </div>
 </template>
 
 <script>
-import VueTagsInput from '@johmun/vue-tags-input';
+import VueTagsInput from '@johmun/vue-tags-input'
+import Datepicker from 'vuejs-datepicker'
+import {en, ko} from 'vuejs-datepicker/dist/locale'
 
 export default {
   name: 'dashboard',
-  components: {VueTagsInput},
+  components: {VueTagsInput, Datepicker},
   data () {
     return {
-     animals: [
-        'Lion', 'Turtle', 'Rabbit', 'Frog', 'Squirrel', 'Owl', 'Bee',
+      animals: [
+        'Lion', 'Turtle', 'Rabbit', 'Frog', 'Squirrel', 'Owl', 'Bee'
       ],
       tag: '',
-      tags: []
+      tags: [],
+      en: en,
+      ko: ko
     }
   },
   computed: {
-    items() {
+    items () {
       return this.animals
         .filter(a => new RegExp(this.tag, 'i').test(a))
-        .map(a => ({ text: a }));
+        .map(a => ({ text: a }))
     }
   }
 }
