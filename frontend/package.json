@@ -17,6 +17,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@johmun/vue-tags-input": "^1.5.4",
     "bootstrap": "4.0.0",
     "bootstrap-vue": "2.0.0-rc.1",
     "chart.js": "^2.7.2",
