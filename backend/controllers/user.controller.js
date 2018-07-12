@@ -1,3 +1,6 @@
+var multer = require('multer');
+var fs= require('fs');
+
 var User = require('../models/user.model');
 var config = require('../config/config');
 
@@ -133,4 +136,40 @@ function getMyToken(req, res, next) {
   });
 }
 
-module.exports = { load, get, create, update, list, remove, getToken, getMyToken, activeList, addressList };
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'upload/');
+  },
+  filename: (req, file, cb) => {
+    const fileName = "profile_" + file.originalname + ".jpg";
+    cb(null, fileName);
+  }
+});
+
+const upload = multer({
+  storage: storage
+}).single('profile');
+
+function uploadImage(req, res, next) {
+  upload(req, res, err => {
+    if (err) {
+      res.json({"result" : "Fail" })
+    } else {
+      res.json({"result" : "Success" })
+    }
+  });
+}
+
+function profileImage(req, res, next) {
+  fs.readFile("upload/profile_" + req.params.id + ".jpg", function(error,data){
+    if (error) {
+      res.writeHead(404, {"Content": "image/jpeg"})
+      res.end()
+    } else {
+      res.writeHead(200, {"Content": "image/jpeg"})
+      res.end(data)
+    }
+  })
+}
+
+module.exports = { load, get, create, update, list, remove, getToken, getMyToken, activeList, addressList, uploadImage, profileImage };

@@ -7,7 +7,7 @@
       <b-row>
         <b-col cols="5">
           <div class="card-body p-4">
-            <b-img center fluid :src="imageData" alt="center image" />
+            <b-img center fluid :src="previewData" onerror="this.onerror=null;this.src='http://mblogthumb2.phinf.naver.net/20150427_261/ninevincent_1430122791768m7oO1_JPEG/kakao_1.jpg?type=w2';" alt="center image" />
             <br>
             <input type="file" @change="previewImage" accept="image/*">
           </div>
@@ -73,7 +73,8 @@ export default {
     return {
       item: [],
       tokens: 0,
-      imageData: "https://picsum.photos/250/250/?image=54"
+      previewData: null,
+      imageData: null
     }
   },
   mounted: function () {
@@ -81,6 +82,7 @@ export default {
       .then((response) => {
         this.item = response.data
         this.item.keyStore.address = '0x' + response.data.keyStore.address
+        this.previewData = 'http://localhost:3000/api/users/image/' + this.item.keyStore.address
       })
 
     this.$http.get('/api/users/token')
@@ -90,19 +92,25 @@ export default {
   },
   methods: {
     updateProfile: function (event) {
-      this.$http.put('/api/users/me', this.item)
+      const formData = new FormData()
+      formData.append('profile', this.imageData[0], this.item.keyStore.address)
+      this.$http.post('/api/users/image', formData)
         .then((response) => {
-          alert('업데이트 완료')
+          this.$http.put('/api/users/me', this.item)
+            .then((response) => {
+              alert('업데이트 완료')
+            })
         })
     },
-    previewImage: function(event) {
-      var input = event.target;
+    previewImage: function (event) {
+      var input = event.target
       if (input.files && input.files[0]) {
-        var reader = new FileReader();
+        this.imageData = event.target.files
+        var reader = new FileReader()
         reader.onload = (e) => {
-          this.imageData = e.target.result;
+          this.previewData = e.target.result
         }
-        reader.readAsDataURL(input.files[0]);
+        reader.readAsDataURL(input.files[0])
       }
     }
   }
