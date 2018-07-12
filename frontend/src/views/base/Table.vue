@@ -1,6 +1,18 @@
 <template>
   <b-card :header="caption">
+    <b-row>
+      <b-col sm="12">
+        <b-input-group>
+          <b-form-input v-model="filter" placeholder="Type to Search" />
+          <b-input-group-append>
+            <b-btn :disabled="!filter" @click="filter = ''">Clear</b-btn>
+          </b-input-group-append>
+        </b-input-group>
+      </b-col>
+    </b-row>
     <b-table ref="table"
+             @filtered="onFiltered"
+             :filter="filter"
              :hover="hover"
              :striped="striped"
              :bordered="bordered"
@@ -76,7 +88,8 @@ export default {
       fields: [],
       currentPage: 1,
       perPage: 5,
-      totalRows: 0
+      totalRows: 0,
+      filter: null
     }
   },
   methods: {
@@ -94,6 +107,10 @@ export default {
         .then((response) => {
           alert('업데이트 완료')
         })
+    },
+    onFiltered (filteredItems) {
+      this.totalRows = filteredItems.length
+      this.currentPage = 1
     }
   }
 }
