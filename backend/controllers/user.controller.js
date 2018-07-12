@@ -80,7 +80,9 @@ function create(req, res, next) {
  */
 function update(req, res, next) {
   const user = new User(req.user);
-  user.name = req.body.name
+  user.name = req.body.name;
+
+  console.log('----------------' +user);
 
   User.update({_id: user.id}, user)
     .then(savedUser => res.json(savedUser))
@@ -133,4 +135,15 @@ function getMyToken(req, res, next) {
   });
 }
 
-module.exports = { load, get, create, update, list, remove, getToken, getMyToken, activeList, addressList };
+module.exports = { 
+  load, 
+  get, 
+  create, 
+  update, 
+  list, 
+  remove, 
+  getToken, 
+  getMyToken, 
+  activeList, 
+  addressList
+};

@@ -12,7 +12,7 @@
              :current-page="currentPage"
              :per-page="perPage">
       <template slot="role" slot-scope="data">
-        <select class="form-control" v-model="data.item.role">
+        <select class="form-control" v-model="data.item.role" v-on:change="onChange(data.item)">
             <option value="user">user</option>
             <option value="admin">admin</option>
             <option value="system">system</option>
@@ -88,6 +88,12 @@ export default {
     },
     getRowCount (items) {
       return items.length
+    },
+    onChange (item) {
+      this.$http.put('/api/users/me', item)
+        .then((response) => {
+          alert('업데이트 완료')
+        })
     }
   }
 }
