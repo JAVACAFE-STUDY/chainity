@@ -24,11 +24,16 @@
              :current-page="currentPage"
              :per-page="perPage">
       <template slot="role" slot-scope="data">
-        <select class="form-control" v-model="data.item.role" v-on:change="onChange(data.item)">
-            <option value="user">user</option>
-            <option value="admin">admin</option>
-            <option value="system">system</option>
-        </select>
+        <div v-if="(user.role === 'system')">
+          <select class="form-control" v-model="data.item.role" v-on:change="onChange(data.item)">
+              <option value="user">user</option>
+              <option value="admin">admin</option>
+              <option value="system">system</option>
+          </select>
+        </div>
+        <div v-else>
+          {{data.item.role}}
+        </div>
       </template>
       <template slot="status" slot-scope="data">
         <b-badge :variant="getBadge(data.item.status)">{{data.item.status}}</b-badge>
@@ -47,6 +52,10 @@ export default {
   created () {
     this.items = this.rows
     this.fields = this.columns
+    this.$http.get('/api/users/me')
+      .then((response) => {
+        this.user = response.data
+      })
   },
   props: {
     rows: {
@@ -89,7 +98,8 @@ export default {
       currentPage: 1,
       perPage: 5,
       totalRows: 0,
-      filter: null
+      filter: null,
+      user: null
     }
   },
   methods: {
