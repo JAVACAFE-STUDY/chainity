@@ -7,7 +7,7 @@
       <b-row>
         <b-col cols="5">
           <div class="card-body p-4">
-            <b-img center fluid :src="previewData" onerror="this.onerror=null;this.src='http://mblogthumb2.phinf.naver.net/20150427_261/ninevincent_1430122791768m7oO1_JPEG/kakao_1.jpg?type=w2';" alt="center image" />
+            <b-img center fluid :src="previewData" onerror="this.onerror=null;this.src='static/img/avatars/profile.jpg';" alt="center image" />
             <br>
             <input type="file" @change="previewImage" accept="image/*">
           </div>
@@ -57,7 +57,7 @@
               <input type="text" class="form-control" v-model="item.role" placeholder="Role" readonly>
             </div>
 
-            <button type="button" v-on:click="updateProfile" class="btn btn-block btn-success">Update Profile</button>
+            <button type="button" v-on:click="onSubmit" class="btn btn-block btn-success">Update Profile</button>
           </div>
         </b-col>
       </b-row>
@@ -91,16 +91,21 @@ export default {
       })
   },
   methods: {
-    updateProfile: function (event) {
-      const formData = new FormData()
-      formData.append('profile', this.imageData[0], this.item.keyStore.address)
-      this.$http.post('/api/users/image', formData)
-        .then((response) => {
-          this.$http.put('/api/users/me', this.item)
-            .then((response) => {
-              alert('업데이트 완료')
-            })
-        })
+    onSubmit: function (event) {
+      if (this.imageData == null) {
+        this.updateProfile()
+      } else {
+        const formData = new FormData()
+        formData.append('profile', this.imageData[0], this.item.keyStore.address)
+        this.$http.post('/api/users/image', formData)
+          .then((response) => {
+            if (response.data.result == "Success") {
+              this.updateProfile()
+            } else {
+              alert('업데이트 실패')
+            }
+          })
+      }
     },
     previewImage: function (event) {
       var input = event.target
@@ -112,6 +117,16 @@ export default {
         }
         reader.readAsDataURL(input.files[0])
       }
+    },
+    updateProfile: function () {
+      this.$http.put('/api/users/me', this.item)
+        .then((response) => {
+          if (response.data.result == "Success") {
+            alert('업데이트 완료')
+          } else {
+            alert('업데이트 실패')
+          }
+        })
     }
   }
 }

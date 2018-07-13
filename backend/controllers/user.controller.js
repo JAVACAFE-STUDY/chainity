@@ -86,7 +86,7 @@ function update(req, res, next) {
   user.name = req.body.name
 
   User.update({_id: user.id}, user)
-    .then(savedUser => res.json(savedUser))
+    .then(savedUser => res.json({"result" : "Success" }))
     .catch(e => next(e));
 }
 
