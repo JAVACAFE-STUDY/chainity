@@ -1,6 +1,6 @@
 <template>
   <div class="animated fadeIn">
-    <b-row>
+    <b-row v-if="(user.role === 'system')">
       <b-col sm="12">
         <b-card header-tag="header" footer-tag="footer">
         <div>
@@ -37,6 +37,10 @@ export default {
   components: {cTable},
   created () {
     this.fetchData()
+    this.$http.get('/api/users/me')
+      .then((response) => {
+        this.user = response.data
+      })
   },
   data () {
     return {
@@ -44,7 +48,15 @@ export default {
         email: ''
       },
       users: null,
-      userFields: [{key: 'name', sortable: true}, {key: 'email', sortable: true}, {key: 'role', sortable: true}, {key: 'status', sortable: true}, {key: 'createdAt', sortable: true}, {key: 'balance', sortable: true}]
+      userFields: [
+        {key: 'name', sortable: true},
+        {key: 'email', sortable: true},
+        {key: 'role', sortable: true},
+        {key: 'status', sortable: true},
+        {key: 'createdAt', sortable: true},
+        {key: 'balance', sortable: true}
+      ],
+      user: null
     }
   },
   methods: {

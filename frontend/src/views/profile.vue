@@ -99,7 +99,7 @@ export default {
         formData.append('profile', this.imageData[0], this.item.keyStore.address)
         this.$http.post('/api/users/image', formData)
           .then((response) => {
-            if (response.data.result == "Success") {
+            if (response.data.result === 'Success') {
               this.updateProfile()
             } else {
               alert('업데이트 실패')
@@ -121,7 +121,7 @@ export default {
     updateProfile: function () {
       this.$http.put('/api/users/me', this.item)
         .then((response) => {
-          if (response.data.result == "Success") {
+          if (response.data.result === 'Success') {
             alert('업데이트 완료')
           } else {
             alert('업데이트 실패')

@@ -1,3 +1,5 @@
+English | [한국어](./docs/ko/README-ko.md)
+
 # Community rewards
 
 This is a platform that rewards members with tokens based on community activity. And Members are allowed to spend their tokens for membership fee.
@@ -63,7 +65,7 @@ Contributions, questions and comments are all welcome and encouraged. For code c
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License
 
 ## Support Development
 
