@@ -21,6 +21,12 @@ router.route('/active')
 // need refactoring
 router.route('/address')
   .get(auth, userCtrl.addressList)
+
+router.route('/image')
+  .post(auth, userCtrl.uploadImage)
+
+router.route('/image/:id')
+  .get(userCtrl.profileImage)
     
 router.route('/me')
   /** GET /api/users/me - Get current user */
