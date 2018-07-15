@@ -4,9 +4,7 @@ var APIError = require('../helpers/APIError');
 var User = require('../models/user.model');
 var config = require('../config/config');
 var nodemailer = require('nodemailer');
-var Email = require('email-templates');
-var crypto = require('crypto'); 
-var fs = require("fs");
+var crypto = require('crypto');
 var ejs = require('ejs');
 
 const transporter = nodemailer.createTransport({
