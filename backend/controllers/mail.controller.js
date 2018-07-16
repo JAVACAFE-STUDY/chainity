@@ -4,7 +4,8 @@ var APIError = require('../helpers/APIError');
 var User = require('../models/user.model');
 var config = require('../config/config');
 var nodemailer = require('nodemailer');
-var crypto = require('crypto'); 
+var crypto = require('crypto');
+var ejs = require('ejs');
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -28,22 +29,34 @@ const transporter = nodemailer.createTransport({
  * @returns {*}
  */
 function sendInvitation(req, res, next) {
-  var invitationFrom = req.user.email + '(' + req.user.name + ')';
+  var invitationFrom = req.user.name + '(' + req.user.email + ')';
   var invitationLink = 'http://' + config.domain  + '/invitation/' + encode(req.receiver._id, req.receiver.email);
-  var mailOptions = {
-    from: 'no-reply@community.com', // sender address
-    to: req.receiver.email, // list of receivers
-    subject: 'Invitation to join Community Rewards', // Subject line
-    html: '<ul><li>Invitaion from: '+ invitationFrom +'</li>' +
-          '<li>Invitaion link: <a href="'+ invitationLink +'" target="_blank">Registration in a new tab</a></li></ul>'
-  };
 
-  transporter.sendMail(mailOptions, function (err, info) {
-    if(err)
-      next(err);
-    else
-      res.json(info);
+  ejs.renderFile(__dirname + "/../emails/invite.ejs", {
+    'invitationFrom': invitationFrom, 
+    'invitationLink': invitationLink,
+    'groupName': 'JAVACAFE',
+    'contact': config.smtp.user
+  }, function (err, data) {
+    if (err) {
+        console.log(err);
+    } else {
+      var mailOptions = {
+        from: 'no-reply@community.com', // sender address
+        to: req.receiver.email, // list of receivers
+        subject: 'Invitation to join Community Rewards', // Subject line
+        html: data
+      };
+      
+      transporter.sendMail(mailOptions, function (err, info) {
+        if(err)
+          next(err);
+        else
+          res.json(info);
+      });
+    }  
   });
+
 }
 
 module.exports = { sendInvitation};
