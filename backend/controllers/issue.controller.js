@@ -22,21 +22,28 @@ function list(req, res, next) {
 
 /**
  * Create new issue
- * @property {string} req.body.title   - The title of issue.
- * @property {string} req.body.content - The content of issue.
- * @property {string} req.body.count   - The count of issue.
- * @property {string} req.body.rewards - The rewards of issue.
- * @property {string} req.body.dueDate - The dueate of issue.
+ * @property {string} req.body.title
+ * @property {string} req.body.description
+ * @property {string} req.body.price
+ * @property {string} req.body.maxNumberOfParticipants
+ * @property {string} req.body.startDate
+ * @property {string} req.body.finishDate
+ * @property {string} req.body.participants
  * @returns {Issue}
  */
 function create(req, res, next) {
   const issue = new Issue({
+    issueType: req.body.issueType,
     title: req.body.title,
-    content: req.body.content,
-    count: req.body.count,
-    rewards: req.body.rewards,
-    dueDate: req.body.dueDate,
-    status: 'open'
+    description: req.body.description,
+    price: req.body.price,
+    maxNumberOfParticipants: req.body.maxNumberOfParticipants,
+    startDate: req.body.startDate,
+    finishDate: req.body.finishDate,
+    participants: req.body.participants,
+    isClosed: false,
+    createdDate: Date.now(),
+    createdBy: req.decoded._id
   });
 
   issue.save()
