@@ -14,7 +14,7 @@ import Users from '@/views/Users'
 import Purchase from '@/views/Purchase'
 import Issues from '@/views/Issues'
 import IssueDetail from '@/views/IssueDetail'
-import AddIssue from '@/views/AddIssue'
+import NewIssue from '@/views/NewIssue'
 import PurchaseList from '@/views/PurchaseList'
 import PurchaseDetail from '@/views/PurchaseDetail'
 import Profile from '@/views/Profile'
@@ -98,9 +98,9 @@ export default new Router({
           component: IssueDetail
         },
         {
-          path: 'addIssue',
-          name: 'AddIssue',
-          component: AddIssue
+          path: 'new-issue',
+          name: 'NewIssue',
+          component: NewIssue
         },
         {
           path: 'profile',
