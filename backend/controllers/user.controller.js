@@ -1,9 +1,11 @@
 var multer = require('multer');
 var fs= require('fs');
-
+var httpStatus = require('http-status');
+var APIError = require('../helpers/APIError');
 var User = require('../models/user.model');
 var config = require('../config/config');
 
+/* Create root user */
 User.list()
     .then(users => {
       if (users.length < 1) {
@@ -11,7 +13,7 @@ User.list()
           email: config.root.id,
           name: config.root.id,
           status: 'active',
-          role: 'admin',
+          role: config.root.role,
           keyStore: JSON.parse(config.root.keyStore)
         });
         
@@ -73,7 +75,9 @@ function create(req, res, next) {
 
   user.save()
     .then(savedUser => res.json(savedUser))
-    .catch(e => next(e));
+    .catch((e) => {
+      next(new APIError(e.message, httpStatus.BAD_REQUEST));
+    });
 }
 
 /**
