@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     addIssue: function (event) {
-      this.$router.push('/addIssue')
+      this.$router.push('/new-issue')
     }
   }
 }
