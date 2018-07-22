@@ -111,7 +111,7 @@
               </b-form-checkbox-group>
               <vue-tags-input
                 class="tags-input"
-                v-model="form.participants"
+                v-model="tag"
                 v-bind:disabled="!enable.participants"
                 :tags="tags"
                 :allow-edit-tags="true"
@@ -166,7 +166,7 @@ export default {
         maxNumberOfParticipants: '1',
         startDate: '',
         finishDate: '',
-        participants: '',
+        participants: [],
         status: 'ready',
         issueType: 'reward'
       },
@@ -181,6 +181,7 @@ export default {
       },
       lang: ko,
       users: [],
+      tag: '',
       tags: [],
       format: 'yyyy-MM-dd'
     }
@@ -188,8 +189,8 @@ export default {
   computed: {
     items () {
       return this.users
-        .filter(a => new RegExp(this.tag, 'i').test(a))
-        .map(a => ({ text: a }))
+        .filter(user => new RegExp(this.tag, 'i').test(user.email) || new RegExp(this.tag, 'i').test(user.name))
+        .map(user => ({ text: user.name, _id: user._id }))
     }
   },
   methods: {
@@ -199,7 +200,7 @@ export default {
           const users = response.data
           for (let i = 0; i < users.length; i++) {
             if (users[i].status === 'active') {
-              this.users.push(users[i].name)
+              this.users.push(users[i])
             }
           }
         })
@@ -207,16 +208,17 @@ export default {
     createIssus () {
       this.form.price = (this.form.price === '-1') ? this.etc.price : this.form.price
       this.form.maxNumberOfParticipants = (this.form.maxNumberOfParticipants === '-1') ? this.etc.maxNumberOfParticipants : this.form.maxNumberOfParticipants
+      this.form.participants = this.tags.map(participant => (participant._id))
       this.$http.post('/api/issues', this.form)
         .then((response) => {
-          this.$router.push('/issues/' + response.data._id)
+          this.$router.push('/issues/' + response.data.id)
         })
     },
     cancel () {
       this.$router.push('/issues')
     },
     initialTag () {
-      this.form.participants = ''
+      this.tag = ''
       this.tags = []
     },
     setIssueType (issueType) {
