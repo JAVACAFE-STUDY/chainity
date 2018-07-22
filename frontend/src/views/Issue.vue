@@ -2,138 +2,90 @@
   <div class="animated fadeIn">
     <b-card>
       <div slot="header">
-          <strong>새 이슈</strong>
-          <small v-if="form.issueType === 'reward'">(타입: 보상)</small>
-          <small v-else>(타입: 납부)</small>
-          <b-dropdown size="sm" id="ddown_info" text="타입 변경" variant="info" class="mx-2">
-            <b-dropdown-item v-on:click="setIssueType('reward')">보상</b-dropdown-item>
-            <b-dropdown-item v-on:click="setIssueType('pay')">납부</b-dropdown-item>
-          </b-dropdown>
+        <strong>이슈 #{{ $route.params.id }}</strong>
+        <small v-if="form.issueType === 'reward'">(타입: 보상)</small>
+        <small v-else>(타입: 납부)</small>
+        <div v-if="form.createdBy" class="card-actions">
+          <!-- TODO : 이슈 수정 -->
+          <a target="_blank">
+            <i class="fa fa-gear"></i>
+          </a>
+        </div>
       </div>
       <div slot="footer" class="text-sm-right">
-        <b-button variant="success" v-on:click="createIssus">등록</b-button>
-        <b-button variant="warning" v-on:click="cancel">취소</b-button>
+        <b-button variant="info" :to="{name: 'Issues'}">확인</b-button>
       </div>
       <b-row>
-        <b-col sm="6">
+        <b-col sm="12">
+          <b-form-group>
+            <h2>{{ form.title }}</h2>
+            <small>{{ form.createdDate | moment("YYYY-MM-DD HH:MM:SS")}} by {{ form.createdBy }}</small>
+          </b-form-group>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col sm="8">
           <b-card>
-            <div slot="header">
-              <strong>내용</strong>
-            </div>
             <b-row>
               <b-col sm="12">
                 <b-form-group>
-                  <label for="name">제목</label>
-                  <b-form-input type="text" v-model="form.title"></b-form-input>
+                  <p v-if="form.issueType === 'reward'" class="h4">보상 금액</p>
+                  <p v-else class="h4">납부 금액</p>
+                  <p>{{ form.price }}</p>
                 </b-form-group>
               </b-col>
             </b-row>
             <b-row>
               <b-col sm="12">
                 <b-form-group>
-                  <label v-if="form.issueType === 'reward'" for="name">보상 금액</label>
-                  <label v-else for="name">납부 금액</label>
-                  <b-form-radio-group
-                    plain
-                    :options="[
-                      {text: '500 coin ',value: '500'},
-                      {text: '1,000 coin ',value: '1000'},
-                      {text: '3,000 coin ',value: '3000'},
-                      {text: '기타 ',value: '-1'}
-                    ]"
-                    v-model="form.price" @change="etc.price = ''">
-                  </b-form-radio-group>
-                  <b-form-input type="number" v-bind:disabled="form.price!=='-1'" v-model="etc.price"></b-form-input>
+                  <p class="h4">상세 내용</p>
+                  <p v-html="form.description"></p>
                 </b-form-group>
               </b-col>
             </b-row>
             <b-row>
               <b-col sm="12">
                 <b-form-group>
-                  <label for="ccnumber">상세 내용</label>
-                  <vue-editor v-model="form.description"></vue-editor>
+                  <p class="h4">기간</p>
+                  <p v-if="form.startDate || form.finishDate">
+                    {{ form.startDate | moment("YYYY-MM-DD")}} ~ {{ form.finishDate | moment("YYYY-MM-DD")}}
+                  </p>
+                  <p v-else>무제한</p>
+                </b-form-group>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col sm="12">
+                <b-form-group>
+                  <p class="h4">참여가능 인원수</p>
+                  <p v-if="form.maxNumberOfParticipants === 9999">멤버 전체</p>
+                  <p v-else-if="form.maxNumberOfParticipants === -1">멤버 전체</p>
+                  <p v-else>{{ form.maxNumberOfParticipants }}</p>
                 </b-form-group>
               </b-col>
             </b-row>
           </b-card>
         </b-col>
-        <b-col sm="6">
-          <b-card>
+        <b-col sm="4">
+          <b-card no-body>
             <div slot="header">
-              <strong>기간</strong>
+              <strong>참여자</strong>
+              <small>현재: {{ form.participants.length }}</small>
             </div>
-            <b-form-group>
-              <label for="start">시작일</label>
-              <b-form-checkbox-group>
-                <div class="custom-control custom-checkbox custom-control-inline">
-                  <input type="checkbox" class="custom-control-input" id="startCheckboxIn" value="true" v-model="enable.start" @change="form.startDate = ''">
-                  <label class="custom-control-label" for="startCheckboxIn">지정</label>
-                </div>
-              </b-form-checkbox-group>
-              <datepicker :language="lang" :format="format"  :bootstrap-styling=true v-model="form.startDate" v-bind:disabled="!enable.start"></datepicker>
-            </b-form-group>
-            <b-form-group>
-              <label for="finish">종료일</label>
-              <b-form-checkbox-group>
-                <div class="custom-control custom-checkbox custom-control-inline">
-                  <input type="checkbox" class="custom-control-input" id="finishCheckboxIn" value="false" v-model="enable.finish" @change="form.finishDate = ''">
-                  <label class="custom-control-label" for="finishCheckboxIn">지정</label>
-                </div>
-              </b-form-checkbox-group>
-              <datepicker :language="lang" :format="format" :bootstrap-styling=true v-model="form.finishDate" v-bind:disabled="!enable.finish"></datepicker>
-            </b-form-group>
-          </b-card>
-          <b-card>
-            <div slot="header">
-              <strong>대상자</strong>
+            <div slot="footer" class="text-sm-right">
+              <b-button variant="success" v-on:click="optIn()">참여하기</b-button>
+              <b-button variant="danger" v-on:click="optOut()">참여취소</b-button>
             </div>
-            <b-form-group>
-              <label for="">참여가능 인원수</label>
-              <b-form-radio-group
-                  plain
-                  :options="[
-                    {text: '1명 ',value: '1'},
-                    {text: '멤버 전체 ',value: '9999'},
-                    {text: '기타 ',value: '-1'}
-                  ]"
-                  checked="1"
-                  v-model="form.maxNumberOfParticipants" @change="etc.maxNumberOfParticipants = ''">
-              </b-form-radio-group>
-              <b-form-input type="number" v-bind:disabled="form.maxNumberOfParticipants!=='-1'" v-model="etc.maxNumberOfParticipants"></b-form-input>
-            </b-form-group>
-            <b-form-group>
-              <label for="">참여가능 대상</label>
-              <b-form-checkbox-group>
-                <div class="custom-control custom-checkbox custom-control-inline">
-                  <input type="checkbox" class="custom-control-input" id="participantsCheckboxIn" value="false" v-model="enable.participants" @change="initialTag()">
-                  <label class="custom-control-label" for="participantsCheckboxIn">지정</label>
-                </div>
-              </b-form-checkbox-group>
-              <vue-tags-input
-                class="tags-input"
-                v-model="form.participants"
-                v-bind:disabled="!enable.participants"
-                :tags="tags"
-                :allow-edit-tags="true"
-                :add-only-from-autocomplete="true"
-                @tags-changed="newTags => tags = newTags"
-                :autocomplete-items="items">
-                <div slot="tagCenter" slot-scope="props">
-                  <span
-                    @click="props.performOpenEdit(props.index)"
-                    v-if="!props.edit">{{ props.tag.text }}
-                  </span>
-                  <div class="inputs" v-else>
-                    <select
-                      v-model="props.tag.text"
-                      @change="props.validateTag(props.index)">
-                      <option v-for="(user, index) in users" :key="index">{{ user }}</option>
-                    </select>
-                    <i class="material-icons" @click="props.performSaveTag(props.index)">check</i>
-                  </div>
-                </div>
-              </vue-tags-input>
-            </b-form-group>
+            <b-list-group v-if="form.participants.length > 0" flush>
+              <!-- <b-list-group-item v-for="participant in form.participants">{{ msg }}</b-list-group-item> -->
+              <b-list-group-item v-for="participant in form.participants" :key="participant.id">
+                {{ participant }}
+              </b-list-group-item>
+            </b-list-group>
+            <p v-else class="card-text text-center">
+              <br>
+              아직 참여자가 없습니다.
+            </p>
           </b-card>
         </b-col>
       </b-row>
@@ -155,6 +107,7 @@ export default {
     Datepicker
   },
   created () {
+    this.fetchIssue(this.$route.params.id)
     this.fetchUsers()
   },
   data () {
@@ -203,13 +156,17 @@ export default {
           }
         })
     },
-    createIssus () {
-      this.form.price = (this.form.price === '-1') ? this.etc.price : this.form.price
-      this.form.maxNumberOfParticipants = (this.form.maxNumberOfParticipants === '-1') ? this.etc.maxNumberOfParticipants : this.form.maxNumberOfParticipants
-      this.$http.post('/api/issues', this.form)
+    fetchIssue (id) {
+      this.$http.get('/api/issues/' + id)
         .then((response) => {
-          this.$router.push('/issues/' + response.data.id)
+          this.form = response.data
         })
+    },
+    optIn () {
+      alert('개발중')
+    },
+    optOut () {
+      alert('개발중')
     },
     cancel () {
       this.$router.push('/issues')
