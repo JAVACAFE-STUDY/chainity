@@ -38,6 +38,9 @@
       <template slot="status" slot-scope="data">
         <b-badge :variant="getBadge(data.item.status)">{{data.item.status}}</b-badge>
       </template>
+      <template slot="id" slot-scope="data">
+        <b-link :to="data.item.id.toString()" append>{{data.item.id}}</b-link>
+      </template>
     </b-table>
     <nav>
       <b-pagination :total-rows="getRowCount(items)" :per-page="perPage" v-model="currentPage" prev-text="Prev" next-text="Next" hide-goto-end-buttons/>

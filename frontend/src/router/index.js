@@ -11,11 +11,10 @@ import Register from '@/views/Register'
 import Page404 from '@/views/Page404'
 import Page500 from '@/views/Page500'
 import Users from '@/views/Users'
-import MyTokenBalance from '@/views/MyBalance'
 import Purchase from '@/views/Purchase'
 import Issues from '@/views/Issues'
-import IssueDetail from '@/views/IssueDetail'
-import AddIssue from '@/views/AddIssue'
+import Issue from '@/views/Issue'
+import NewIssue from '@/views/NewIssue'
 import PurchaseList from '@/views/PurchaseList'
 import PurchaseDetail from '@/views/PurchaseDetail'
 import Profile from '@/views/Profile'
@@ -71,12 +70,6 @@ export default new Router({
           beforeEnter: requireAuth
         },
         {
-          path: 'mybalance',
-          name: 'MyBalance',
-          component: MyTokenBalance,
-          beforeEnter: requireAuth
-        },
-        {
           path: 'purchase',
           name: 'Purchase',
           component: Purchase,
@@ -97,17 +90,20 @@ export default new Router({
         {
           path: 'issues',
           name: 'Issues',
-          component: Issues
+          component: Issues,
+          beforeEnter: requireAuth
         },
         {
-          path: 'issueDetail',
-          name: 'IssueDetail',
-          component: IssueDetail
+          path: 'issues/new-issue',
+          name: 'NewIssue',
+          component: NewIssue,
+          beforeEnter: requireAuth
         },
         {
-          path: 'addIssue',
-          name: 'AddIssue',
-          component: AddIssue
+          path: 'issues/:id',
+          name: 'Issue',
+          component: Issue,
+          beforeEnter: requireAuth
         },
         {
           path: 'profile',

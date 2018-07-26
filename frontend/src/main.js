@@ -7,11 +7,13 @@ import router from './router'
 import axios from 'axios'
 import VueSession from 'vue-session'
 import HttpStatus from 'http-status'
+import moment from 'moment'
 
 axios.defaults.baseURL = 'http://localhost:3000'
 
 Vue.prototype.$http = axios
 
+Vue.use(require('vue-moment'), {moment})
 Vue.use(VueSession, {persist: true})
 Vue.use(BootstrapVue)
 

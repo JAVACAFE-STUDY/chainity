@@ -32,7 +32,7 @@ module.exports = {
       repeatPassword: Joi.string().required()
     }
   },
-  // POST /api/mail/invitation/users/:userId
+  // POST /api/mails/invitation/users/:userId
   sendInvitation: {
     params: {
       userId: Joi.string().required()

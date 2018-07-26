@@ -86,7 +86,7 @@ export default {
       fields: [
         {key: 'from'},
         {key: 'to'},
-        {key: 'value'},
+        {key: 'value'}
       ],
       currentPage: 1,
       perPage: 5,

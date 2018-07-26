@@ -1,32 +1,59 @@
 <template>
   <div class="animated fadeIn">
+    <div class="text-sm-right">
+      <b-button variant="primary" :to="{name: 'NewIssue'}">이슈 등록</b-button>
+    </div>
+    <br/>
     <b-row>
       <b-col sm="12">
-        <c-table striped caption="<i class='fa fa-align-justify'></i> 이슈 리스트"></c-table>
+        <c-table ref="table" v-if="issues !== null" striped :rows="issues" :columns="issueFields" caption="<i class='fa fa-align-justify'></i> 이슈 목록"></c-table>
       </b-col><!--/.col-->
     </b-row><!--/.row-->
-    <!-- <router-link to="./addIssue">이슈 등록</router-link> -->
-    <div class="text-sm-right">
-      <b-button variant="primary" v-on:click="addIssue">이슈 등록</b-button>
-    </div>
   </div>
 </template>
 
 <script>
-import cTable from './base/IssueTable.vue'
+import cTable from './base/Table.vue'
 
 export default {
   name: 'tables',
   components: {cTable},
-  mounted: function () {
-    this.$http.get('/api/issues')
-      .then((response) => {
-        this.$children[0].items = response.data
-      })
+  created () {
+    this.fetchData()
+  },
+  data () {
+    return {
+      issues: null,
+      issueFields: [
+        {key: 'id', label: '아이디', sortable: true},
+        {key: 'title', label: '제목', sortable: true},
+        {key: 'price', label: '보상/납부 금액', sortable: true, variant: 'info'},
+        {key: 'createdDate', label: '등록일', sortable: true},
+        {key: 'startDate', label: '시작일', sortable: true},
+        {key: 'finishDate', label: '종료일', sortable: true, variant: 'warning'},
+        {key: 'participants', label: '참여 등록 수', sortable: true}
+      ]
+    }
   },
   methods: {
-    addIssue: function (event) {
-      this.$router.push('/addIssue')
+    fetchData () {
+      this.$http.get('/api/issues')
+        .then((response) => {
+          this.issues = response.data
+        })
+        .then(() => {
+          for (let i = 0; i < this.issues.length; i++) {
+            const issue = this.issues[i]
+            this.issues[i].startDate = this.$moment.utc(issue.startDate).local().format('YYYY-MM-DD')
+            this.issues[i].finishDate = this.$moment.utc(issue.finishDate).local().format('YYYY-MM-DD')
+            this.issues[i].createdDate = this.$moment.utc(issue.createdDate).local().format('YYYY-MM-DD HH:mm:ss')
+            if (issue.participants) {
+              this.issues[i].participants = issue.participants.length
+            } else {
+              this.issues[i].participants = 0
+            }
+          }
+        })
     }
   }
 }
