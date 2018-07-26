@@ -113,7 +113,9 @@ export default {
       return items.length
     },
     onChange (item) {
-      this.$http.put('/api/users/me', item)
+      this.$http.put('/api/users/' + item.id, {
+        role: item.role
+      })
         .then((response) => {
           alert('업데이트 완료')
         })

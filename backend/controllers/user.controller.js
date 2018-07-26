@@ -81,8 +81,7 @@ function create(req, res, next) {
 function update(req, res, next) {
   const user = new User(req.user);
   user.name = req.body.name;
-
-  console.log('----------------' +user);
+  user.role = req.body.role;
 
   User.update({_id: user.id}, user)
     .then(savedUser => res.json(savedUser))

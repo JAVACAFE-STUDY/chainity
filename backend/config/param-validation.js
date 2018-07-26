@@ -12,8 +12,6 @@ module.exports = {
   // UPDATE /api/users/:userId
   updateUser: {
     body: {
-      email: Joi.string().email().required(),
-      name: Joi.string().required()
     },
     params: {
       userId: Joi.string().hex().required()
