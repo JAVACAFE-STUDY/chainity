@@ -6,10 +6,7 @@
         <small v-if="form.issueType === 'reward'">(타입: 보상)</small>
         <small v-else>(타입: 납부)</small>
         <div v-if="form.createdBy" class="card-actions">
-          <!-- TODO : 이슈 수정 -->
-          <a target="_blank">
-            <i class="fa fa-gear"></i>
-          </a>
+          <b-link :to="'edit'" append><i class="fa fa-gear"></i></b-link>
         </div>
       </div>
       <div slot="footer" class="text-sm-right">
@@ -59,7 +56,6 @@
                 <b-form-group>
                   <p class="h4">참여가능 인원수</p>
                   <p v-if="form.maxNumberOfParticipants === 9999">멤버 전체</p>
-                  <p v-else-if="form.maxNumberOfParticipants === -1">멤버 전체</p>
                   <p v-else>{{ form.maxNumberOfParticipants }}</p>
                 </b-form-group>
               </b-col>
@@ -94,21 +90,12 @@
 </template>
 
 <script>
-import { VueEditor } from 'vue2-editor'
-import VueTagsInput from '@johmun/vue-tags-input'
-import Datepicker from 'vuejs-datepicker'
-import { ko } from 'vuejs-datepicker/dist/locale'
 
 export default {
-  name: 'forms',
-  components: {
-    VueEditor,
-    VueTagsInput,
-    Datepicker
-  },
+  name: 'issue',
+  components: {},
   created () {
     this.fetchIssue(this.$route.params.id)
-    this.fetchUsers()
   },
   data () {
     return {
@@ -116,46 +103,15 @@ export default {
         title: '',
         description: '',
         price: '500',
-        maxNumberOfParticipants: '1',
+        maxNumberOfParticipants: '',
         startDate: '',
         finishDate: '',
         participants: '',
         issueType: 'reward'
-      },
-      etc: {
-        price: '',
-        maxNumberOfParticipants: ''
-      },
-      enable: {
-        start: false,
-        finish: false,
-        participants: false
-      },
-      lang: ko,
-      users: [],
-      tags: [],
-      format: 'yyyy-MM-dd'
-    }
-  },
-  computed: {
-    items () {
-      return this.users
-        .filter(a => new RegExp(this.tag, 'i').test(a))
-        .map(a => ({ text: a }))
+      }
     }
   },
   methods: {
-    fetchUsers () {
-      this.$http.get('/api/users')
-        .then((response) => {
-          const users = response.data
-          for (let i = 0; i < users.length; i++) {
-            if (users[i].status === 'active') {
-              this.users.push(users[i].name)
-            }
-          }
-        })
-    },
     fetchIssue (id) {
       this.$http.get('/api/issues/' + id)
         .then((response) => {
@@ -170,13 +126,6 @@ export default {
     },
     cancel () {
       this.$router.push('/issues')
-    },
-    initialTag () {
-      this.form.participants = ''
-      this.tags = []
-    },
-    setIssueType (issueType) {
-      this.form.issueType = issueType
     }
   }
 }
