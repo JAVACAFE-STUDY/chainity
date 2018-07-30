@@ -75,11 +75,25 @@ function get(req, res) {
  * Update existing issue
  */
 function update(req, res, next) {
-  const issue = req.issue;
-  issue[0].assignee_email = req.body.selected;
-  issue[0].status = req.body.status;
+  const issue = new Issue(req.issue);
+  if (req.body.title != '') {
+    issue.title = req.body.title;
+  }
+  if (req.body.description != '') {
+    issue.description = req.body.description;
+  }
+  if (req.body.maxNumberOfParticipants != '') {
+    issue.maxNumberOfParticipants = req.body.maxNumberOfParticipants;
+  }
+  if (req.body.startDate != '') {
+    issue.startDate = req.body.startDate;
+  }
+  if (req.body.finishDate != '') {
+    issue.finishDate = req.body.finishDate;
+  }
+  
 
-  Issue.update({id: issue[0].id}, issue[0])
+  Issue.update({ id: issue.id}, issue)
     .then(savedIssue => res.json(savedIssue))
     .catch(e => next(e));
 }

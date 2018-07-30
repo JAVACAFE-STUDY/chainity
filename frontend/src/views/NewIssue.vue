@@ -11,7 +11,7 @@
           </b-dropdown>
       </div>
       <div slot="footer" class="text-sm-right">
-        <b-button variant="success" v-on:click="createIssus">등록</b-button>
+        <b-button variant="success" v-on:click="createIssue">등록</b-button>
         <b-button variant="warning" v-on:click="cancel">취소</b-button>
       </div>
       <b-row>
@@ -205,7 +205,7 @@ export default {
           }
         })
     },
-    createIssus () {
+    createIssue () {
       this.form.price = (this.form.price === '-1') ? this.etc.price : this.form.price
       this.form.maxNumberOfParticipants = (this.form.maxNumberOfParticipants === '-1') ? this.etc.maxNumberOfParticipants : this.form.maxNumberOfParticipants
       this.form.participants = this.tags.map(participant => (participant._id))
