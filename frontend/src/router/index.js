@@ -15,6 +15,7 @@ import Purchase from '@/views/Purchase'
 import Issues from '@/views/Issues'
 import Issue from '@/views/Issue'
 import NewIssue from '@/views/NewIssue'
+import EditIssue from '@/views/EditIssue'
 import PurchaseList from '@/views/PurchaseList'
 import PurchaseDetail from '@/views/PurchaseDetail'
 import Profile from '@/views/Profile'
@@ -94,7 +95,7 @@ export default new Router({
           beforeEnter: requireAuth
         },
         {
-          path: 'issues/new-issue',
+          path: 'issues/new',
           name: 'NewIssue',
           component: NewIssue,
           beforeEnter: requireAuth
@@ -103,6 +104,12 @@ export default new Router({
           path: 'issues/:id',
           name: 'Issue',
           component: Issue,
+          beforeEnter: requireAuth
+        },
+        {
+          path: 'issues/:id/edit',
+          name: 'Issue',
+          component: EditIssue,
           beforeEnter: requireAuth
         },
         {

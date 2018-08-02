@@ -2,16 +2,12 @@
   <div class="animated fadeIn">
     <b-card>
       <div slot="header">
-          <strong>새 이슈</strong>
-          <small v-if="form.issueType === 'reward'">(타입: 보상)</small>
-          <small v-else>(타입: 납부)</small>
-          <b-dropdown size="sm" id="ddown_info" text="타입 변경" variant="info" class="mx-2">
-            <b-dropdown-item v-on:click="setIssueType('reward')">보상</b-dropdown-item>
-            <b-dropdown-item v-on:click="setIssueType('pay')">납부</b-dropdown-item>
-          </b-dropdown>
+        <strong>이슈 #{{ $route.params.id }}</strong>
+        <small v-if="form.issueType === 'reward'">(타입: 보상)</small>
+        <small v-else>(타입: 납부)</small>
       </div>
       <div slot="footer" class="text-sm-right">
-        <b-button variant="success" v-on:click="createIssue">등록</b-button>
+        <b-button variant="success" v-on:click="updateIssue">수정</b-button>
         <b-button variant="warning" v-on:click="cancel">취소</b-button>
       </div>
       <b-row>
@@ -33,17 +29,7 @@
                 <b-form-group>
                   <label v-if="form.issueType === 'reward'" for="name">보상 금액</label>
                   <label v-else for="name">납부 금액</label>
-                  <b-form-radio-group
-                    plain
-                    :options="[
-                      {text: '500 coin ',value: '500'},
-                      {text: '1,000 coin ',value: '1000'},
-                      {text: '3,000 coin ',value: '3000'},
-                      {text: '기타 ',value: '-1'}
-                    ]"
-                    v-model="form.price" @change="etc.price = ''">
-                  </b-form-radio-group>
-                  <b-form-input type="number" v-bind:disabled="form.price!=='-1'" v-model="etc.price"></b-form-input>
+                  <b-form-input type="number" :disabled="true" v-model="form.price"></b-form-input>
                 </b-form-group>
               </b-col>
             </b-row>
@@ -66,7 +52,7 @@
               <label for="start">시작일</label>
               <b-form-checkbox-group>
                 <div class="custom-control custom-checkbox custom-control-inline">
-                  <input type="checkbox" class="custom-control-input" id="startCheckboxIn" value="true" v-model="enable.start" @change="form.startDate = ''">
+                  <input type="checkbox" class="custom-control-input" id="startCheckboxIn" v-model="enable.start" @change="form.startDate = ''">
                   <label class="custom-control-label" for="startCheckboxIn">지정</label>
                 </div>
               </b-form-checkbox-group>
@@ -76,7 +62,7 @@
               <label for="finish">종료일</label>
               <b-form-checkbox-group>
                 <div class="custom-control custom-checkbox custom-control-inline">
-                  <input type="checkbox" class="custom-control-input" id="finishCheckboxIn" value="false" v-model="enable.finish" @change="form.finishDate = ''">
+                  <input type="checkbox" class="custom-control-input" id="finishCheckboxIn" v-model="enable.finish" @change="form.finishDate = ''">
                   <label class="custom-control-label" for="finishCheckboxIn">지정</label>
                 </div>
               </b-form-checkbox-group>
@@ -155,11 +141,13 @@ export default {
     Datepicker
   },
   created () {
+    this.fetchIssue(this.$route.params.id)
     this.fetchUsers()
   },
   data () {
     return {
       form: {
+        _id: '',
         title: '',
         description: '',
         price: '500',
@@ -205,17 +193,31 @@ export default {
           }
         })
     },
-    createIssue () {
+    fetchIssue (id) {
+      this.$http.get('/api/issues/' + id)
+        .then((response) => {
+          this.form = response.data
+        })
+        .then((response) => {
+          this.enable.start = (this.form.startDate === null) ? false : true
+          this.enable.finish = (this.form.finishDate === null) ? false : true
+          if(this.form.maxNumberOfParticipants > 1 && this.form.maxNumberOfParticipants < 9999) {
+            this.etc.maxNumberOfParticipants = this.form.maxNumberOfParticipants
+            this.form.maxNumberOfParticipants = '-1'
+          }
+        })
+    },
+    updateIssue () {
       this.form.price = (this.form.price === '-1') ? this.etc.price : this.form.price
       this.form.maxNumberOfParticipants = (this.form.maxNumberOfParticipants === '-1') ? this.etc.maxNumberOfParticipants : this.form.maxNumberOfParticipants
       this.form.participants = this.tags.map(participant => (participant._id))
-      this.$http.post('/api/issues', this.form)
+      this.$http.put('/api/issues/' + this.$route.params.id, this.form)
         .then((response) => {
-          this.$router.push('/issues/' + response.data.id)
+          this.$router.push('/issues/' + this.$route.params.id)
         })
     },
     cancel () {
-      this.$router.push('/issues')
+      this.$router.push('/issues/' + this.$route.params.id)
     },
     initialTag () {
       this.tag = ''
