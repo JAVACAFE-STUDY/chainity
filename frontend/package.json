@@ -34,7 +34,8 @@
     "vue-router": "^3.0.1",
     "vue-session": "^1.0.0",
     "vue2-editor": "^2.5.0",
-    "vuejs-datepicker": "^1.5.2"
+    "vuejs-datepicker": "^1.5.2",
+    "vuelidate": "^0.7.4"
   },
   "devDependencies": {
     "autoprefixer": "7.2.5",
