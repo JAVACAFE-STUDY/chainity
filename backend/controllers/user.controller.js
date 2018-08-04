@@ -34,7 +34,6 @@ function addressList(req, res) {
   var array = req.query.selected.split(',');
   User.find({ email: array })
     .then(user => {
-      // console.log(user);
       res.json(user);
     })
     .catch(e => next(e));
