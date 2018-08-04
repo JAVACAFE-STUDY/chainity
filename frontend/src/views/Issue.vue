@@ -16,7 +16,10 @@
         <b-col sm="12">
           <b-form-group>
             <h2>{{ form.title }}</h2>
-            <small>{{ form.createdDate | moment("YYYY-MM-DD HH:MM:SS")}} by {{ form.createdBy }}</small>
+            <small>{{ form.createdDate | moment("YYYY-MM-DD HH:MM:SS") }} </small>
+            <small> by </small>
+            <small v-if="users[form.createdBy]">{{ users[form.createdBy].name }}</small>
+            <small v-else>{{ form.createdBy }}</small>
           </b-form-group>
         </b-col>
       </b-row>
@@ -86,43 +89,104 @@
         </b-col>
       </b-row>
     </b-card>
+  <pw-modal></pw-modal>
   </div>
 </template>
 
 <script>
+import pwModal from './notifications/PasswordModal.vue'
 
 export default {
   name: 'issue',
-  components: {},
+  components: {pwModal},
   created () {
-    this.fetchIssue(this.$route.params.id)
+    this.fetchIssue()
+    this.fetchUser('me')
+    this.$eventHub.$on('pw-modal-return', (password) => {
+      if (this.isOptIn) {
+        this.sendAllowance(password)
+      } else {
+        this.cancelAllowance(password)
+      }
+    })
   },
   data () {
     return {
       form: {
         title: '',
+        createdBy: '',
+        createdByName: '',
+        createdDate: '',
         description: '',
-        price: '500',
+        price: '0',
         maxNumberOfParticipants: '',
         startDate: '',
         finishDate: '',
-        participants: '',
-        issueType: 'reward'
-      }
+        issueType: 'reward',
+        participants: []
+      },
+      users: {},
+      isOptIn: false
     }
   },
   methods: {
-    fetchIssue (id) {
-      this.$http.get('/api/issues/' + id)
+    fetchUser (userId) {
+      this.$http.get('/api/users/' + userId)
+        .then((response) => {
+          this.users[userId] = response.data
+        })
+        .then(() => {
+          if (userId === this.form.createdBy) {
+            this.form.createdByName = this.users[userId].name
+            // trick to change createdByName
+            this.form.title = this.form.title + ' '
+          }
+        })
+    },
+    fetchIssue () {
+      this.$http.get('/api/issues/' + this.$route.params.id)
         .then((response) => {
           this.form = response.data
         })
+        .then(() => {
+          this.fetchUser(this.form.createdBy)
+        })
     },
     optIn () {
-      alert('개발중')
+      this.isOptIn = true
+      if (this.form.issueType === 'reward') {
+        this.$http.put('/api/issues/' + this.$route.params.id + '/participants/me')
+          .then((response) => {
+            this.fetchIssue()
+            alert('참여 완료')
+          })
+      } else {
+        this.$eventHub.$emit('pw-modal-open',
+          '토큰 전송 수락',
+          this.users['me'].name + '님의 지갑으로부터 <b>' + this.users[this.form.createdBy].name + '님이 ' + this.form.price + '토큰을 지출</b> 할 수 있도록 수락하시겠습니까?'
+        )
+      }
     },
     optOut () {
-      alert('개발중')
+      this.isOptIn = false
+      if (this.form.issueType === 'reward') {
+        this.$http.delete('/api/issues/' + this.$route.params.id + '/participants/me')
+          .then((response) => {
+            this.fetchIssue()
+            alert('참여 취소 완료')
+          })
+      } else {
+        this.$eventHub.$emit('pw-modal-open',
+          '토큰 전송 취소',
+          this.users['me'].name + '님의 지갑으로부터 <b>' + this.users[this.form.createdBy].name + '님이 ' + this.form.price + '토큰 지출 수락 건</b>을 취소하시겠습니까?'
+        )
+      }
+    },
+    sendAllowance (password) {
+      alert('TODO - sendAllowance ' + password)
+    },
+    cancelAllowance (password) {
+      alert('TODO - cancelAllowance ' + password)
     },
     cancel () {
       this.$router.push('/issues')
