@@ -1,6 +1,6 @@
 <template>
   <b-modal :title="title" v-model="isActive" @ok="handleOk">
-    <b-form>
+    <b-form @submit="onSubmit">
       <b-row>
         <b-col sm="12">
           <b-form-group>
@@ -29,9 +29,11 @@ import { required } from 'vuelidate/lib/validators'
 export default {
   name: 'pw-modal',
   created () {
-    this.$eventHub.$on('pw-modal-open', (title, message) => {
+    this.$eventHub.$on('pw-modal-open', (title, message, callback) => {
+      this.form.password = ''
       this.title = title
       this.message = message
+      this.callback = callback
       this.activate()
     })
   },
@@ -42,7 +44,8 @@ export default {
       isActive: false,
       form: {
         password: ''
-      }
+      },
+      callback: ''
     }
   },
   validations: {
@@ -53,8 +56,9 @@ export default {
     }
   },
   methods: {
-    clearPassword () {
-      this.form.password = ''
+    onSubmit (evt) {
+      evt.preventDefault()
+      this.submit()
     },
     activate () {
       this.isActive = true
@@ -65,10 +69,12 @@ export default {
     handleOk (evt) {
       // Prevent modal from closing
       evt.preventDefault()
+      this.submit()
+    },
+    submit () {
       if (!this.$v.form.password.$invalid) {
         this.deactivate()
-        this.$eventHub.$emit('pw-modal-return', this.form.password)
-        this.clearPassword()
+        this.callback(this.form.password)
       }
     }
   }
