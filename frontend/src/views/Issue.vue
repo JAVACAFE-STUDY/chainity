@@ -72,8 +72,8 @@
               <small>현재: {{ form.participants.length }}</small>
             </div>
             <div slot="footer" class="text-sm-right">
-              <b-button variant="success" v-on:click="optIn()">참여하기</b-button>
-              <b-button variant="danger" v-on:click="optOut()">참여취소</b-button>
+              <b-button variant="success" v-on:click="form.issueType === 'reward' ? optIn() : askPermissionAndOptIn()">참여하기</b-button>
+              <b-button variant="danger" v-on:click="form.issueType === 'reward' ? optOut() : askPermissionAndOptOut()">참여취소</b-button>
             </div>
             <b-list-group v-if="form.participants.length > 0" flush>
               <!-- <b-list-group-item v-for="participant in form.participants">{{ msg }}</b-list-group-item> -->
@@ -102,13 +102,6 @@ export default {
   created () {
     this.fetchIssue()
     this.fetchUser('me')
-    this.$eventHub.$on('pw-modal-return', (password) => {
-      if (this.isOptIn) {
-        this.sendAllowance(password)
-      } else {
-        this.cancelAllowance(password)
-      }
-    })
   },
   data () {
     return {
@@ -125,8 +118,7 @@ export default {
         issueType: 'reward',
         participants: []
       },
-      users: {},
-      isOptIn: false
+      users: {}
     }
   },
   methods: {
@@ -152,41 +144,69 @@ export default {
           this.fetchUser(this.form.createdBy)
         })
     },
+    askPermissionAndOptIn () {
+      var tokenOwnerName = this.users['me'].name
+      var spenderName = this.users[this.form.createdBy].name
+      var spenderAddress = this.users[this.form.createdBy].keyStore.address
+      var price = this.form.price
+
+      this.$eventHub.$emit('pw-modal-open',
+        '토큰 전송 수락',
+        tokenOwnerName + '님의 지갑으로부터 <b>' + spenderName + '님이 ' + price + '토큰을 지출</b> 할 수 있도록 수락하시겠습니까?',
+        password => {
+          var body = {
+            spender: spenderAddress,
+            tokens: price,
+            password: password
+          }
+          this.$http.post('/api/contracts/mine/approval', body)
+            .then((response) => {
+              this.optIn()
+            })
+            .catch((error) => {
+              alert(error.response.data.message)
+            })
+        }
+      )
+    },
+    askPermissionAndOptOut () {
+      var tokenOwnerName = this.users['me'].name
+      var spenderName = this.users[this.form.createdBy].name
+      var spenderAddress = this.users[this.form.createdBy].keyStore.address
+      var price = this.form.price
+
+      this.$eventHub.$emit('pw-modal-open',
+        '토큰 전송 취소',
+        tokenOwnerName + '님의 지갑으로부터 <b>' + spenderName + '님이 ' + price + '토큰 지출 수락 건</b>을 취소하시겠습니까?',
+        password => {
+          var body = {
+            spender: spenderAddress,
+            tokens: 0,
+            password: password
+          }
+          this.$http.post('/api/contracts/mine/approval', body)
+            .then((response) => {
+              this.optOut()
+            })
+            .catch((error) => {
+              alert(error.response.data.message)
+            })
+        }
+      )
+    },
     optIn () {
-      this.isOptIn = true
-      if (this.form.issueType === 'reward') {
-        this.$http.put('/api/issues/' + this.$route.params.id + '/participants/me')
-          .then((response) => {
-            this.fetchIssue()
-            alert('참여 완료')
-          })
-      } else {
-        this.$eventHub.$emit('pw-modal-open',
-          '토큰 전송 수락',
-          this.users['me'].name + '님의 지갑으로부터 <b>' + this.users[this.form.createdBy].name + '님이 ' + this.form.price + '토큰을 지출</b> 할 수 있도록 수락하시겠습니까?'
-        )
-      }
+      this.$http.put('/api/issues/' + this.$route.params.id + '/participants/me')
+        .then((response) => {
+          this.fetchIssue()
+          alert('참여 완료')
+        })
     },
     optOut () {
-      this.isOptIn = false
-      if (this.form.issueType === 'reward') {
-        this.$http.delete('/api/issues/' + this.$route.params.id + '/participants/me')
-          .then((response) => {
-            this.fetchIssue()
-            alert('참여 취소 완료')
-          })
-      } else {
-        this.$eventHub.$emit('pw-modal-open',
-          '토큰 전송 취소',
-          this.users['me'].name + '님의 지갑으로부터 <b>' + this.users[this.form.createdBy].name + '님이 ' + this.form.price + '토큰 지출 수락 건</b>을 취소하시겠습니까?'
-        )
-      }
-    },
-    sendAllowance (password) {
-      alert('TODO - sendAllowance ' + password)
-    },
-    cancelAllowance (password) {
-      alert('TODO - cancelAllowance ' + password)
+      this.$http.delete('/api/issues/' + this.$route.params.id + '/participants/me')
+        .then((response) => {
+          this.fetchIssue()
+          alert('참여 취소 완료')
+        })
     },
     cancel () {
       this.$router.push('/issues')
