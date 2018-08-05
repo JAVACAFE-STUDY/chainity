@@ -123,13 +123,13 @@ function remove(req, res, next) {
 }
 
 /**
- * Get user token.
- * @returns {token}
+ * Get user tokens.
+ * @returns {tokens}
  */
-function getToken(req, res, next) {
+function getTokens(req, res, next) {
   const token = User.getToken(req.user.keyStore.address)
   token.call().then(function(token) {
-    res.json({"token" : Number(token) })
+    res.json({"tokens" : Number(token) })
   });
 }
 
@@ -180,4 +180,4 @@ function profileImage(req, res, next) {
   })
 }
 
-module.exports = { load, get, create, update, list, remove, getToken, getMyToken, activeList, addressList, uploadImage, profileImage };
+module.exports = { load, get, create, update, list, remove, getTokens, getMyToken, activeList, addressList, uploadImage, profileImage };

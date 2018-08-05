@@ -150,24 +150,37 @@ export default {
       var spenderAddress = this.users[this.form.createdBy].keyStore.address
       var price = this.form.price
 
-      this.$eventHub.$emit('pw-modal-open',
-        '토큰 전송 수락',
-        tokenOwnerName + '님의 지갑으로부터 <b>' + spenderName + '님이 ' + price + '토큰을 지출</b> 할 수 있도록 수락하시겠습니까?',
-        password => {
-          var body = {
-            spender: spenderAddress,
-            tokens: price,
-            password: password
+      this.$http.get('/api/users/me/tokens')
+        .then((response) => {
+          if (response.data.tokens < price) {
+            alert('토큰 잔액 부족 - 보유량: ' + response.data.token)
+            throw new Error()
           }
-          this.$http.post('/api/contracts/mine/approval', body)
-            .then((response) => {
-              this.optIn()
-            })
-            .catch((error) => {
-              alert(error.response.data.message)
-            })
-        }
-      )
+        })
+        .then(() => {
+          this.$eventHub.$emit('pw-modal-open',
+            '토큰 전송 수락',
+            tokenOwnerName + '님의 지갑으로부터 <b>' + spenderName + '님이 ' + price + '토큰을 지출</b> 할 수 있도록 수락하시겠습니까?',
+            password => {
+              var body = {
+                spender: spenderAddress,
+                tokens: price,
+                password: password
+              }
+              this.$http.post('/api/contracts/mine/approval', body)
+                .then((response) => {
+                  this.optIn()
+                })
+                .catch((error) => {
+                  alert(error.response.data.message)
+                })
+            }
+          )
+        })
+        .catch((error) => {
+          console.error(error)
+          alert(error.response.data.message)
+        })
     },
     askPermissionAndOptOut () {
       var tokenOwnerName = this.users['me'].name
