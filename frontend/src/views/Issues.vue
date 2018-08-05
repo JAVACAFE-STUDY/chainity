@@ -44,8 +44,8 @@ export default {
         .then(() => {
           for (let i = 0; i < this.issues.length; i++) {
             const issue = this.issues[i]
-            this.issues[i].startDate = this.$moment.utc(issue.startDate).local().format('YYYY-MM-DD')
-            this.issues[i].finishDate = this.$moment.utc(issue.finishDate).local().format('YYYY-MM-DD')
+            this.issues[i].startDate = issue.startDate ? this.$moment.utc(issue.startDate).local().format('YYYY-MM-DD') : '미지정'
+            this.issues[i].finishDate = issue.finishDate ? this.$moment.utc(issue.finishDate).local().format('YYYY-MM-DD') : '미지정'
             this.issues[i].createdDate = this.$moment.utc(issue.createdDate).local().format('YYYY-MM-DD HH:mm:ss')
             if (issue.participants) {
               this.issues[i].participants = issue.participants.length

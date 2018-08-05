@@ -54,8 +54,8 @@ function create(req, res, next) {
 /**
  * Load issue and append to req.
  */
-function load(req, res, next, id) {
-  Issue.get(id)
+function load(req, res, next, issueId) {
+  Issue.get(issueId)
     .then((issue) => {
       req.issue = issue;
       return next();
@@ -91,7 +91,6 @@ function update(req, res, next) {
   if (req.body.finishDate != '') {
     issue.finishDate = req.body.finishDate;
   }
-  
 
   Issue.update({ id: issue.id}, issue)
     .then(savedIssue => res.json(savedIssue))
@@ -102,11 +101,58 @@ function update(req, res, next) {
  * Delete issue.
  * @returns {Issue}
  */
-function remove(req, res, next, id) {
+function remove(req, res, next) {
+  // Issue.remove({ id: parseInt(id) })
+  //   .then(deletedIssue => res.json(deletedIssue))
+  //   .catch(e => next(e));
   const issue = req.issue;
-  issue.remove({ id: parseInt(id) })
+  issue.remove()
     .then(deletedIssue => res.json(deletedIssue))
     .catch(e => next(e));
 }
 
-module.exports = { list, create, load, get, update, remove };
+/**
+ * Add participant
+ */
+function addParticipant(req, res, next) {
+  var userId = req.params.userId;
+  if('me' === userId) {
+    userId = req.decoded._id;
+  }
+
+  // TODO: trasaction for allowance with web3
+
+  const issue = new Issue(req.issue);
+  var index = issue.participants.indexOf(userId);
+  if(index < 0) {
+    issue.participants.push(userId);
+  }
+
+  Issue.update({ id: issue.id}, issue)
+    .then(savedIssue => res.json(savedIssue))
+    .catch(e => next(e));
+}
+
+/**
+ * Remove participant
+ */
+function removeParticipant(req, res, next) {
+  var userId = req.params.userId;
+  if('me' === userId) {
+    userId = req.decoded._id;
+  }
+
+  // TODO: trasaction for allowance with web3
+
+  const issue = new Issue(req.issue);
+  var index = issue.participants.indexOf(userId);
+  if(index > -1) {
+    issue.participants.splice(index, 1)
+  }
+
+  Issue.update({ id: issue.id}, issue)
+    .then(savedIssue => res.json(savedIssue))
+    .catch(e => next(e));
+}
+
+module.exports = { list, create, load, get, update, remove, addParticipant, removeParticipant };

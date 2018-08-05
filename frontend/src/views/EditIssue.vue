@@ -199,9 +199,9 @@ export default {
           this.form = response.data
         })
         .then((response) => {
-          this.enable.start = (this.form.startDate === null) ? false : true
-          this.enable.finish = (this.form.finishDate === null) ? false : true
-          if(this.form.maxNumberOfParticipants > 1 && this.form.maxNumberOfParticipants < 9999) {
+          this.enable.start = this.form.startDate !== null
+          this.enable.finish = this.form.finishDate !== null
+          if (this.form.maxNumberOfParticipants > 1 && this.form.maxNumberOfParticipants < 9999) {
             this.etc.maxNumberOfParticipants = this.form.maxNumberOfParticipants
             this.form.maxNumberOfParticipants = '-1'
           }
