@@ -1,7 +1,9 @@
 var config = require('../config/config');
-var Web3 = require('web3');
 var User = require('../models/user.model');
-
+var Web3 = require('web3');
+var Tx = require('ethereumjs-tx');
+var APIError = require('../helpers/APIError');
+var httpStatus = require('http-status');
 var web3 = new Web3(new Web3.providers.HttpProvider(config.web3Provider));
 
 function getTotalSupply(req, res) {
@@ -76,40 +78,50 @@ function sendToken(req, res) {
     })
 }
 
-function approval(req, res) {
-	var nonce = web3.eth.getTransactionCount('0x' + req.body.user.keyStore.address)
-    nonce.then(resultNonce => {
-    	var Tx = require('ethereumjs-tx');
-    	console.log('nonce : ' + nonce)
-    	var walletInfo = web3.eth.accounts.decrypt(req.body.user.keyStore, req.body.password);
-		var privateKey = new Buffer(walletInfo.privateKey.replace('0x', ''), 'hex')
+function approval(req, res, next) {
+	const spender = req.body.spender;
+	const tokens = req.body.tokens;
+	const password = req.body.password;
 
-		var data = req.contract.methods.approve(req.body.receiver, req.body.tokens).encodeABI();
+	User.get(req.decoded._id)
+    .then((user) => {
+		const tokenOwner = user.keyStore.address;
+
+		var walletInfo = web3.eth.accounts.decrypt(user.keyStore, password);
+		var privateKey = new Buffer(walletInfo.privateKey.replace('0x', ''), 'hex')
+		var data = req.contract.methods.approve(spender, tokens).encodeABI();
 
 		var rawTx = {
-		  nonce: web3.utils.toHex(resultNonce),
-		  gasPrice: web3.utils.toHex(2550000),
-		  gasLimit: web3.utils.toHex(3050000),
-		  from: '0x' + req.body.user.keyStore.address,
-		  to: config.contractAccount,
-		  value: '0x0',
-		  data: data
+			gasPrice: web3.utils.toHex(2550000),
+			gasLimit: web3.utils.toHex(3050000),
+			from: '0x' + tokenOwner,
+			to: config.contractAccount,
+			value: '0x0',
+			data: data
 		}
 
-		var tx = new Tx(rawTx);
-		tx.sign(privateKey);
+		web3.eth.getTransactionCount('0x' + tokenOwner)
+		.then(nonce => {
+			rawTx.nonce = web3.utils.toHex(nonce);
+		})
+		.then(() => {
+			var tx = new Tx(rawTx);
+			tx.sign(privateKey)
 
-		var serializedTx = tx.serialize();
-		web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), function(error, hash) {
-			console.log('hash: ' + hash);
-			console.log('error message: ' + error);
-			if (!error) {
-				return res.send({"result" : "success", "hash" : hash})
-			} else {
-				return res.send({"result" : "error", "errorMessage" : error})
-			}
-		});
+			var serializedTx = tx.serialize();
+			web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), function(error, hash) {
+				if (!error) {
+					return res.send({'nonce': rawTx.nonce, 'hash': hash})
+				} else {
+					throw new Error('Transaction error: ' + error);
+				}
+			});
+		})
     })
+    .catch((e) => {
+	  console.error(e)
+      next(new APIError(e.message, httpStatus.INTERNAL_SERVER_ERROR, true));
+    });
 }
 
 module.exports = { getTotalSupply, getReceiptList, load, sendToken, approval };
