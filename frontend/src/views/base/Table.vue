@@ -25,11 +25,11 @@
              :per-page="perPage">
       <template slot="role" slot-scope="data">
         <div v-if="(user.role === 'system')">
-          <b-form-select class="form-control" v-model="data.item.role" v-on:change="onChange(data.item)">
+          <select class="form-control" v-model="data.item.role" v-on:change="onChange(data.item)">
               <option value="user">user</option>
               <option value="admin">admin</option>
               <option value="system">system</option>
-          </b-form-select>
+          </select>
         </div>
         <div v-else>
           {{data.item.role}}
