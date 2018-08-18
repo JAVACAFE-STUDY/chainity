@@ -10,7 +10,7 @@
         </div>
       </div>
       <div slot="footer" class="text-sm-right">
-        <b-button variant="info" :to="{name: 'Issues'}">확인</b-button>
+        <b-button variant="info" :to="{name: '이슈'}">확인</b-button>
       </div>
       <b-row>
         <b-col sm="12">

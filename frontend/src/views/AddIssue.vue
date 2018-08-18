@@ -23,13 +23,13 @@
             <b-col sm="6">
               <b-form-group>
                 <label for="count">인원수</label>
-                <b-form-input type="number" id="count" v-model="count"></b-form-input>
+                <b-form-input type="number" min="0" id="count" v-model="count"></b-form-input>
               </b-form-group>
             </b-col>
             <b-col sm="6">
               <b-form-group>
                 <label for="rewards">보상금액</label>
-                <b-form-input type="number" id="rewards" v-model="rewards"></b-form-input>
+                <b-form-input type="number" min="0" id="rewards" v-model="rewards"></b-form-input>
               </b-form-group>
             </b-col>
           </b-row>
