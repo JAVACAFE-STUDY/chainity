@@ -29,7 +29,7 @@
                 <b-form-group>
                   <label v-if="form.issueType === 'reward'" for="name">보상 금액</label>
                   <label v-else for="name">납부 금액</label>
-                  <b-form-input type="number" :disabled="true" v-model="form.price"></b-form-input>
+                  <b-form-input type="number" min="0" :disabled="true" v-model="form.price"></b-form-input>
                 </b-form-group>
               </b-col>
             </b-row>
@@ -85,7 +85,7 @@
                   checked="1"
                   v-model="form.maxNumberOfParticipants" @change="etc.maxNumberOfParticipants = ''">
               </b-form-radio-group>
-              <b-form-input type="number" v-bind:disabled="form.maxNumberOfParticipants!=='-1'" v-model="etc.maxNumberOfParticipants"></b-form-input>
+              <b-form-input type="number" min="0" v-bind:disabled="form.maxNumberOfParticipants!=='-1'" v-model="etc.maxNumberOfParticipants"></b-form-input>
             </b-form-group>
             <b-form-group>
               <label for="">사전 참여자 등록</label>
