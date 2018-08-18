@@ -22,11 +22,9 @@ router.route('/active')
 router.route('/address')
   .get(auth, userCtrl.addressList)
 
-router.route('/image')
-  .post(auth, userCtrl.uploadImage)
-
-router.route('/image/:id')
+router.route('/:userId/images/profile')
   .get(userCtrl.profileImage)
+  .post(auth, userCtrl.uploadImage)
     
 router.route('/me')
   /** GET /api/users/me - Get current user */

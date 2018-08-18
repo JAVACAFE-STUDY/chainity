@@ -82,7 +82,7 @@ export default {
       .then((response) => {
         this.item = response.data
         this.item.keyStore.address = '0x' + response.data.keyStore.address
-        this.previewData = 'http://localhost:3000/api/users/image/' + this.item.keyStore.address
+        this.previewData = 'http://localhost:3000/api/users/' + this.item.keyStore.address + '/images/profile'
       })
 
     this.$http.get('/api/users/token')
@@ -97,7 +97,7 @@ export default {
       } else {
         const formData = new FormData()
         formData.append('profile', this.imageData[0], this.item.keyStore.address)
-        this.$http.post('/api/users/image', formData)
+        this.$http.post('/api/users/' + this.item.keyStore.address + '/images/profile', formData)
           .then((response) => {
             if (response.data.result === 'Success') {
               this.updateProfile()

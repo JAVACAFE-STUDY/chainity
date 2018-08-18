@@ -163,7 +163,7 @@ function uploadImage(req, res, next) {
 }
 
 function profileImage(req, res, next) {
-  fs.readFile("upload/profile_" + req.params.id + ".jpg", function(error,data){
+  fs.readFile("upload/profile_" + req.params.userId + ".jpg", function(error,data){
     if (error) {
       res.writeHead(404, {"Content": "image/jpeg"})
       res.end()
