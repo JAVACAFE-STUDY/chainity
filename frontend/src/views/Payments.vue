@@ -41,7 +41,7 @@ export default {
         this.tokens = response.data.token + ' JC'
       })
 
-    this.$http.get('/api/token-requests/me')
+    this.$http.get('/api/tokens-requests/me')
       .then((response) => {
         this.tokensRequest = response.data
       })

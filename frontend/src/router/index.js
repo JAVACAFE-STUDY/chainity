@@ -16,12 +16,11 @@ import Issues from '@/views/Issues'
 import Issue from '@/views/Issue'
 import NewIssue from '@/views/NewIssue'
 import EditIssue from '@/views/EditIssue'
-import PurchaseList from '@/views/PurchaseList'
-import PurchaseDetail from '@/views/PurchaseDetail'
+import TokensRequests from '@/views/TokensRequests'
 import Profile from '@/views/Profile'
 import Approve from '@/views/Approve'
 import Receipt from '@/views/Receipt'
-import Payments from '@/views/Payments'
+import MyTokens from '@/views/MyTokens'
 
 import crypto from 'crypto'
 
@@ -77,40 +76,51 @@ export default new Router({
           beforeEnter: requireAuth
         },
         {
-          path: 'purchaseList',
-          name: 'PurchaseList',
-          component: PurchaseList,
-          beforeEnter: requireAuth
-        },
-        {
-          path: 'purchaseDetail',
-          name: 'PurchaseDetail',
-          component: PurchaseDetail,
-          beforeEnter: requireAuth
+          path: 'admin',
+          redirect: '/admin/tokens-requests',
+          name: '관리자메뉴',
+          component: {
+            render (c) { return c('router-view') }
+          },
+          children: [
+            {
+              path: 'tokens-requests',
+              name: '토큰충전요청',
+              component: TokensRequests
+            }
+          ]
         },
         {
           path: 'issues',
-          name: 'Issues',
+          name: '이슈',
           component: Issues,
           beforeEnter: requireAuth
         },
         {
-          path: 'issues/new',
-          name: 'NewIssue',
-          component: NewIssue,
-          beforeEnter: requireAuth
-        },
-        {
-          path: 'issues/:id',
-          name: 'Issue',
-          component: Issue,
-          beforeEnter: requireAuth
-        },
-        {
-          path: 'issues/:id/edit',
-          name: 'Issue',
-          component: EditIssue,
-          beforeEnter: requireAuth
+          path: 'issues/',
+          redirect: '/issues',
+          name: '이슈',
+          component: {
+            render (c) { return c('router-view') }
+          },
+          beforeEnter: requireAuth,
+          children: [
+            {
+              path: 'new-issue',
+              name: '생성하기',
+              component: NewIssue
+            },
+            {
+              path: ':id',
+              name: '상세보기',
+              component: Issue
+            },
+            {
+              path: ':id/edit',
+              name: '수정하기',
+              component: EditIssue
+            }
+          ]
         },
         {
           path: 'profile',
@@ -131,9 +141,9 @@ export default new Router({
           beforeEnter: requireAuth
         },
         {
-          path: 'payments',
-          name: 'Payments',
-          component: Payments,
+          path: 'my-tokens',
+          name: '토큰 관리',
+          component: MyTokens,
           beforeEnter: requireAuth
         }
       ]
