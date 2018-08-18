@@ -56,7 +56,7 @@ export default {
         {key: 'createdAt', sortable: true},
         {key: 'balance', sortable: true}
       ],
-      user: null
+      user: {}
     }
   },
   methods: {
