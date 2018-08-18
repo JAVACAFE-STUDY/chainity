@@ -41,6 +41,18 @@
       <template slot="id" slot-scope="data">
         <b-link :to="data.item.id.toString()" append>{{data.item.id}}</b-link>
       </template>
+      <template slot="price" slot-scope="data">
+        ₩ {{data.item.price}}
+      </template>
+      <template slot="tokens" slot-scope="data">
+        JC {{data.item.tokens}}
+      </template>
+      <template slot="tx" slot-scope="data">
+        <b-link :href="'https://rinkeby.etherscan.io/tx/'+data.item.tx" target="_blank">{{data.item.tx}}</b-link>
+      </template>
+      <template slot="tokensRequestAcceptible" slot-scope="data">
+        <b-button variant="success" v-on:click="askPermissionAndTransferFrom(data.item)">승인</b-button>
+      </template>
     </b-table>
     <nav>
       <b-pagination :total-rows="getRowCount(items)" :per-page="perPage" v-model="currentPage" prev-text="Prev" next-text="Next" hide-goto-end-buttons/>
@@ -102,7 +114,7 @@ export default {
       perPage: 5,
       totalRows: 0,
       filter: null,
-      user: null
+      user: {}
     }
   },
   methods: {
@@ -126,6 +138,50 @@ export default {
     onFiltered (filteredItems) {
       this.totalRows = filteredItems.length
       this.currentPage = 1
+    },
+    fetchUser (userId) {
+      this.$http.get('/api/users/' + userId)
+        .then((response) => {
+          this.users[userId] = response.data
+        })
+        .then(() => {
+          if (userId === this.form.createdBy) {
+            this.form.createdByName = this.users[userId].name
+            // trick to change createdByName
+            this.form.title = this.form.title + ' '
+          }
+        })
+    },
+    askPermissionAndTransferFrom (item) {
+      this.$eventHub.$emit('pw-modal-open',
+        '토큰 충전 요청 승인',
+        '입금자명: <b>' + item.senderName + '</b><br/>' +
+        '입금액: <b>₩ ' + item.price + '</b><br/>' +
+        '위와 같은 입금 내역을 확인 하셨습니까?<br/>' +
+        '승인 시, ' + item.createdBy + '님에게 <b>JC ' + item.tokens + '을(를) 충전</b> 합니다.',
+        password => {
+          this.$http.get('/api/users/' + item.createdBy)
+          .then((response) => {
+            var body = {
+              receiver: response.data.keyStore.address,
+              tokens: item.tokens,
+              password: password
+            }
+
+            this.$http.post('/api/contracts/0x000/tokens', body)
+              .then((response) => {
+                console.log(response.data)
+                item.tx = response.data.hash
+                this.$http.put('/api/tokens-requests/' + item.id, {tx: item.tx, approvedDate: new Date()})
+                  .then((response) => {
+                    alert('승인 되었습니다.')
+                  })
+                }).catch((error) => {
+                  alert(error.response.data.message)
+                })
+            })
+        }
+      )
     }
   }
 }
