@@ -50,9 +50,15 @@ router.route('/:userId')
   /** DELETE /api/users/:userId - Delete user */
   .delete(auth, userCtrl.remove);
 
-router.route('/:userId/token')
-  /** GET /api/users/:userId/token - Get user token */
-  .get(auth, userCtrl.getToken)
+router.route('/me/tokens')
+  /** GET /api/users/me/tokens - Get user tokens */
+  .get(auth, function(req, res, next){
+    userCtrl.load(req, res, next, req.decoded._id)
+  }, userCtrl.getTokens)
+
+router.route('/:userId/tokens')
+  /** GET /api/users/:userId/tokens - Get user tokens */
+  .get(auth, userCtrl.getTokens)
 
 /** Load user when API with userId route parameter is hit */
 router.param('userId', userCtrl.load);

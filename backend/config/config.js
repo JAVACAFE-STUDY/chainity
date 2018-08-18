@@ -37,6 +37,8 @@ const envVarsSchema = Joi.object({
   ROOT_ID: Joi.string()
   .default('system'),
   ROOT_PASSWORD: Joi.string()
+  .default('system'),
+  ROOT_ROLE: Joi.string()
   .default('system')
 }).unknown()
   .required();
@@ -66,6 +68,7 @@ const config = {
   root: {
     id: envVars.ROOT_ID,
     password: envVars.ROOT_PASSWORD,
+    role: envVars.ROOT_ROLE,
     keyStore: envVars.ROOT_KEYSTORE
   },
   bank: {

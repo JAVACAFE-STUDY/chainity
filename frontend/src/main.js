@@ -7,13 +7,18 @@ import router from './router'
 import axios from 'axios'
 import VueSession from 'vue-session'
 import HttpStatus from 'http-status'
+import moment from 'moment'
+import Vuelidate from 'vuelidate'
 
 axios.defaults.baseURL = 'http://localhost:3000'
 
 Vue.prototype.$http = axios
+Vue.prototype.$eventHub = new Vue()
 
+Vue.use(require('vue-moment'), {moment})
 Vue.use(VueSession, {persist: true})
 Vue.use(BootstrapVue)
+Vue.use(Vuelidate)
 
 /* eslint-disable no-new */
 new Vue({
@@ -38,8 +43,7 @@ new Vue({
       if (error.response && error.response.status === HttpStatus.UNAUTHORIZED) {
         if (!error.config.url.endsWith('/api/auth/login')) {
           console.error(error)
-          alert(error.response.data.message)
-          location.href = 'login'
+          location.href = '/login'
           return
         }
       }

@@ -11,31 +11,54 @@ mongoose.connect('mongodb://' + config.mongo.host + ':' + config.mongo.port);
  * Issue Schema
  */
 const IssueSchema = new mongoose.Schema({
-  title: { // 이슈 제목
+  title: {
     type: String,
     required: true
   },
-  content: { // 이슈 내용
+  description: {
     type: String,
-    required: true
+    required: false
   },
-  count: { // 이슈 할당 인원수
+  price: {
     type: Number,
     required: true
   },
-  rewards: { // 보상금액
+  maxNumberOfParticipants: {
     type: Number,
+    required: false
+  },
+  startDate: {
+    type: Date,
+    required: false
+  },
+  finishDate: {
+    type: Date,
+    required: false
+  },
+  participants: {
+    type: Array,
+    required: false
+  },
+  isClosed: {
+    type: Boolean,
     required: true
   },
-  dueDate: { // 마감일
+  createdDate: {
     type: Date,
     required: true
   },
-  status: { // 진행상태
+  createdBy: {
     type: String,
     required: true
   },
-  assignee_email: [String]
+  closedDate: {
+    type: Date,
+    required: false
+  },
+  issueType: {
+    type: String,
+    required: true
+  }
 });
 
 /**
@@ -68,7 +91,7 @@ IssueSchema.statics = {
    * @returns {Promise<Issue, APIError>}
    */
   get(id) {
-    return this.find({ id: parseInt(id) })
+    return this.findOne({ id: parseInt(id) })
       .exec()
       .then((issue) => {
         if (issue) {

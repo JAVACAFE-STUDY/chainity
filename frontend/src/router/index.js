@@ -13,8 +13,9 @@ import Page500 from '@/views/Page500'
 import Users from '@/views/Users'
 import Purchase from '@/views/Purchase'
 import Issues from '@/views/Issues'
-import IssueDetail from '@/views/IssueDetail'
-import AddIssue from '@/views/AddIssue'
+import Issue from '@/views/Issue'
+import NewIssue from '@/views/NewIssue'
+import EditIssue from '@/views/EditIssue'
 import PurchaseList from '@/views/PurchaseList'
 import PurchaseDetail from '@/views/PurchaseDetail'
 import Profile from '@/views/Profile'
@@ -90,17 +91,26 @@ export default new Router({
         {
           path: 'issues',
           name: 'Issues',
-          component: Issues
+          component: Issues,
+          beforeEnter: requireAuth
         },
         {
-          path: 'issueDetail',
-          name: 'IssueDetail',
-          component: IssueDetail
+          path: 'issues/new',
+          name: 'NewIssue',
+          component: NewIssue,
+          beforeEnter: requireAuth
         },
         {
-          path: 'addIssue',
-          name: 'AddIssue',
-          component: AddIssue
+          path: 'issues/:id',
+          name: 'Issue',
+          component: Issue,
+          beforeEnter: requireAuth
+        },
+        {
+          path: 'issues/:id/edit',
+          name: 'Issue',
+          component: EditIssue,
+          beforeEnter: requireAuth
         },
         {
           path: 'profile',

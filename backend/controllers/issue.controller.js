@@ -22,21 +22,28 @@ function list(req, res, next) {
 
 /**
  * Create new issue
- * @property {string} req.body.title   - The title of issue.
- * @property {string} req.body.content - The content of issue.
- * @property {string} req.body.count   - The count of issue.
- * @property {string} req.body.rewards - The rewards of issue.
- * @property {string} req.body.dueDate - The dueate of issue.
+ * @property {string} req.body.title
+ * @property {string} req.body.description
+ * @property {string} req.body.price
+ * @property {string} req.body.maxNumberOfParticipants
+ * @property {string} req.body.startDate
+ * @property {string} req.body.finishDate
+ * @property {string} req.body.participants
  * @returns {Issue}
  */
 function create(req, res, next) {
   const issue = new Issue({
+    issueType: req.body.issueType,
     title: req.body.title,
-    content: req.body.content,
-    count: req.body.count,
-    rewards: req.body.rewards,
-    dueDate: req.body.dueDate,
-    status: 'open'
+    description: req.body.description,
+    price: req.body.price,
+    maxNumberOfParticipants: req.body.maxNumberOfParticipants,
+    startDate: req.body.startDate,
+    finishDate: req.body.finishDate,
+    participants: req.body.participants,
+    isClosed: false,
+    createdDate: Date.now(),
+    createdBy: req.decoded._id
   });
 
   issue.save()
@@ -47,8 +54,8 @@ function create(req, res, next) {
 /**
  * Load issue and append to req.
  */
-function load(req, res, next, id) {
-  Issue.get(id)
+function load(req, res, next, issueId) {
+  Issue.get(issueId)
     .then((issue) => {
       req.issue = issue;
       return next();
@@ -68,11 +75,24 @@ function get(req, res) {
  * Update existing issue
  */
 function update(req, res, next) {
-  const issue = req.issue;
-  issue[0].assignee_email = req.body.selected;
-  issue[0].status = req.body.status;
+  const issue = new Issue(req.issue);
+  if (req.body.title != '') {
+    issue.title = req.body.title;
+  }
+  if (req.body.description != '') {
+    issue.description = req.body.description;
+  }
+  if (req.body.maxNumberOfParticipants != '') {
+    issue.maxNumberOfParticipants = req.body.maxNumberOfParticipants;
+  }
+  if (req.body.startDate != '') {
+    issue.startDate = req.body.startDate;
+  }
+  if (req.body.finishDate != '') {
+    issue.finishDate = req.body.finishDate;
+  }
 
-  Issue.update({id: issue[0].id}, issue[0])
+  Issue.update({ id: issue.id}, issue)
     .then(savedIssue => res.json(savedIssue))
     .catch(e => next(e));
 }
@@ -81,11 +101,58 @@ function update(req, res, next) {
  * Delete issue.
  * @returns {Issue}
  */
-function remove(req, res, next, id) {
+function remove(req, res, next) {
+  // Issue.remove({ id: parseInt(id) })
+  //   .then(deletedIssue => res.json(deletedIssue))
+  //   .catch(e => next(e));
   const issue = req.issue;
-  issue.remove({ id: parseInt(id) })
+  issue.remove()
     .then(deletedIssue => res.json(deletedIssue))
     .catch(e => next(e));
 }
 
-module.exports = { list, create, load, get, update, remove };
+/**
+ * Add participant
+ */
+function addParticipant(req, res, next) {
+  var userId = req.params.userId;
+  if('me' === userId) {
+    userId = req.decoded._id;
+  }
+
+  // TODO: trasaction for allowance with web3
+
+  const issue = new Issue(req.issue);
+  var index = issue.participants.indexOf(userId);
+  if(index < 0) {
+    issue.participants.push(userId);
+  }
+
+  Issue.update({ id: issue.id}, issue)
+    .then(savedIssue => res.json(savedIssue))
+    .catch(e => next(e));
+}
+
+/**
+ * Remove participant
+ */
+function removeParticipant(req, res, next) {
+  var userId = req.params.userId;
+  if('me' === userId) {
+    userId = req.decoded._id;
+  }
+
+  // TODO: trasaction for allowance with web3
+
+  const issue = new Issue(req.issue);
+  var index = issue.participants.indexOf(userId);
+  if(index > -1) {
+    issue.participants.splice(index, 1)
+  }
+
+  Issue.update({ id: issue.id}, issue)
+    .then(savedIssue => res.json(savedIssue))
+    .catch(e => next(e));
+}
+
+module.exports = { list, create, load, get, update, remove, addParticipant, removeParticipant };
