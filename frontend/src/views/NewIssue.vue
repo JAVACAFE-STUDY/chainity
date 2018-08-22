@@ -15,7 +15,7 @@
         <b-button variant="warning" v-on:click="cancel">취소</b-button>
       </div>
       <b-row>
-        <b-col sm="6">ㅣ
+        <b-col sm="6">
           <b-card>
             <div slot="header">
               <strong>내용</strong>

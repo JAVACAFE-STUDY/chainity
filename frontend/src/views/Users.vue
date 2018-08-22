@@ -1,6 +1,6 @@
 <template>
   <div class="animated fadeIn">
-    <b-row v-if="(user.role === 'system')">
+    <b-row v-if="(user.role === 'system' || user.role === 'admin')">
       <b-col sm="12">
         <b-card header-tag="header" footer-tag="footer">
         <div>
