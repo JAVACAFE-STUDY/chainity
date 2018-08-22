@@ -1,6 +1,11 @@
+var multer = require('multer');
+var fs= require('fs');
+var httpStatus = require('http-status');
+var APIError = require('../helpers/APIError');
 var User = require('../models/user.model');
 var config = require('../config/config');
 
+/* Create root user */
 User.list()
     .then(users => {
       if (users.length < 1) {
@@ -8,7 +13,7 @@ User.list()
           email: config.root.id,
           name: config.root.id,
           status: 'active',
-          role: 'admin',
+          role: config.root.role,
           keyStore: JSON.parse(config.root.keyStore)
         });
         
@@ -29,7 +34,6 @@ function addressList(req, res) {
   var array = req.query.selected.split(',');
   User.find({ email: array })
     .then(user => {
-      // console.log(user);
       res.json(user);
     })
     .catch(e => next(e));
@@ -70,7 +74,9 @@ function create(req, res, next) {
 
   user.save()
     .then(savedUser => res.json(savedUser))
-    .catch(e => next(e));
+    .catch((e) => {
+      next(new APIError(e.message, httpStatus.BAD_REQUEST));
+    });
 }
 
 /**
@@ -80,10 +86,15 @@ function create(req, res, next) {
  */
 function update(req, res, next) {
   const user = new User(req.user);
-  user.name = req.body.name
+  if (req.body.name != '') {
+    user.name = req.body.name;
+  }
+  if (req.body.role != '') {
+    user.role = req.body.role;
+  }
 
   User.update({_id: user.id}, user)
-    .then(savedUser => res.json(savedUser))
+    .then(savedUser => res.json({"result" : "Success" }))
     .catch(e => next(e));
 }
 
@@ -112,13 +123,13 @@ function remove(req, res, next) {
 }
 
 /**
- * Get user token.
- * @returns {token}
+ * Get user tokens.
+ * @returns {tokens}
  */
-function getToken(req, res, next) {
+function getTokens(req, res, next) {
   const token = User.getToken(req.user.keyStore.address)
   token.call().then(function(token) {
-    res.json({"token" : Number(token) })
+    res.json({"tokens" : Number(token) })
   });
 }
 
@@ -133,4 +144,40 @@ function getMyToken(req, res, next) {
   });
 }
 
-module.exports = { load, get, create, update, list, remove, getToken, getMyToken, activeList, addressList };
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'upload/');
+  },
+  filename: (req, file, cb) => {
+    const fileName = "profile_" + file.originalname + ".jpg";
+    cb(null, fileName);
+  }
+});
+
+const upload = multer({
+  storage: storage
+}).single('profile');
+
+function uploadImage(req, res, next) {
+  upload(req, res, err => {
+    if (err) {
+      res.json({"result" : "Fail" })
+    } else {
+      res.json({"result" : "Success" })
+    }
+  });
+}
+
+function profileImage(req, res, next) {
+  fs.readFile("upload/profile_" + req.params.id + ".jpg", function(error,data){
+    if (error) {
+      res.writeHead(404, {"Content": "image/jpeg"})
+      res.end()
+    } else {
+      res.writeHead(200, {"Content": "image/jpeg"})
+      res.end(data)
+    }
+  })
+}
+
+module.exports = { load, get, create, update, list, remove, getTokens, getMyToken, activeList, addressList, uploadImage, profileImage };

@@ -107,7 +107,6 @@ export default {
       this.$http.get('/api/users/address?selected=' + this.selected)
         .then((response) => {
           var data = response.data
-          
           for (var i = 0; i < data.length; i++) {
             this.item.receiver = JSON.parse(JSON.stringify(data[i].keyStore)).address
             this.item.tokens = this.item.rewards
@@ -115,15 +114,15 @@ export default {
             // 보상 코인 전송
             this.$http.post('/api/contracts/0x000/tokens', this.item)
               .then((response) => {
-              this.$http.put('/api/issues/' + this.$route.query.id, {
-                issue: this.item,
-                status: 'close'
-              })
-                .then((response) => {
-                  alert('이슈가 종료되었습니다.')
-                  this.$router.go(-1)
+                this.$http.put('/api/issues/' + this.$route.query.id, {
+                  issue: this.item,
+                  status: 'close'
                 })
-            })
+                  .then((response) => {
+                    alert('이슈가 종료되었습니다.')
+                    this.$router.go(-1)
+                  })
+              })
           }
         })
         .then((response) => {
@@ -133,7 +132,6 @@ export default {
             alert(response.data.error)
           }
         })
-        
     },
     back: function (event) {
       this.$router.go(-1)
