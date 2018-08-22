@@ -1,9 +1,14 @@
 var multer = require('multer');
 var fs= require('fs');
+var gm = require('gm');
+var Thumbnail = require('thumbnail');
 var httpStatus = require('http-status');
 var APIError = require('../helpers/APIError');
 var User = require('../models/user.model');
 var config = require('../config/config');
+var profileImagePath = 'upload/profile/'
+var profileThumbnailImagePath = 'upload/profile/thumbnails/'
+var thumbnail = new Thumbnail(profileImagePath,  profileThumbnailImagePath);
 
 /* Create root user */
 User.list()
@@ -56,6 +61,7 @@ function load(req, res, next, id) {
  * @returns {User}
  */
 function get(req, res) {
+  console.log(req.user)
   return res.json(req.user);
 }
 
@@ -94,7 +100,7 @@ function update(req, res, next) {
   }
 
   User.update({_id: user.id}, user)
-    .then(savedUser => res.json({"result" : "Success" }))
+    .then(savedUser => res.json(savedUser))
     .catch(e => next(e));
 }
 
@@ -146,11 +152,23 @@ function getMyToken(req, res, next) {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'upload/');
+    if (!fs.existsSync(profileImagePath)){
+      fs.mkdirSync(profileImagePath);
+    }
+
+    if (!fs.existsSync(profileThumbnailImagePath)){
+      fs.mkdirSync(profileThumbnailImagePath);
+    }
+
+    cb(null, profileImagePath);
   },
   filename: (req, file, cb) => {
     const fileName = "profile_" + file.originalname + ".jpg";
     cb(null, fileName);
+    thumbnail.ensureThumbnail(fileName, null, 100, function(err, filename){
+      if(err) console.error(err);
+      console.log(filename);
+    });
   }
 });
 
@@ -169,7 +187,7 @@ function uploadImage(req, res, next) {
 }
 
 function profileImage(req, res, next) {
-  fs.readFile("upload/profile_" + req.params.userId + ".jpg", function(error,data){
+  fs.readFile(profileImagePath + "profile_" + req.params.userId + ".jpg", function(error,data){
     if (error) {
       res.writeHead(404, {"Content": "image/jpeg"})
       res.end()
@@ -180,4 +198,16 @@ function profileImage(req, res, next) {
   })
 }
 
-module.exports = { load, get, create, update, list, remove, getTokens, getMyToken, activeList, addressList, uploadImage, profileImage };
+function profileThumbnail(req, res, next) {
+  fs.readFile(profileThumbnailImagePath + "profile_" + req.params.userId + "-x100.jpg", function(error,data){
+    if (error) {
+      res.writeHead(404, {"Content": "image/jpeg"})
+      res.end()
+    } else {
+      res.writeHead(200, {"Content": "image/jpeg"})
+      res.end(data)
+    }
+  })
+}
+
+module.exports = { load, get, create, update, list, remove, getTokens, getMyToken, activeList, addressList, uploadImage, profileImage, profileThumbnail };

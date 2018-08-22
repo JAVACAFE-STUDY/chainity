@@ -26,6 +26,9 @@ router.route('/address')
 router.route('/:userId/images/profile')
   .get(userCtrl.profileImage)
   .post(auth, userCtrl.uploadImage)
+
+router.route('/:userId/images/profile/thumbnail')
+  .get(userCtrl.profileThumbnail)
     
 router.route('/me')
   /** GET /api/users/me - Get current user */
