@@ -60,10 +60,6 @@ function load(req, res, next, id) {
     return next();
 }
 
-function numberWithCommas (x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-}
-
 function _sendTx(walletInfo,  data) {
 	var myAddress = walletInfo.address;
 	var privateKey = new Buffer(walletInfo.privateKey.replace('0x', ''), 'hex')

@@ -68,7 +68,7 @@ export default {
             const user = this.users[i]
             if (user.keyStore) {
               this.$http.get('/api/users/' + user._id + '/tokens')
-                .then((response) => { this.users[i].tokens = response.data.tokens })
+                .then((response) => { this.users[i].tokens = response.data.tokens.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') })
             }
           }
         })
