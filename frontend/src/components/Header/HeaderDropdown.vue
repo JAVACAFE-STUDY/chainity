@@ -5,7 +5,7 @@
         </template>
         <b-dropdown-header tag="div" class="text-center"><strong>Settings</strong></b-dropdown-header>
         <b-dropdown-item @click="profile"><i class="fa fa-user"></i> Profile</b-dropdown-item>
-        <b-dropdown-item @click="payments"><i class="fa fa-usd"></i> Payments<b-badge variant="secondary">{{itemsCount}}</b-badge></b-dropdown-item>
+        <b-dropdown-item @click="payments"><i class="fa fa-usd"></i> 토큰 관리<b-badge variant="secondary">{{itemsCount}}</b-badge></b-dropdown-item>
         <b-dropdown-divider></b-dropdown-divider>
         <b-dropdown-item @click="logout"><i class="fa fa-lock"></i> Logout</b-dropdown-item>
       </b-nav-item-dropdown>
@@ -20,15 +20,15 @@ export default {
     logout (e) {
       e.preventDefault()
       this.$session.destroy()
-      location.href = 'login'
+      this.$router.push('/login')
     },
     profile (e) {
       e.preventDefault()
-      location.href = 'Profile'
+      this.$router.push('/Profile')
     },
     payments (e) {
       e.preventDefault()
-      location.href = 'Payments'
+      this.$router.push('/my-tokens')
     }
   }
 }

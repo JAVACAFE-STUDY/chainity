@@ -10,7 +10,7 @@
           <div class="col-sm-12">
             <fieldset role="group" class="b-form-group form-group">
               <label class="mr-sm-2">주소</label>
-              <input v-model="form.receiver" type="text" placeholder="" required="required" aria-required="true" class="form-control-warning form-control">
+              <input v-model="form.spender" type="text" placeholder="" required="required" aria-required="true" class="form-control-warning form-control">
             </fieldset>
           </div>
         </div>
@@ -18,7 +18,7 @@
           <div class="col-sm-12">
             <fieldset role="group" class="b-form-group form-group">
               <label class="mr-sm-2">토큰</label>
-              <input v-model="form.tokens" type="number" placeholder="" required="required" aria-required="true" class="form-control">
+              <input v-model="form.tokens" type="number" min="0" placeholder="" required="required" aria-required="true" class="form-control">
             </fieldset>
           </div>
         </div>
@@ -41,12 +41,6 @@
 
 <script>
 export default {
-  mounted: function () {
-    this.$http.get('/api/users/me')
-      .then((response) => {
-        this.user = response.data
-      })
-  },
   computed: {
     nameState () {
       return this.address.length > 2
@@ -55,10 +49,9 @@ export default {
   data () {
     return {
       form: {
-        receiver: '',
+        spender: '',
         tokens: '',
-        password: '',
-        user: null
+        password: ''
       }
     }
   },
@@ -66,13 +59,12 @@ export default {
     onSubmit (evt) {
       evt.preventDefault()
       if (this.form.address !== '' && this.form.tokens !== '') {
-        this.form.user = this.user
         this.$http.post('/api/contracts/0x000/approval', this.form)
           .then((response) => {
             console.log(response.data)
             if (response.data.result === 'success') {
               alert('충전 요청이 등록되었습니다.')
-              this.form.receiver = ''
+              this.form.spender = ''
               this.form.tokens = ''
               this.form.password = ''
             } else {
@@ -84,7 +76,7 @@ export default {
     onReset (evt) {
       evt.preventDefault()
       /* Reset our form values */
-      this.form.receiver = ''
+      this.form.spender = ''
       this.form.tokens = ''
       this.form.password = ''
     }
