@@ -21,7 +21,7 @@
     </b-row><!--/.row-->
     <b-row>
       <b-col sm="12">
-        <c-table ref="table" v-if="users !== null" striped :rows="users" :columns="userFields" caption="<i class='fa fa-align-justify'></i> Striped Table"></c-table>
+        <c-table ref="table" v-if="users.length > 0" striped :rows="users" :columns="userFields" caption="<i class='fa fa-align-justify'></i> Striped Table"></c-table>
       </b-col><!--/.col-->
     </b-row><!--/.row-->
 
@@ -47,14 +47,14 @@ export default {
       form: {
         email: ''
       },
-      users: null,
+      users: [],
       userFields: [
         {key: 'name', sortable: true},
         {key: 'email', sortable: true},
         {key: 'role', sortable: true},
         {key: 'status', sortable: true},
         {key: 'createdAt', sortable: true},
-        {key: 'balance', sortable: true}
+        {key: 'tokens', sortable: true}
       ],
       user: {}
     }
@@ -67,8 +67,8 @@ export default {
           for (let i = 0; i < this.users.length; i++) {
             const user = this.users[i]
             if (user.keyStore) {
-              this.$http.get('/api/balance/' + user.keyStore.address)
-                .then((response) => { this.users[i].balance = response.data })
+              this.$http.get('/api/users/' + user._id + '/tokens')
+                .then((response) => { this.users[i].tokens = response.data.tokens })
             }
           }
         })
