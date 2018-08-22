@@ -7,7 +7,7 @@ var APIError = require('../helpers/APIError');
 var User = require('../models/user.model');
 var config = require('../config/config');
 var profileImagePath = 'upload/profile/'
-var profileThumbnailImagePath = 'upload/profile/thumbnails/'
+var profileThumbnailImagePath = 'upload/profile_thumbnail/'
 var thumbnail = new Thumbnail(profileImagePath,  profileThumbnailImagePath);
 
 /* Create root user */
@@ -165,9 +165,10 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     const fileName = "profile_" + file.originalname + ".jpg";
     cb(null, fileName);
-    thumbnail.ensureThumbnail(fileName, null, 100, function(err, filename){
-      if(err) console.error(err);
-      console.log(filename);
+    thumbnail.ensureThumbnail(fileName, null, 50, function(err, filename){
+      if (err) {
+        console.error(err);
+      }
     });
   }
 });
@@ -199,7 +200,7 @@ function profileImage(req, res, next) {
 }
 
 function profileThumbnail(req, res, next) {
-  fs.readFile(profileThumbnailImagePath + "profile_" + req.params.userId + "-x100.jpg", function(error,data){
+  fs.readFile(profileThumbnailImagePath + "profile_" + req.params.userId + "-x50.jpg", function(error,data){
     if (error) {
       res.writeHead(404, {"Content": "image/jpeg"})
       res.end()
