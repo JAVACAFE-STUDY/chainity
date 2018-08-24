@@ -110,10 +110,8 @@ export default {
             this.tokensRequests[i].tokens = tokensRequest.price / 1000
             if (this.tokensRequests[i].tx) {
               this.tokensRequests[i].status = '완료'
-              this.tokensRequests[i].accpetButtonVisible = false
             } else {
               this.tokensRequests[i].status = '대기중'
-              this.tokensRequests[i].accpetButtonVisible = true
             }
           }
         }).catch((error) => {

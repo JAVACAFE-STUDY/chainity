@@ -9,7 +9,7 @@ const router = express.Router();
 const auth = expressJwt({secret: config.jwtSecret, requestProperty: 'decoded'});
 
 router.route('/:id/tokens')
-  .get(auth, contractCtrl.getTotalSupply)
+  .get(auth, contractCtrl.getTotalTokens)
   .post(auth, contractCtrl.sendToken)
 
 router.route('/:id/approval')

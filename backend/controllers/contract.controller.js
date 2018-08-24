@@ -8,10 +8,30 @@ var web3 = new Web3(new Web3.providers.HttpProvider(config.web3Provider));
 
 var nonces = {};
 
-function getTotalSupply(req, res) {
-	req.contract.methods.totalSupply().call().then(function (result) {
-		return res.send(numberWithCommas(result));
-	});
+function getTotalTokens(req, res) {
+	req.contract.methods.decimals().call()
+	.then(decimals => {
+		req.contract.methods.totalSupply().call()
+		.then(function (balance) {
+			if(balance > 0) {
+				balance = balance / Math.pow(10, decimals)
+			}
+			return res.send({"tokens" : balance});
+    	});
+	})
+}
+
+function getUserTokens(req, res) {
+	req.contract.methods.decimals().call()
+	.then(decimals => {
+		req.contract.methods.balanceOf(req.user.keyStore.address).call()
+		.then(function (balance) {
+			if(balance > 0) {
+				balance = balance / Math.pow(10, decimals)
+			}
+			return res.send({"tokens" : balance});
+    	});
+	})
 }
 
 function getReceiptList(req, res) {
@@ -40,8 +60,36 @@ function load(req, res, next, id) {
     return next();
 }
 
-function numberWithCommas (x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+function _sendTx(walletInfo,  data) {
+	var myAddress = walletInfo.address;
+	var privateKey = new Buffer(walletInfo.privateKey.replace('0x', ''), 'hex')
+
+	var rawTx = {
+		gasPrice: web3.utils.toHex(config.gasPrice),
+		gasLimit: web3.utils.toHex(config.gasLimit),
+		to: config.contractAccount,
+		value: web3.utils.toHex(0),
+		data: data
+	}
+
+	web3.eth.getTransactionCount(myAddress)
+	.then(nonce => {
+		rawTx.nonce = web3.utils.toHex(getUpdatedNonce(myAddress, nonce));
+	})
+	.then(() => {
+
+		var tx = new Tx(rawTx);
+		tx.sign(privateKey)
+
+		var serializedTx = tx.serialize();
+		web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), function(error, hash) {
+			if (!error) {
+				return {'nonce': rawTx.nonce, 'hash': hash}
+			} else {
+				throw new APIError('Transaction error: ' + error);
+			}
+		});
+	})
 }
 
 function sendToken(req, res, next) {
@@ -52,41 +100,11 @@ function sendToken(req, res, next) {
 
 	User.get(req.decoded._id)
     .then((user) => {
-		const myAddress = user.keyStore.address;
-
 		var walletInfo = web3.eth.accounts.decrypt(user.keyStore, password);
-		var privateKey = new Buffer(walletInfo.privateKey.replace('0x', ''), 'hex')
 		var data = req.contract.methods.transferFrom(from, to, tokens).encodeABI();
-
-		var rawTx = {
-			gasPrice: web3.utils.toHex(2550000),
-			gasLimit: web3.utils.toHex(3050000),
-			from: '0x' + myAddress,
-			to: config.contractAccount,
-			value: '0x0',
-			data: data
-		}
-
-		web3.eth.getTransactionCount('0x' + myAddress)
-		.then(nonce => {
-			rawTx.nonce = web3.utils.toHex(getUpdatedNonce(myAddress, nonce));
-		})
-		.then(() => {
-			var tx = new Tx(rawTx);
-			tx.sign(privateKey)
-
-			var serializedTx = tx.serialize();
-			web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), function(error, hash) {
-				if (!error) {
-					return res.send({'nonce': rawTx.nonce, 'hash': hash})
-				} else {
-					throw new Error('Transaction error: ' + error);
-				}
-			});
-		})
+		res.send(_sendTx(walletInfo, data));
     })
     .catch((e) => {
-	  console.error(e)
       next(new APIError(e.message, httpStatus.INTERNAL_SERVER_ERROR, true));
     });
 }
@@ -98,41 +116,11 @@ function approval(req, res, next) {
 
 	User.get(req.decoded._id)
     .then((user) => {
-		const myAddress = user.keyStore.address;
-
 		var walletInfo = web3.eth.accounts.decrypt(user.keyStore, password);
-		var privateKey = new Buffer(walletInfo.privateKey.replace('0x', ''), 'hex')
 		var data = req.contract.methods.approve(spender, tokens).encodeABI();
-
-		var rawTx = {
-			gasPrice: web3.utils.toHex(2550000),
-			gasLimit: web3.utils.toHex(3050000),
-			from: '0x' + myAddress,
-			to: config.contractAccount,
-			value: '0x0',
-			data: data
-		}
-
-		web3.eth.getTransactionCount('0x' + myAddress)
-		.then(nonce => {
-			rawTx.nonce = web3.utils.toHex(nonce);
-		})
-		.then(() => {
-			var tx = new Tx(rawTx);
-			tx.sign(privateKey)
-
-			var serializedTx = tx.serialize();
-			web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), function(error, hash) {
-				if (!error) {
-					return res.send({'nonce': rawTx.nonce, 'hash': hash})
-				} else {
-					throw new Error('Transaction error: ' + error);
-				}
-			});
-		})
+		res.send(_sendTx(walletInfo, data));
     })
     .catch((e) => {
-	  console.error(e)
       next(new APIError(e.message, httpStatus.INTERNAL_SERVER_ERROR, true));
 	});
 	
@@ -147,4 +135,4 @@ function getUpdatedNonce(address, systemNonce) {
 	return nonces[address];
 }
 
-module.exports = { getTotalSupply, getReceiptList, load, sendToken, approval };
+module.exports = { getTotalTokens, getReceiptList, load, sendToken, approval, getUserTokens };

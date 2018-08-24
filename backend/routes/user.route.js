@@ -5,6 +5,7 @@ var paramValidation = require('../config/param-validation');
 var config = require('../config/config');
 var userCtrl = require('../controllers/user.controller');
 var tokensRequestCtrl = require('../controllers/tokensRequest.controller');
+var contractCtrl = require('../controllers/contract.controller');
 
 const router = express.Router(); // eslint-disable-line new-cap
 const auth = expressJwt({secret: config.jwtSecret, requestProperty: 'decoded'})
@@ -57,7 +58,9 @@ router.route('/me/tokens')
   /** GET /api/users/me/tokens - Get my tokens */
   .get(auth, function(req, res, next){
     userCtrl.load(req, res, next, req.decoded._id)
-  }, userCtrl.getTokens)
+  }, function(req, res, next){
+    contractCtrl.load(req, res, next)
+  }, contractCtrl.getUserTokens)
 
 router.route('/me/tokens-requests')
 /** GET /api/users/me/tokens - Get my tokens requests */
@@ -67,7 +70,9 @@ router.route('/me/tokens-requests')
 
 router.route('/:userId/tokens')
   /** GET /api/users/:userId/tokens - Get user tokens */
-  .get(auth, userCtrl.getTokens)
+  .get(auth, function(req, res, next){
+    contractCtrl.load(req, res, next)
+  }, contractCtrl.getUserTokens)
 
 /** Load user when API with userId route parameter is hit */
 router.param('userId', userCtrl.load);

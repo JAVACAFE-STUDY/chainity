@@ -3,7 +3,6 @@ var authRoutes = require('./auth.route');
 var userRoutes = require('./user.route');
 var issueRoutes = require('./issue.route');
 var mailRoutes = require('./mail.route');
-var balanceRoutes = require('./balance.route');
 var bankRoutes = require('./bank.route')
 var tokensRequestRoutes = require('./tokensRequest.route')
 var contractRoutes = require('./contract.route')
@@ -58,9 +57,6 @@ router.use('/issues', issueRoutes);
 
 // mount mail routes at /mails
 router.use('/mails', mailRoutes);
-
-// mount balance routes at /balance
-router.use('/balance', balanceRoutes);
 
 // mount tokens requests routes at /tokens-requests
 router.use('/tokens-requests', tokensRequestRoutes);
