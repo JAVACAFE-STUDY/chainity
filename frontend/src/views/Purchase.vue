@@ -18,7 +18,7 @@
           <div class="col-sm-12">
             <fieldset role="group" class="b-form-group form-group">
               <label class="mr-sm-2">충전금액</label>
-              <input v-model="form.tokens" type="number" min="0" placeholder="" required="required" aria-required="true" class="form-control">
+              <input v-model="form.tokens" type="number" placeholder="" required="required" aria-required="true" class="form-control">
             </fieldset>
           </div>
         </div>
@@ -52,7 +52,7 @@ export default {
       evt.preventDefault()
       if (this.form.name !== '' && this.form.tokens !== '') {
         this.form.status = 'pending'
-        this.$http.post('/api/tokens-requests', this.form)
+        this.$http.post('/api/token-requests', this.form)
           .then((response) => {
             this.form.status = ''
             this.form.name = ''

@@ -11,7 +11,7 @@ const auth = expressJwt({secret: config.jwtSecret, requestProperty: 'decoded'})
 
 router.route('/invitation/users/:userId')
 
-  /** POST /api/mails/invitation/users/:email - Send new user invitation*/
+  /** POST /api/mail/invitation/users/:email - Send new user invitation*/
   .post(auth, validate(paramValidation.sendInvitation), function(req, res, next){
     req.receiver = req.user;
     next();

@@ -12,6 +12,8 @@ module.exports = {
   // UPDATE /api/users/:userId
   updateUser: {
     body: {
+      email: Joi.string().email().required(),
+      name: Joi.string().required()
     },
     params: {
       userId: Joi.string().hex().required()
@@ -32,7 +34,7 @@ module.exports = {
       repeatPassword: Joi.string().required()
     }
   },
-  // POST /api/mails/invitation/users/:userId
+  // POST /api/mail/invitation/users/:userId
   sendInvitation: {
     params: {
       userId: Joi.string().required()

@@ -4,7 +4,6 @@ var expressJwt = require('express-jwt');
 var paramValidation = require('../config/param-validation');
 var config = require('../config/config');
 var userCtrl = require('../controllers/user.controller');
-var tokensRequestCtrl = require('../controllers/tokensRequest.controller');
 
 const router = express.Router(); // eslint-disable-line new-cap
 const auth = expressJwt({secret: config.jwtSecret, requestProperty: 'decoded'})
@@ -22,12 +21,6 @@ router.route('/active')
 // need refactoring
 router.route('/address')
   .get(auth, userCtrl.addressList)
-
-router.route('/image')
-  .post(auth, userCtrl.uploadImage)
-
-router.route('/image/:id')
-  .get(userCtrl.profileImage)
     
 router.route('/me')
   /** GET /api/users/me - Get current user */
@@ -53,21 +46,9 @@ router.route('/:userId')
   /** DELETE /api/users/:userId - Delete user */
   .delete(auth, userCtrl.remove);
 
-router.route('/me/tokens')
-  /** GET /api/users/me/tokens - Get my tokens */
-  .get(auth, function(req, res, next){
-    userCtrl.load(req, res, next, req.decoded._id)
-  }, userCtrl.getTokens)
-
-router.route('/me/tokens-requests')
-/** GET /api/users/me/tokens - Get my tokens requests */
-.get(auth, function(req, res, next){
-  userCtrl.load(req, res, next, req.decoded._id)
-}, tokensRequestCtrl.listMine)
-
-router.route('/:userId/tokens')
-  /** GET /api/users/:userId/tokens - Get user tokens */
-  .get(auth, userCtrl.getTokens)
+router.route('/:userId/token')
+  /** GET /api/users/:userId/token - Get user token */
+  .get(auth, userCtrl.getToken)
 
 /** Load user when API with userId route parameter is hit */
 router.param('userId', userCtrl.load);
