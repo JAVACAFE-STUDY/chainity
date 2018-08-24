@@ -6,7 +6,7 @@ export default {
       icon: 'icon-speedometer'
     },
     {
-      name: '이슈',
+      name: 'Issues',
       url: '/issues',
       icon: 'icon-list'
     },
@@ -16,21 +16,9 @@ export default {
       icon: 'icon-speedometer'
     },
     {
-      name: '사용자',
+      name: 'Users',
       url: '/users',
       icon: 'icon-people'
-    },
-    {
-      name: '관리자메뉴',
-      url: '/admin',
-      icon: 'icon-puzzle',
-      children: [
-        {
-          name: '토큰충전요청',
-          url: '/admin/tokens-requests',
-          icon: 'icon-puzzle'
-        }
-      ]
     }
   ]
 }

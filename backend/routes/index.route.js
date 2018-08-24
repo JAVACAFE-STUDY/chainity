@@ -5,7 +5,7 @@ var issueRoutes = require('./issue.route');
 var mailRoutes = require('./mail.route');
 var balanceRoutes = require('./balance.route');
 var bankRoutes = require('./bank.route')
-var tokensRequestRoutes = require('./tokensRequest.route')
+var tokenRequestsRoutes = require('./tokenRequests.route')
 var contractRoutes = require('./contract.route')
 
 const router = express.Router(); // eslint-disable-line new-cap
@@ -59,16 +59,16 @@ router.use('/issues', issueRoutes);
 // mount mail routes at /mails
 router.use('/mails', mailRoutes);
 
-// mount balance routes at /balance
+// mount mail routes at /balance
 router.use('/balance', balanceRoutes);
 
-// mount tokens requests routes at /tokens-requests
-router.use('/tokens-requests', tokensRequestRoutes);
+// mount mail routes at /token-requests
+router.use('/token-requests', tokenRequestsRoutes);
 
 // mount bank routes at /banks
 router.use('/banks', bankRoutes);
 
-// mount contract routes at /contracts
+// mount mail routes at /contracts
 router.use('/contracts', contractRoutes);
 
 module.exports = router;

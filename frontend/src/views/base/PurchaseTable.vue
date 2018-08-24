@@ -84,9 +84,10 @@ export default {
         {username: 'Aulus Agmundr', registered: '2012/01/01', role: 'Member', status: 'Pending'}
       ]),
       fields: [
-        {key: 'from'},
-        {key: 'to'},
-        {key: 'value'},
+        {key: 'name'},
+        {key: 'registered'},
+        {key: 'tokens'},
+        {key: 'status'}
       ],
       currentPage: 1,
       perPage: 5,

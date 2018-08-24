@@ -37,11 +37,11 @@ export default {
   },
   mounted: function () {
     this.$http.get('/api/users/token')
-      .then((response) => {
-        this.tokens = response.data.token + ' JC'
-      })
+    .then((response) => {
+      this.tokens = response.data.token + ' JC'
+    })
 
-    this.$http.get('/api/tokens-requests/me')
+    this.$http.get('/api/token-requests/me')
       .then((response) => {
         this.tokensRequest = response.data
       })

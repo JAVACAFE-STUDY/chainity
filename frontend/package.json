@@ -17,7 +17,6 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "@johmun/vue-tags-input": "^1.5.4",
     "bootstrap": "4.0.0",
     "bootstrap-vue": "2.0.0-rc.1",
     "chart.js": "^2.7.2",
@@ -32,10 +31,7 @@
     "vue-multiselect": "^2.1.0",
     "vue-resource": "^1.5.1",
     "vue-router": "^3.0.1",
-    "vue-session": "^1.0.0",
-    "vue2-editor": "^2.5.0",
-    "vuejs-datepicker": "^1.5.2",
-    "vuelidate": "^0.7.4"
+    "vue-session": "^1.0.0"
   },
   "devDependencies": {
     "autoprefixer": "7.2.5",
