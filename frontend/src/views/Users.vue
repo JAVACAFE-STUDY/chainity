@@ -10,7 +10,7 @@
                 <b-form-input v-model="form.email" type="email" placeholder="Email"></b-form-input>
                 <!-- Attach Right button -->
                 <b-input-group-append>
-                  <b-button type="submit" variant="primary">Send invitation</b-button>
+                  <b-button type="submit" variant="primary">초대장 보내기</b-button>
                 </b-input-group-append>
               </b-input-group>
             </b-form-group>
