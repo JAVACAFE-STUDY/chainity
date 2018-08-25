@@ -154,7 +154,7 @@ export default {
       this.$http.get('/api/users/me/tokens')
         .then((response) => {
           if (response.data.tokens < price) {
-            alert('토큰 잔액 부족 - 보유량: ' + response.data.token)
+            alert('토큰 잔액 부족 - 보유량: ' + response.data.tokens)
             throw new Error()
           }
         })
