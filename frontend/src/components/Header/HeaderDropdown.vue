@@ -1,7 +1,7 @@
 <template>
       <b-nav-item-dropdown right no-caret>
         <template slot="button-content">
-          <img src="static/img/avatars/6.jpg" class="img-avatar" alt="admin@bootstrapmaster.com">
+          <img class="img-avatar" :src="previewData" onerror="this.onerror=null;this.src='static/img/avatars/profile_thumbnail.jpg';">
         </template>
         <b-dropdown-header tag="div" class="text-center"><strong>설정</strong></b-dropdown-header>
         <b-dropdown-item @click="profile"><i class="fa fa-user"></i> 프로필</b-dropdown-item>
@@ -14,7 +14,16 @@
 export default {
   name: 'header-dropdown',
   data: () => {
-    return { itemsCount: 42 }
+    return {
+      itemsCount: 42,
+      previewData: null
+    }
+  },
+  mounted: function () {
+    this.$http.get('/api/users/me')
+      .then((response) => {
+        this.previewData = 'http://localhost:3000/api/users/' + response.data._id + '/images/profile/thumbnail'
+      })
   },
   methods: {
     logout (e) {
