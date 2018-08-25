@@ -11,7 +11,7 @@ export default {
       icon: 'icon-list'
     },
     {
-      name: 'Receipt',
+      name: '거래내역',
       url: '/receipt',
       icon: 'icon-speedometer'
     },
