@@ -1,7 +1,7 @@
 <template>
   <div class="animated fadeIn">
     <div class="text-sm-right">
-      <b-button variant="primary" :to="{name: 'NewIssue'}">이슈 등록</b-button>
+      <b-button variant="primary" :to="'new-issue'" append>이슈 등록</b-button>
     </div>
     <br/>
     <b-row>

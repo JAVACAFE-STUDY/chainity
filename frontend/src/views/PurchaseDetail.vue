@@ -32,7 +32,7 @@
 <script>
 export default {
   mounted: function () {
-    this.$http.get('/api/token-requests/' + this.$route.query.id)
+    this.$http.get('/api/tokens-requests/' + this.$route.query.id)
       .then((response) => {
         this.item = response.data[0]
       })
@@ -59,7 +59,7 @@ export default {
             console.log(response.data)
             if (response.data.result === 'success') {
               this.item.transactionHash = response.data.hash
-              this.$http.put('/api/token-requests/' + this.$route.query.id, this.item)
+              this.$http.put('/api/tokens-requests/' + this.$route.query.id, this.item)
                 .then((response) => {
                   alert('승인 되었습니다.')
                   this.$router.go(-1)
@@ -74,7 +74,7 @@ export default {
     },
     reject: function (event) {
       this.item.status = 'Fail'
-      this.$http.put('/api/token-requests/' + this.$route.query.id, this.item)
+      this.$http.put('/api/tokens-requests/' + this.$route.query.id, this.item)
         .then((response) => {
           alert('반려 되었습니다.')
           this.$router.go(-1)
