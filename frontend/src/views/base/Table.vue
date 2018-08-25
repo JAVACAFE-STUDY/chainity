@@ -188,7 +188,7 @@ export default {
       )
     },
     getProfileUrl (userId) {
-      return 'http://localhost:3000/api/users/' + userId + '/images/profile/thumbnail'
+      return 'http://localhost:3000/api/images/' + userId + '/profile/thumbnail'
     }
   }
 }

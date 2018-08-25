@@ -82,7 +82,7 @@ export default {
       .then((response) => {
         this.item = response.data
         this.item.keyStore.address = '0x' + response.data.keyStore.address
-        this.previewData = 'http://localhost:3000/api/users/' + this.item._id + '/images/profile'
+        this.previewData = 'http://localhost:3000/api/images/' + this.item._id + '/profile'
       })
 
     this.$http.get('/api/users/token')

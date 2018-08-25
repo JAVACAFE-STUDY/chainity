@@ -22,7 +22,7 @@ export default {
   mounted: function () {
     this.$http.get('/api/users/me')
       .then((response) => {
-        this.previewData = 'http://localhost:3000/api/users/' + response.data._id + '/images/profile/thumbnail'
+        this.previewData = 'http://localhost:3000/api/images/' + response.data._id + '/profile/thumbnail'
       })
   },
   methods: {
