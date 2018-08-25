@@ -21,7 +21,7 @@
     </b-row><!--/.row-->
     <b-row>
       <b-col sm="12">
-        <c-table ref="table" v-if="users.length > 0" striped :rows="users" :columns="userFields" caption="<i class='fa fa-align-justify'></i> Striped Table"></c-table>
+        <c-table ref="table" v-if="users.length > 0" striped :rows="users" :columns="userFields" caption="<i class='fa fa-align-justify'></i> 사용자 목록"></c-table>
       </b-col><!--/.col-->
     </b-row><!--/.row-->
 
