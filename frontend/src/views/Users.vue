@@ -84,7 +84,7 @@ export default {
           .then((response) => {
             this.form.email = ''
             _this.$http.post('/api/mails/invitation/users/' + response.data._id)
-              .then((response) => { alert('Invitation has been sent.') })
+              .then((response) => { alert('초대 메일이 발송되었습니다.') })
               .then(() => { this.users.unshift(response.data) })
           })
           .catch((error) => {
