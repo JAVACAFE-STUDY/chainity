@@ -47,6 +47,10 @@
       <template slot="tokens" slot-scope="data">
         JC {{data.item.tokens}}
       </template>
+      <template slot="name" slot-scope="data">
+        <img class="img-avatar" :src="getProfileUrl(data.item.id)" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
+        {{data.item.name}}
+      </template>
       <template slot="tx" slot-scope="data">
         <b-link :href="'https://rinkeby.etherscan.io/tx/'+data.item.tx" target="_blank">{{data.item.tx}}</b-link>
       </template>
@@ -182,6 +186,9 @@ export default {
             })
         }
       )
+    },
+    getProfileUrl(userId) {
+      return 'http://localhost:3000/api/users/' + userId + '/images/profile/thumbnail'
     }
   }
 }
