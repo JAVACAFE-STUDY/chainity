@@ -214,7 +214,7 @@ export default {
       )
     },
     getProfileUrl (userId) {
-      return 'http://localhost:3000/api/users/' + userId + '/images/profile/thumbnail'
+      return 'http://localhost:3000/api/images/' + userId + '/profile/thumbnail'
     },
     optIn () {
       this.$http.put('/api/issues/' + this.$route.params.id + '/participants/me')

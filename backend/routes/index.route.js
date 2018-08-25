@@ -6,6 +6,7 @@ var mailRoutes = require('./mail.route');
 var bankRoutes = require('./bank.route')
 var tokensRequestRoutes = require('./tokensRequest.route')
 var contractRoutes = require('./contract.route')
+var imageRoutes = require('./image.route');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -66,5 +67,8 @@ router.use('/banks', bankRoutes);
 
 // mount contract routes at /contracts
 router.use('/contracts', contractRoutes);
+
+// mount image routes at /image
+router.use('/images', imageRoutes);
 
 module.exports = router;
