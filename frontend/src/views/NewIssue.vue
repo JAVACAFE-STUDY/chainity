@@ -41,9 +41,9 @@
                       {text: '3,000 JC ',value: '3000'},
                       {text: '기타 ',value: '-1'}
                     ]"
-                    v-model="form.price" @change="etc.price = ''">
+                    v-model="form.tokens" @change="etc.tokens = ''">
                   </b-form-radio-group>
-                  <b-form-input type="number" min="0" v-bind:disabled="form.price!=='-1'" v-model="etc.price"></b-form-input>
+                  <b-form-input type="number" min="0" v-bind:disabled="form.tokens!=='-1'" v-model="etc.tokens"></b-form-input>
                 </b-form-group>
               </b-col>
             </b-row>
@@ -162,7 +162,7 @@ export default {
       form: {
         title: '',
         description: '',
-        price: '500',
+        tokens: '500',
         maxNumberOfParticipants: '1',
         startDate: '',
         finishDate: '',
@@ -171,7 +171,7 @@ export default {
         issueType: 'reward'
       },
       etc: {
-        price: '',
+        tokens: '',
         maxNumberOfParticipants: ''
       },
       enable: {
@@ -206,7 +206,7 @@ export default {
         })
     },
     createIssue () {
-      this.form.price = (this.form.price === '-1') ? this.etc.price : this.form.price
+      this.form.tokens = (this.form.tokens === '-1') ? this.etc.tokens : this.form.tokens
       this.form.maxNumberOfParticipants = (this.form.maxNumberOfParticipants === '-1') ? this.etc.maxNumberOfParticipants : this.form.maxNumberOfParticipants
       this.form.participants = this.tags.map(participant => (participant._id))
       this.$http.post('/api/issues', this.form)
