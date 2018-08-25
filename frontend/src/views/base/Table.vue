@@ -3,9 +3,9 @@
     <b-row>
       <b-col sm="12">
         <b-input-group>
-          <b-form-input v-model="filter" placeholder="Type to Search" />
+          <b-form-input v-model="filter" placeholder="검색어를 입력해주세요." />
           <b-input-group-append>
-            <b-btn :disabled="!filter" @click="filter = ''">Clear</b-btn>
+            <b-btn :disabled="!filter" @click="filter = ''">지움</b-btn>
           </b-input-group-append>
         </b-input-group>
       </b-col>

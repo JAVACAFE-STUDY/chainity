@@ -7,8 +7,7 @@
             <b-card no-body class="p-4">
               <b-card-body>
                 <b-form novalidate="novalidate" class="was-validated" @submit="onSubmit">
-                  <h1>Login</h1>
-                  <p class="text-muted">Sign In to your account</p>
+                  <h1>로그인</h1>
                   <b-input-group class="mb-3">
                     <b-input-group-prepend><b-input-group-text><i class="icon-user"></i></b-input-group-text></b-input-group-prepend>
                     <input v-model="form.email" type="text" class="form-control" placeholder="Username">
@@ -19,10 +18,10 @@
                   </b-input-group>
                   <b-row>
                     <b-col cols="6">
-                      <b-button type="submit" variant="primary" class="px-4">Login</b-button>
+                      <b-button type="submit" variant="primary" class="px-4">로그인</b-button>
                     </b-col>
                     <b-col cols="6" class="text-right">
-                      <b-button variant="link" class="px-0">Forgot password?</b-button>
+                      <b-button variant="link" class="px-0">비밀번호를 잊어버리셨나요?</b-button>
                     </b-col>
                   </b-row>
                 </b-form>
