@@ -6,8 +6,8 @@ var httpStatus = require('http-status');
 var APIError = require('../helpers/APIError');
 var User = require('../models/user.model');
 var config = require('../config/config');
-var profileImagePath = 'upload/profile/'
-var profileThumbnailImagePath = 'upload/profile_thumbnail/'
+var profileImagePath = config.imageUploadPath
+var profileThumbnailImagePath = config.imageThumbnailUploadPath
 var thumbnail = new Thumbnail(profileImagePath,  profileThumbnailImagePath);
 
 /* Create root user */

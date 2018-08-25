@@ -43,7 +43,11 @@ const envVarsSchema = Joi.object({
   GAS_PRICE: Joi.number()
   .default(1),
   GAS_LIMIT: Joi.number()
-  .default(100000)
+  .default(100000),
+  IMAGE_UPLOAD_PATH: Joi.string()
+  .default('upload/profile/'),
+  IMAGE_THUMBNAIL_UPLOAD_PATH: Joi.string()
+  .default('upload/profile_thumbnail/'),
 }).unknown()
   .required();
 
@@ -83,7 +87,9 @@ const config = {
       account: envVars.BANK_NH_FIN_ACCOUNT
     }
   },
-  systemAddress: envVars.SYSTEM_ADDRESS
+  systemAddress: envVars.SYSTEM_ADDRESS,
+  imageUploadPath: envVars.IMAGE_UPLOAD_PATH,
+  imageThumbnailUploadPath: envVars.IMAGE_THUMBNAIL_UPLOAD_PATH
 };
 
 module.exports = config;
