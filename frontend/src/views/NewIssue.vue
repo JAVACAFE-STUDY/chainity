@@ -36,9 +36,9 @@
                   <b-form-radio-group
                     plain
                     :options="[
-                      {text: '500 coin ',value: '500'},
-                      {text: '1,000 coin ',value: '1000'},
-                      {text: '3,000 coin ',value: '3000'},
+                      {text: '500 JC ',value: '500'},
+                      {text: '1,000 JC ',value: '1000'},
+                      {text: '3,000 JC ',value: '3000'},
                       {text: '기타 ',value: '-1'}
                     ]"
                     v-model="form.price" @change="etc.price = ''">
