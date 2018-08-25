@@ -39,7 +39,11 @@ const envVarsSchema = Joi.object({
   ROOT_PASSWORD: Joi.string()
   .default('system'),
   ROOT_ROLE: Joi.string()
-  .default('system')
+  .default('system'),
+  GAS_PRICE: Joi.number()
+  .default(1),
+  GAS_LIMIT: Joi.number()
+  .default(100000)
 }).unknown()
   .required();
 
@@ -65,6 +69,8 @@ const config = {
   web3Provider: envVars.WEB3_PROVIDER,
   contractABI: envVars.CONTRACT_ABI,
   contractAccount: envVars.CONTRACT_ACCOUNT,
+  gasPrice: envVars.GAS_PRICE,
+  gasLimit: envVars.GAS_LIMIT,
   root: {
     id: envVars.ROOT_ID,
     password: envVars.ROOT_PASSWORD,

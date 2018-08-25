@@ -1,24 +1,24 @@
 export default {
   items: [
-    {
-      name: 'Dashboard',
-      url: '/dashboard',
-      icon: 'icon-speedometer'
-    },
+    // {
+    //   name: 'Dashboard',
+    //   url: '/dashboard',
+    //   icon: 'icon-speedometer'
+    // },
     {
       name: '이슈',
       url: '/issues',
       icon: 'icon-list'
     },
     {
-      name: 'Receipt',
-      url: '/receipt',
-      icon: 'icon-speedometer'
-    },
-    {
       name: '사용자',
       url: '/users',
       icon: 'icon-people'
+    },
+    {
+      name: '거래내역',
+      url: '/receipt',
+      icon: 'icon-speedometer'
     },
     {
       name: '관리자메뉴',

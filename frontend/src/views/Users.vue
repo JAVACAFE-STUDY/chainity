@@ -10,7 +10,7 @@
                 <b-form-input v-model="form.email" type="email" placeholder="Email"></b-form-input>
                 <!-- Attach Right button -->
                 <b-input-group-append>
-                  <b-button type="submit" variant="primary">Send invitation</b-button>
+                  <b-button type="submit" variant="primary">초대장 보내기</b-button>
                 </b-input-group-append>
               </b-input-group>
             </b-form-group>
@@ -21,7 +21,7 @@
     </b-row><!--/.row-->
     <b-row>
       <b-col sm="12">
-        <c-table ref="table" v-if="users !== null" striped :rows="users" :columns="userFields" caption="<i class='fa fa-align-justify'></i> Striped Table"></c-table>
+        <c-table ref="table" v-if="users.length > 0" striped :rows="users" :columns="userFields" caption="<i class='fa fa-align-justify'></i> 사용자 목록"></c-table>
       </b-col><!--/.col-->
     </b-row><!--/.row-->
 
@@ -47,14 +47,14 @@ export default {
       form: {
         email: ''
       },
-      users: null,
+      users: [],
       userFields: [
-        {key: 'name', sortable: true},
-        {key: 'email', sortable: true},
-        {key: 'role', sortable: true},
-        {key: 'status', sortable: true},
-        {key: 'createdAt', sortable: true},
-        {key: 'balance', sortable: true}
+        {key: 'name', label: '이름', sortable: true},
+        {key: 'email', label: '이메일', sortable: true},
+        {key: 'role', label: '권한', sortable: true},
+        {key: 'status', label: '상태', sortable: true},
+        {key: 'createdAt', label: '가입일', sortable: true},
+        {key: 'tokens', label: '보유토큰', sortable: true}
       ],
       user: {}
     }
@@ -67,8 +67,8 @@ export default {
           for (let i = 0; i < this.users.length; i++) {
             const user = this.users[i]
             if (user.keyStore) {
-              this.$http.get('/api/balance/' + user.keyStore.address)
-                .then((response) => { this.users[i].balance = response.data })
+              this.$http.get('/api/users/' + user._id + '/tokens')
+                .then((response) => { this.users[i].tokens = response.data.tokens.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') })
             }
           }
         })
@@ -84,7 +84,7 @@ export default {
           .then((response) => {
             this.form.email = ''
             _this.$http.post('/api/mails/invitation/users/' + response.data._id)
-              .then((response) => { alert('Invitation has been sent.') })
+              .then((response) => { alert('초대 메일이 발송되었습니다.') })
               .then(() => { this.users.unshift(response.data) })
           })
           .catch((error) => {
