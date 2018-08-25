@@ -14,10 +14,10 @@
 export default {
   name: 'header-dropdown',
   data: () => {
-    return { 
+    return {
       itemsCount: 42,
-      previewData: null,
-     }
+      previewData: null
+    }
   },
   mounted: function () {
     this.$http.get('/api/users/me')
