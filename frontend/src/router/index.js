@@ -65,7 +65,7 @@ export default new Router({
         },
         {
           path: 'users',
-          name: 'Users',
+          name: '사용자',
           component: Users,
           beforeEnter: requireAuth
         },
@@ -124,7 +124,7 @@ export default new Router({
         },
         {
           path: 'profile',
-          name: 'Profile',
+          name: '프로필',
           component: Profile,
           beforeEnter: requireAuth
         },
@@ -136,7 +136,7 @@ export default new Router({
         },
         {
           path: 'receipt',
-          name: 'Receipt',
+          name: '거래내역',
           component: Receipt,
           beforeEnter: requireAuth
         },
