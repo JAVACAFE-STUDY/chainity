@@ -6,8 +6,7 @@
           <b-card no-body class="mx-4">
             <b-card-body class="p-4">
               <b-form novalidate="novalidate" class="was-validated" @submit="onSubmit">
-                <h1>Register</h1>
-                <p class="text-muted">Create your account</p>
+                <h1>회원가입</h1>
                 <b-input-group class="mb-3">
                   <b-input-group-prepend>
                     <b-input-group-text>@</b-input-group-text>
@@ -19,24 +18,24 @@
                   <b-input-group-prepend>
                     <b-input-group-text><i class="icon-user"></i></b-input-group-text>
                   </b-input-group-prepend>
-                  <input v-model="form.name" type="text" class="form-control" placeholder="Name">
+                  <input v-model="form.name" type="text" class="form-control" placeholder="이름">
                 </b-input-group>
 
                 <b-input-group class="mb-3">
                   <b-input-group-prepend>
                     <b-input-group-text><i class="icon-lock"></i></b-input-group-text>
                   </b-input-group-prepend>
-                  <input v-model="form.password" type="password" class="form-control" placeholder="Password">
+                  <input v-model="form.password" type="password" class="form-control" placeholder="비밀번호">
                 </b-input-group>
 
                 <b-input-group class="mb-4">
                   <b-input-group-prepend>
                     <b-input-group-text><i class="icon-lock"></i></b-input-group-text>
                   </b-input-group-prepend>
-                  <input v-model="form.repeatPassword" type="password" class="form-control" placeholder="Repeat password">
+                  <input v-model="form.repeatPassword" type="password" class="form-control" placeholder="비밀번호 확인">
                 </b-input-group>
 
-                <b-button type="submit" variant="success" block>Create Account</b-button>
+                <b-button type="submit" variant="success" block>가입하기</b-button>
               </b-form>
             </b-card-body>
           </b-card>
