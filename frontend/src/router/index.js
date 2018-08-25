@@ -5,7 +5,7 @@ import Router from 'vue-router'
 import Full from '@/containers/Full'
 
 // Views
-import Dashboard from '@/views/Dashboard'
+// import Dashboard from '@/views/Dashboard'
 import Login from '@/views/Login'
 import Register from '@/views/Register'
 import Page404 from '@/views/Page404'
@@ -54,42 +54,15 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/dashboard',
+      redirect: '/issues',
       name: 'Home',
       component: Full,
       children: [
-        {
-          path: 'dashboard',
-          name: 'Dashboard',
-          component: Dashboard
-        },
-        {
-          path: 'users',
-          name: 'Users',
-          component: Users,
-          beforeEnter: requireAuth
-        },
-        {
-          path: 'purchase',
-          name: 'Purchase',
-          component: Purchase,
-          beforeEnter: requireAuth
-        },
-        {
-          path: 'admin',
-          redirect: '/admin/tokens-requests',
-          name: '관리자메뉴',
-          component: {
-            render (c) { return c('router-view') }
-          },
-          children: [
-            {
-              path: 'tokens-requests',
-              name: '토큰충전요청',
-              component: TokensRequests
-            }
-          ]
-        },
+        // {
+        //   path: 'dashboard',
+        //   name: 'Dashboard',
+        //   component: Dashboard
+        // },
         {
           path: 'issues',
           name: '이슈',
@@ -119,6 +92,33 @@ export default new Router({
               path: ':id/edit',
               name: '수정하기',
               component: EditIssue
+            }
+          ]
+        },
+        {
+          path: 'users',
+          name: 'Users',
+          component: Users,
+          beforeEnter: requireAuth
+        },
+        {
+          path: 'purchase',
+          name: 'Purchase',
+          component: Purchase,
+          beforeEnter: requireAuth
+        },
+        {
+          path: 'admin',
+          redirect: '/admin/tokens-requests',
+          name: '관리자메뉴',
+          component: {
+            render (c) { return c('router-view') }
+          },
+          children: [
+            {
+              path: 'tokens-requests',
+              name: '토큰충전요청',
+              component: TokensRequests
             }
           ]
         },

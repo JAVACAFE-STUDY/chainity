@@ -161,21 +161,21 @@ export default {
         '승인 시, ' + item.createdBy + '님에게 <b>JC ' + item.tokens + '을(를) 충전</b> 합니다.',
         password => {
           this.$http.get('/api/users/' + item.createdBy)
-          .then((response) => {
-            var body = {
-              receiver: response.data.keyStore.address,
-              tokens: item.tokens,
-              password: password
-            }
+            .then((response) => {
+              var body = {
+                receiver: response.data.keyStore.address,
+                tokens: item.tokens,
+                password: password
+              }
 
-            this.$http.post('/api/contracts/0x000/tokens', body)
-              .then((response) => {
-                console.log(response.data)
-                item.tx = response.data.hash
-                this.$http.put('/api/tokens-requests/' + item.id, {tx: item.tx, approvedDate: new Date()})
-                  .then((response) => {
-                    alert('승인 되었습니다.')
-                  })
+              this.$http.post('/api/contracts/0x000/tokens', body)
+                .then((response) => {
+                  console.log(response.data)
+                  item.tx = response.data.hash
+                  this.$http.put('/api/tokens-requests/' + item.id, {tx: item.tx, approvedDate: new Date()})
+                    .then((response) => {
+                      alert('승인 되었습니다.')
+                    })
                 }).catch((error) => {
                   alert(error.response.data.message)
                 })
