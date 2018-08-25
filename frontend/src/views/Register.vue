@@ -64,12 +64,12 @@ export default {
     onSubmit (evt) {
       evt.preventDefault()
       if (this.form.password !== this.form.repeatPassword) {
-        alert('Repeat your password again!')
+        alert('')
         return
       }
       this.$http.post('/api/auth/register', this.form)
         .then((response) => {
-          alert('User registered.')
+          alert('비밀번호가 일치하지 않습니다.')
           this.$router.push('/login')
         }).catch((error) => {
           alert(error.response.data.message)
