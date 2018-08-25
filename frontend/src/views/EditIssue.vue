@@ -29,7 +29,7 @@
                 <b-form-group>
                   <label v-if="form.issueType === 'reward'" for="name">보상 금액</label>
                   <label v-else for="name">납부 금액</label>
-                  <b-form-input type="number" min="0" :disabled="true" v-model="form.price"></b-form-input>
+                  <b-form-input type="number" min="0" :disabled="true" v-model="form.tokens"></b-form-input>
                 </b-form-group>
               </b-col>
             </b-row>
@@ -150,7 +150,7 @@ export default {
         _id: '',
         title: '',
         description: '',
-        price: '500',
+        tokens: '500',
         maxNumberOfParticipants: '1',
         startDate: '',
         finishDate: '',
@@ -159,7 +159,7 @@ export default {
         issueType: 'reward'
       },
       etc: {
-        price: '',
+        tokens: '',
         maxNumberOfParticipants: ''
       },
       enable: {
@@ -208,7 +208,7 @@ export default {
         })
     },
     updateIssue () {
-      this.form.price = (this.form.price === '-1') ? this.etc.price : this.form.price
+      this.form.tokens = (this.form.tokens === '-1') ? this.etc.tokens : this.form.tokens
       this.form.maxNumberOfParticipants = (this.form.maxNumberOfParticipants === '-1') ? this.etc.maxNumberOfParticipants : this.form.maxNumberOfParticipants
       this.form.participants = this.tags.map(participant => (participant._id))
       this.$http.put('/api/issues/' + this.$route.params.id, this.form)

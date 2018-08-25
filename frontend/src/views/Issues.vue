@@ -27,7 +27,7 @@ export default {
       issueFields: [
         {key: 'id', label: '아이디', sortable: true},
         {key: 'title', label: '제목', sortable: true},
-        {key: 'price', label: '보상/납부 금액', sortable: true, variant: 'info'},
+        {key: 'tokens', label: '보상/납부 금액', sortable: true, variant: 'info'},
         {key: 'createdDate', label: '등록일', sortable: true},
         {key: 'startDate', label: '시작일', sortable: true},
         {key: 'finishDate', label: '종료일', sortable: true, variant: 'warning'},

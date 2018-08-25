@@ -32,7 +32,7 @@
                 <b-form-group>
                   <p v-if="form.issueType === 'reward'" class="h4">보상 금액</p>
                   <p v-else class="h4">납부 금액</p>
-                  <p>{{ form.price }}</p>
+                  <p>{{ form.tokens }}</p>
                 </b-form-group>
               </b-col>
             </b-row>
@@ -117,7 +117,7 @@ export default {
         createdByName: '',
         createdDate: '',
         description: '',
-        price: '0',
+        tokens: '0',
         maxNumberOfParticipants: '',
         startDate: '',
         finishDate: '',
@@ -154,11 +154,11 @@ export default {
       var tokenOwnerName = this.users['me'].name
       var spenderName = this.users[this.form.createdBy].name
       var spenderAddress = this.users[this.form.createdBy].keyStore.address
-      var price = this.form.price
+      var tokens = this.form.tokens
 
       this.$http.get('/api/users/me/tokens')
         .then((response) => {
-          if (response.data.tokens < price) {
+          if (response.data.tokens < tokens) {
             alert('토큰 잔액 부족 - 보유량: ' + response.data.tokens)
             throw new Error()
           }
@@ -166,11 +166,11 @@ export default {
         .then(() => {
           this.$eventHub.$emit('pw-modal-open',
             '토큰 전송 수락',
-            tokenOwnerName + '님의 지갑으로부터 <b>' + spenderName + '님이 ' + price + '토큰을 지출</b> 할 수 있도록 수락하시겠습니까?',
+            tokenOwnerName + '님의 지갑으로부터 <b>' + spenderName + '님이 ' + tokens + '토큰을 지출</b> 할 수 있도록 수락하시겠습니까?',
             password => {
               var body = {
                 spender: spenderAddress,
-                tokens: price,
+                tokens: tokens,
                 password: password
               }
               this.$http.post('/api/contracts/mine/approval', body)
@@ -192,11 +192,11 @@ export default {
       var tokenOwnerName = this.users['me'].name
       var spenderName = this.users[this.form.createdBy].name
       var spenderAddress = this.users[this.form.createdBy].keyStore.address
-      var price = this.form.price
+      var tokens = this.form.tokens
 
       this.$eventHub.$emit('pw-modal-open',
         '토큰 전송 취소',
-        tokenOwnerName + '님의 지갑으로부터 <b>' + spenderName + '님이 ' + price + '토큰 지출 수락 건</b>을 취소하시겠습니까?',
+        tokenOwnerName + '님의 지갑으로부터 <b>' + spenderName + '님이 ' + tokens + '토큰 지출 수락 건</b>을 취소하시겠습니까?',
         password => {
           var body = {
             spender: spenderAddress,

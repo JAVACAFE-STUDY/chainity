@@ -24,7 +24,7 @@ function list(req, res, next) {
  * Create new issue
  * @property {string} req.body.title
  * @property {string} req.body.description
- * @property {string} req.body.price
+ * @property {string} req.body.tokens
  * @property {string} req.body.maxNumberOfParticipants
  * @property {string} req.body.startDate
  * @property {string} req.body.finishDate
@@ -36,7 +36,7 @@ function create(req, res, next) {
     issueType: req.body.issueType,
     title: req.body.title,
     description: req.body.description,
-    price: req.body.price,
+    tokens: req.body.tokens,
     maxNumberOfParticipants: req.body.maxNumberOfParticipants,
     startDate: req.body.startDate,
     finishDate: req.body.finishDate,

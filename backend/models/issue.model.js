@@ -19,7 +19,7 @@ const IssueSchema = new mongoose.Schema({
     type: String,
     required: false
   },
-  price: {
+  tokens: {
     type: Number,
     required: true
   },
