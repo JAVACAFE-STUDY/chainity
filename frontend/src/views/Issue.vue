@@ -47,7 +47,7 @@
             <b-row>
               <b-col sm="12">
                 <b-form-group>
-                  <p class="h4">기간</p>
+                  <p class="h4">참여 가능 기간</p>
                   <p v-if="form.startDate || form.finishDate">
                     {{ form.startDate | moment("YYYY-MM-DD")}} ~ {{ form.finishDate | moment("YYYY-MM-DD")}}
                   </p>
@@ -58,7 +58,7 @@
             <b-row>
               <b-col sm="12">
                 <b-form-group>
-                  <p class="h4">참여가능 인원수</p>
+                  <p class="h4">참여 가능 인원 수</p>
                   <p v-if="form.maxNumberOfParticipants === 9999">멤버 전체</p>
                   <p v-else>{{ form.maxNumberOfParticipants }}</p>
                 </b-form-group>
