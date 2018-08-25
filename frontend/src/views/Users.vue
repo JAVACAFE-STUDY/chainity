@@ -49,12 +49,12 @@ export default {
       },
       users: [],
       userFields: [
-        {key: 'name', sortable: true},
-        {key: 'email', sortable: true},
-        {key: 'role', sortable: true},
-        {key: 'status', sortable: true},
-        {key: 'createdAt', sortable: true},
-        {key: 'tokens', sortable: true}
+        {key: 'name', label: '이름', sortable: true},
+        {key: 'email', label: '이메일', sortable: true},
+        {key: 'role', label: '권한', sortable: true},
+        {key: 'status', label: '상태', sortable: true},
+        {key: 'createdAt', label: '가입일', sortable: true},
+        {key: 'tokens', label: '보유토큰량', sortable: true}
       ],
       user: {}
     }
