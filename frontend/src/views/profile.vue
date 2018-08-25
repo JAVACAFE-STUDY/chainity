@@ -2,7 +2,7 @@
   <div class="animated fadeIn">
     <div class="card mx-4">
       <div class="card-body">
-        <h1>Profile</h1>
+        <h1>프로필</h1>
       </div>
       <b-row>
         <b-col cols="5">
@@ -57,7 +57,7 @@
               <input type="text" class="form-control" v-model="item.role" placeholder="Role" readonly>
             </div>
 
-            <button type="button" v-on:click="onSubmit" class="btn btn-block btn-success">Update Profile</button>
+            <button type="button" v-on:click="onSubmit" class="btn btn-block btn-success">수정</button>
           </div>
         </b-col>
       </b-row>
