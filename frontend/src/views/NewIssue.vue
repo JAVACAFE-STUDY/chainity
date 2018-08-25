@@ -88,7 +88,7 @@
               <strong>참여 대상자</strong>
             </div>
             <b-form-group>
-              <label for="">참여가능 인원수</label>
+              <label for="">참여 가능 인원 수</label>
               <b-form-radio-group
                   plain
                   :options="[
