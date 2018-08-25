@@ -165,7 +165,7 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     const fileName = "profile_" + file.originalname + ".jpg";
     cb(null, fileName);
-    thumbnail.ensureThumbnail(fileName, null, 50, function(err, filename){
+    thumbnail.ensureThumbnail(fileName, 50, 50, function(err, filename){
       if (err) {
         console.error(err);
       }
@@ -200,7 +200,7 @@ function profileImage(req, res, next) {
 }
 
 function profileThumbnail(req, res, next) {
-  fs.readFile(profileThumbnailImagePath + "profile_" + req.params.userId + "-x50.jpg", function(error,data){
+  fs.readFile(profileThumbnailImagePath + "profile_" + req.params.userId + "-50x50.jpg", function(error,data){
     if (error) {
       res.writeHead(404, {"Content": "image/jpeg"})
       res.end()
