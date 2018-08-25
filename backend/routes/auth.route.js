@@ -12,7 +12,7 @@ const router = express.Router(); // eslint-disable-line new-cap
 router.route('/login')
   .post(validate(paramValidation.login), authCtrl.login);
 
-/** POST /api/auth/register - Returns token if correct username and password is provided */
+/** POST /api/auth/register */
 router.route('/register')
   .post(validate(paramValidation.register), authCtrl.loadUserToRegister, userCtrl.update);
 

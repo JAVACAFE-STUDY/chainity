@@ -8,6 +8,7 @@ import Full from '@/containers/Full'
 // import Dashboard from '@/views/Dashboard'
 import Login from '@/views/Login'
 import Register from '@/views/Register'
+import RegisterComplete from '@/views/RegisterComplete'
 import Page404 from '@/views/Page404'
 import Page500 from '@/views/Page500'
 import Users from '@/views/Users'
@@ -170,6 +171,11 @@ export default new Router({
           next({name: 'Page500', params: {msg: 'Invalid access.'}})
         }
       }
+    },
+    {
+      path: '/register-complete',
+      name: 'RegisterComplete',
+      component: RegisterComplete
     },
     {
       path: '/500',
