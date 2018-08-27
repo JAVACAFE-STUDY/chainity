@@ -77,7 +77,7 @@ export default {
       var _this = this
       evt.preventDefault()
       if (this.form.email !== '') {
-        this.form.status = 'pending'
+        this.form.status = 'invited'
         this.form.role = 'user'
         this.form.name = ''
         this.$http.post('/api/users', this.form)
