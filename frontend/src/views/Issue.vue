@@ -79,7 +79,12 @@
             <b-list-group v-if="form.participants.length > 0" flush>
               <!-- <b-list-group-item v-for="participant in form.participants">{{ msg }}</b-list-group-item> -->
               <b-list-group-item v-for="participant in form.participants" :key="participant.id">
-                {{ participant }}
+                <div class="avatar float-right">
+                  <img class="img-avatar" :src="getProfileUrl(participant)" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
+                </div>
+                <div>
+                  <strong>{{ participant }}</strong>
+                </div>
               </b-list-group-item>
             </b-list-group>
             <p v-else class="card-text text-center">
@@ -207,6 +212,9 @@ export default {
             })
         }
       )
+    },
+    getProfileUrl (userId) {
+      return 'http://localhost:3000/api/users/' + userId + '/images/profile/thumbnail'
     },
     optIn () {
       this.$http.put('/api/issues/' + this.$route.params.id + '/participants/me')

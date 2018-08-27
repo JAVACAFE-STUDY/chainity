@@ -16,6 +16,7 @@
     "concurrently": "^3.5.1"
   },
   "dependencies": {
-    "axios": "^0.18.0"
+    "axios": "^0.18.0",
+    "gm": "^1.23.1"
   }
 }
