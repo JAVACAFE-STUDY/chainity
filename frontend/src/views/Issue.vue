@@ -72,9 +72,9 @@
               <strong>참여자</strong>
               <small>현재: {{ form.participants.length }}</small>
             </div>
-            <div slot="footer" class="text-sm-right" v-if="form.isClosed === false">
-              <b-button variant="success" v-on:click="form.issueType === 'reward' ? optIn() : askPermissionAndOptIn()">참여하기</b-button>
-              <b-button variant="danger" v-on:click="form.issueType === 'reward' ? optOut() : askPermissionAndOptOut()">참여취소</b-button>
+            <div slot="footer" class="text-sm-center" v-if="form.isClosed === false">
+              <b-button variant="success" v-if="!isParticipant" v-on:click="form.issueType === 'reward' ? optIn() : askPermissionAndOptIn()">참여하기</b-button>
+              <b-button variant="danger" v-if="isParticipant" v-on:click="form.issueType === 'reward' ? optOut() : askPermissionAndOptOut()">참여취소</b-button>
             </div>
             <b-list-group v-if="form.participants.length > 0" flush>
               <!-- <b-list-group-item v-for="participant in form.participants">{{ msg }}</b-list-group-item> -->
@@ -107,10 +107,10 @@ export default {
   components: {pwModal},
   created () {
     this.fetchIssue()
-    this.fetchUser('me')
   },
   data () {
     return {
+      isParticipant: false,
       form: {
         title: '',
         createdBy: '',
@@ -128,19 +128,6 @@ export default {
     }
   },
   methods: {
-    fetchUser (userId) {
-      this.$http.get('/api/users/' + userId)
-        .then((response) => {
-          this.users[userId] = response.data
-        })
-        .then(() => {
-          if (userId === this.form.createdBy) {
-            this.form.createdByName = this.users[userId].name
-            // trick to change createdByName
-            this.form.title = this.form.title + ' '
-          }
-        })
-    },
     fetchIssue () {
       this.$http.get('/api/issues/' + this.$route.params.id)
         .then((response) => {
@@ -148,6 +135,30 @@ export default {
         })
         .then(() => {
           this.fetchUser(this.form.createdBy)
+        })
+        .then(() => {
+          this.fetchUser('me')
+        })
+    },
+    fetchUser (userId) {
+      this.$http.get('/api/users/' + userId)
+        .then((response) => {
+          this.users[userId] = response.data
+        })
+        .then(() => {
+          // 로그인 한 사람이 이미 참여한 이슈인지 체크한 후, 참여하기 또는 참여취소 버튼의 visibility 설정
+          if (userId == 'me') {
+            var loginUserId = this.users[userId].id;
+            var participantId = this.form.participants.filter(function(objectId) {
+              return loginUserId == objectId
+            });
+            this.isParticipant = (participantId != '') ? true : false
+          }
+          if (userId === this.form.createdBy) {
+            this.form.createdByName = this.users[userId].name
+            // trick to change createdByName
+            this.form.title = this.form.title + ' '
+          }
         })
     },
     askPermissionAndOptIn () {
@@ -220,14 +231,14 @@ export default {
       this.$http.put('/api/issues/' + this.$route.params.id + '/participants/me')
         .then((response) => {
           this.fetchIssue()
-          alert('참여 완료')
+          alert('참여가 완료되었습니다.')
         })
     },
     optOut () {
       this.$http.delete('/api/issues/' + this.$route.params.id + '/participants/me')
         .then((response) => {
           this.fetchIssue()
-          alert('참여 취소 완료')
+          alert('참여가 취소되었습니다.')
         })
     },
     cancel () {
