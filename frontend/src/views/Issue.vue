@@ -11,7 +11,7 @@
       </div>
       <div slot="footer" class="text-sm-right">
         <b-button variant="info" :to="{name: '이슈'}">확인</b-button>
-        <b-button variant="danger" v-on:click="close" :disabled="form.status === 'close'">종료</b-button>
+        <b-button variant="danger" v-on:click="close" v-if="form.isClosed === false">종료</b-button>
       </div>
       <b-row>
         <b-col sm="12">
@@ -234,35 +234,16 @@ export default {
       this.$router.push('/issues')
     },
     close: function (event) {
-      // address 받아오기
-      this.$http.get('/api/users/address?selected=' + this.selected)
-        .then((response) => {
-          var data = response.data
-          for (var i = 0; i < data.length; i++) {
-            this.item.receiver = JSON.parse(JSON.stringify(data[i].keyStore)).address
-            this.item.tokens = this.item.rewards
-            this.item.user = this.user
-            // 보상 코인 전송
-            this.$http.post('/api/contracts/0x000/tokens', this.item)
-              .then((response) => {
-                this.$http.put('/api/issues/' + this.$route.query.id, {
-                  issue: this.item,
-                  status: 'close'
-                })
-                  .then((response) => {
-                    alert('이슈가 종료되었습니다.')
-                    this.$router.go(-1)
-                  })
-              })
-          }
+      if (confirm('이슈를 종료하시겠습니까?')) {
+        this.$http.put('/api/issues/' + this.$route.params.id, {
+          isClosed: true,
+          closedDate: new Date()
         })
-        .then((response) => {
-          if (response.data.result === 'success') {
-            alert(response.data.hash)
-          } else {
-            alert(response.data.error)
-          }
-        })
+          .then((response) => {
+            alert('이슈가 종료되었습니다.')
+            this.$router.go(-1)
+          })
+      }
     }
   }
 }

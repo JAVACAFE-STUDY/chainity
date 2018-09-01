@@ -91,6 +91,12 @@ function update(req, res, next) {
   if (req.body.finishDate != '') {
     issue.finishDate = req.body.finishDate;
   }
+  if (req.body.isClosed != '') {
+    issue.isClosed = req.body.isClosed;
+  }
+  if (req.body.closedDate != '') {
+    issue.closedDate = req.body.closedDate;
+  }
 
   Issue.update({ id: issue.id}, issue)
     .then(savedIssue => res.json(savedIssue))
