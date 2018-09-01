@@ -60,7 +60,7 @@
         <b-col sm="6">
           <b-card>
             <div slot="header">
-              <strong>기간</strong>
+              <strong>참여 가능 기간</strong>
             </div>
             <b-form-group>
               <label for="start">시작일</label>
@@ -85,10 +85,10 @@
           </b-card>
           <b-card>
             <div slot="header">
-              <strong>대상자</strong>
+              <strong>참여 대상자</strong>
             </div>
             <b-form-group>
-              <label for="">참여가능 인원수</label>
+              <label for="">참여 가능 인원 수</label>
               <b-form-radio-group
                   plain
                   :options="[
