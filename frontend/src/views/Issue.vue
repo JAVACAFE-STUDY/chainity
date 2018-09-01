@@ -72,7 +72,7 @@
               <strong>참여자</strong>
               <small>현재: {{ form.participants.length }}</small>
             </div>
-            <div slot="footer" class="text-sm-right">
+            <div slot="footer" class="text-sm-right" v-if="form.isClosed === false">
               <b-button variant="success" v-on:click="form.issueType === 'reward' ? optIn() : askPermissionAndOptIn()">참여하기</b-button>
               <b-button variant="danger" v-on:click="form.issueType === 'reward' ? optOut() : askPermissionAndOptOut()">참여취소</b-button>
             </div>
