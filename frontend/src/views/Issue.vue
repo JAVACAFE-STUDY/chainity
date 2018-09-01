@@ -69,12 +69,14 @@
         <b-col sm="4">
           <b-card no-body>
             <div slot="header">
-              <strong>참여자</strong>
+              <strong v-if="form.issueType === 'reward'">참여자</strong>
+              <strong v-if="form.issueType != 'reward'">납부자</strong>
               <small>현재: {{ form.participants.length }}</small>
             </div>
             <div slot="footer" class="text-sm-center" v-if="form.isClosed === false">
-              <b-button variant="success" v-if="!isParticipant" v-on:click="form.issueType === 'reward' ? optIn() : askPermissionAndOptIn()">참여하기</b-button>
-              <b-button variant="danger" v-if="isParticipant" v-on:click="form.issueType === 'reward' ? optOut() : askPermissionAndOptOut()">참여취소</b-button>
+              <b-button variant="success" v-if="form.issueType != 'reward'" v-on:click="askPermissionAndOptIn()">납부하기</b-button>
+              <b-button variant="success" v-if="form.issueType === 'reward' && !isParticipant" v-on:click="optIn()">참여하기</b-button>
+              <b-button variant="danger" v-if="form.issueType === 'reward' && isParticipant" v-on:click="form.issueType === 'reward' ? optOut() : askPermissionAndOptOut()">참여취소</b-button>
             </div>
             <b-list-group v-if="form.participants.length > 0" flush>
               <!-- <b-list-group-item v-for="participant in form.participants">{{ msg }}</b-list-group-item> -->
