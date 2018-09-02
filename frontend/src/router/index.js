@@ -22,6 +22,7 @@ import Profile from '@/views/Profile'
 import Approve from '@/views/Approve'
 import Receipt from '@/views/Receipt'
 import MyTokens from '@/views/MyTokens'
+import RegisterRequests from '@/views/RegisterRequests'
 
 import crypto from 'crypto'
 
@@ -115,6 +116,21 @@ export default new Router({
               path: 'tokens-requests',
               name: '토큰충전요청',
               component: TokensRequests
+            }
+          ]
+        },
+        {
+          path: 'system',
+          redirect: '/system/register-requests',
+          name: '시스템메뉴',
+          component: {
+            render (c) { return c('router-view') }
+          },
+          children: [
+            {
+              path: 'register-requests',
+              name: '회원가입요청',
+              component: RegisterRequests
             }
           ]
         },
