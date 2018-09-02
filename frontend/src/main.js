@@ -9,6 +9,7 @@ import VueSession from 'vue-session'
 import HttpStatus from 'http-status'
 import moment from 'moment'
 import Vuelidate from 'vuelidate'
+import Toastr from 'vue-toastr'
 
 axios.defaults.baseURL = 'http://localhost:3000'
 
@@ -19,6 +20,8 @@ Vue.use(require('vue-moment'), {moment})
 Vue.use(VueSession, {persist: true})
 Vue.use(BootstrapVue)
 Vue.use(Vuelidate)
+require('vue-toastr/src/vue-toastr.scss')
+Vue.use(Toastr)
 
 /* eslint-disable no-new */
 new Vue({
@@ -29,6 +32,8 @@ new Vue({
     App
   },
   created: function () {
+    this.$toastr.defaultPosition = 'toast-bottom-right'
+    this.$toastr.defaultProgressBar = false
     var _this = this
     axios.interceptors.request.use(function (config) {
       config.headers['Authorization'] = 'Bearer ' + _this.$session.get('user-token')
