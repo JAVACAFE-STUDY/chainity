@@ -60,49 +60,56 @@ function load(req, res, next, id) {
     return next();
 }
 
-function _sendTx(walletInfo,  data) {
+async function _sendTx(walletInfo, to, data, value) {
 	var myAddress = walletInfo.address;
 	var privateKey = new Buffer(walletInfo.privateKey.replace('0x', ''), 'hex')
+	var result = {
+		nonceFromNode : '',
+		nonceFromMemory : '',
+		txHash : ''
+	};
+	let nonce = await web3.eth.getTransactionCount(myAddress);
+	result.nonceFromNode = nonce;
 
 	var rawTx = {
+		nonce : web3.utils.toHex(getUpdatedNonce(myAddress, nonce)),
 		gasPrice: web3.utils.toHex(config.gasPrice),
 		gasLimit: web3.utils.toHex(config.gasLimit),
-		to: config.contractAccount,
-		value: web3.utils.toHex(0),
+		to: web3.utils.toHex(to),
+		value: web3.utils.toHex(value),
 		data: data
 	}
+	result.nonceFromMemory = rawTx.nonce;
 
-	web3.eth.getTransactionCount(myAddress)
-	.then(nonce => {
-		rawTx.nonce = web3.utils.toHex(getUpdatedNonce(myAddress, nonce));
-	})
-	.then(() => {
+	var tx = new Tx(rawTx);
+	tx.sign(privateKey);
 
-		var tx = new Tx(rawTx);
-		tx.sign(privateKey)
+	await web3.eth.sendSignedTransaction('0x' + tx.serialize().toString('hex'), function(error, hash) {
+		if (!error) {
+			result.txHash = hash;
+		} else {
+			throw new APIError('Transaction error: ' + error);
+		}
+	});
 
-		var serializedTx = tx.serialize();
-		web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'), function(error, hash) {
-			if (!error) {
-				return {'nonce': rawTx.nonce, 'hash': hash}
-			} else {
-				throw new APIError('Transaction error: ' + error);
-			}
-		});
-	})
+	return result;
 }
 
-function sendToken(req, res, next) {
+function sendTokens(req, res, next) {
 	const from = config.systemAddress;
 	const to = req.body.receiver;
 	const tokens = req.body.tokens;
 	const password = req.body.password;
 
 	User.get(req.decoded._id)
-    .then((user) => {
+    .then(async (user) => {
 		var walletInfo = web3.eth.accounts.decrypt(user.keyStore, password);
 		var data = req.contract.methods.transferFrom(from, to, tokens).encodeABI();
-		res.send(_sendTx(walletInfo, data));
+		try{
+			res.send(await _sendTx(walletInfo, config.contractAccount, data, 0));
+		} catch (e) {
+			throw e;
+		}
     })
     .catch((e) => {
       next(new APIError(e.message, httpStatus.INTERNAL_SERVER_ERROR, true));
@@ -115,15 +122,43 @@ function approval(req, res, next) {
 	const password = req.body.password;
 
 	User.get(req.decoded._id)
-    .then((user) => {
+    .then(async (user) => {
 		var walletInfo = web3.eth.accounts.decrypt(user.keyStore, password);
 		var data = req.contract.methods.approve(spender, tokens).encodeABI();
-		res.send(_sendTx(walletInfo, data));
+		try{
+			res.send(await _sendTx(walletInfo, config.contractAccount, data, 0));
+		} catch (e) {
+			throw e;
+		}
     })
     .catch((e) => {
       next(new APIError(e.message, httpStatus.INTERNAL_SERVER_ERROR, true));
 	});
-	
+}
+
+function getUserCoins(req, res, next) {
+	web3.eth.getBalance(req.user.keyStore.address, function(err, result) {
+		return res.send({"coins" : result});
+	});
+}
+
+function sendCoins(req, res, next) {
+	const to = req.user.keyStore.address;
+	const coins = web3.utils.toWei(req.body.coins.toString(), 'ether');
+	const password = req.body.password;
+
+	User.get(req.decoded._id)
+    .then(async (user) => {
+		var walletInfo = web3.eth.accounts.decrypt(user.keyStore, password);
+		try {
+			res.send(await _sendTx(walletInfo, to, '0x00', coins));
+		} catch (e) {
+			throw e;
+		}
+	})
+	.catch((e) => {
+		next(new APIError(e.message, httpStatus.INTERNAL_SERVER_ERROR, true));
+	});
 }
 
 function getUpdatedNonce(address, systemNonce) {
@@ -135,4 +170,4 @@ function getUpdatedNonce(address, systemNonce) {
 	return nonces[address];
 }
 
-module.exports = { getTotalTokens, getReceiptList, load, sendToken, approval, getUserTokens };
+module.exports = { getTotalTokens, getReceiptList, load, sendTokens, approval, getUserTokens, sendCoins, getUserCoins };
