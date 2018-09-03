@@ -3,6 +3,7 @@ var User = require('../models/user.model');
 var config = require('../config/config');
 var Tx = require('ethereumjs-tx');
 var Web3 = require('web3');
+var User = require('../models/user.model');
 
 var web3 = new Web3(new Web3.providers.HttpProvider(config.web3Provider));
 var erc20 = new web3.eth.Contract(JSON.parse(config.contractABI), config.contractAccount);
@@ -57,9 +58,12 @@ function create(req, res, next) {
 function load(req, res, next, issueId) {
   Issue.get(issueId)
     .then((issue) => {
-      req.issue = issue;
-      return next();
-    })
+      req.issue = issue
+      return User.findAll(issue.participants);
+    }).then((users) => {
+      req.issue.participants = users;
+      return next()
+    }) 
     .catch(e => next(e));
 }
 
