@@ -149,12 +149,12 @@ export default {
         })
         .then(() => {
           // 로그인 한 사람이 이미 참여한 이슈인지 체크한 후, 참여하기 또는 참여취소 버튼의 visibility 설정
-          if (userId == 'me') {
-            var loginUserId = this.users[userId].id;
-            var participantId = this.form.participants.filter(function(objectId) {
-              return loginUserId == objectId
-            });
-            this.isParticipant = (participantId != '') ? true : false
+          if (userId === 'me') {
+            var loginUserId = this.users[userId].id
+            var participantId = this.form.participants.filter(function (objectId) {
+              return loginUserId === objectId
+            })
+            this.isParticipant = participantId.length !== 0
           }
           if (userId === this.form.createdBy) {
             this.form.createdByName = this.users[userId].name
