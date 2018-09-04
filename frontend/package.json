@@ -33,6 +33,7 @@
     "vue-resource": "^1.5.1",
     "vue-router": "^3.0.1",
     "vue-session": "^1.0.0",
+    "vue-toastr": "^2.0.14",
     "vue2-editor": "^2.5.0",
     "vuejs-datepicker": "^1.5.2",
     "vuelidate": "^0.7.4"

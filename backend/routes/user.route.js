@@ -71,6 +71,11 @@ router.route('/:userId/tokens')
     contractCtrl.load(req, res, next)
   }, contractCtrl.getUserTokens)
 
+router.route('/:userId/coins')
+  /** GET /api/users/:userId/coins - Get user coins */
+  .get(auth, contractCtrl.getUserCoins)
+  .post(auth, contractCtrl.sendCoins);
+
 /** Load user when API with userId route parameter is hit */
 router.param('userId', userCtrl.load);
 

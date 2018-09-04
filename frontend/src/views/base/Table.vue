@@ -57,6 +57,10 @@
       <template slot="tokensRequestAcceptible" slot-scope="data">
         <b-button variant="success" v-on:click="askPermissionAndTransferFrom(data.item)">승인</b-button>
       </template>
+      <template slot="approve" slot-scope="data">
+        <b-button size="sm" @click.stop="$eventHub.$emit('approve-clicked', data.item)" class="mr-1">승인하기</b-button>
+        <!-- <b-button size="sm" @click.stop="$root.$emit('bv::show::modal', 'registerRequest', $event.target)" class="mr-1">승인하기</b-button> -->
+      </template>
     </b-table>
     <nav>
       <b-pagination :total-rows="getRowCount(items)" :per-page="perPage" v-model="currentPage" prev-text="Prev" next-text="Next" hide-goto-end-buttons/>
