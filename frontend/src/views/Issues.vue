@@ -36,10 +36,10 @@ export default {
         {key: 'id', label: '아이디', sortable: true},
         {key: 'title', label: '제목', sortable: true},
         {key: 'tokens', label: '보상/납부 금액', sortable: true, variant: 'info'},
-        {key: 'createdAt', label: '등록일', sortable: true},
-        {key: 'startDate', label: '시작일', sortable: true},
-        {key: 'finishDate', label: '종료일', sortable: true, variant: 'warning'},
-        {key: 'participants', label: '현재 참여 수', sortable: true},
+        {key: 'createdAt', label: '등록일시', sortable: true},
+        {key: 'startDate', label: '참여 시작일', sortable: true},
+        {key: 'finishDate', label: '참여 마감일', sortable: true, variant: 'warning'},
+        {key: 'participants', label: '참여 수', sortable: true},
         {key: 'issueStatus', label: '상태', sortable: true}
       ],
       user: {}

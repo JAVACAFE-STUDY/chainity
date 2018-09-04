@@ -62,7 +62,11 @@
         <!-- <b-button size="sm" @click.stop="$root.$emit('bv::show::modal', 'registerRequest', $event.target)" class="mr-1">승인하기</b-button> -->
       </template>
        <template slot="issueStatus" slot-scope="data">
-          {{ data.item.isClosed == true ? '종료' : '진행 중' }}
+         <!-- TODO: check closed by finishDate -->
+         <b-badge v-if="data.item.isClosed == true" variant="error">종료</b-badge>
+        <!-- TODO: check pending by startDate -->
+         <!-- <b-badge v-else-if="data.item.startDate == true" variant="error">대기 중</b-badge> -->
+         <b-badge v-else variant="success">진행 중</b-badge>
       </template>
       <template slot="createdAt" slot-scope="data">
           {{ (data.item.createdAt && data.item.createdAt != null) ? $moment.utc(data.item.createdAt).local().format('YYYY-MM-DD HH:mm:ss') : '' }}
