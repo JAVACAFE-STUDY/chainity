@@ -59,7 +59,7 @@ export default {
             this.issues[i].finishDate = issue.finishDate ? this.$moment.utc(issue.finishDate).local().format('YYYY-MM-DD') : '미지정'
             this.issues[i].createdDate = this.$moment.utc(issue.createdDate).local().format('YYYY-MM-DD HH:mm:ss')
             this.issues[i].isClosed = issue.isClosed ? '종료' : ''
-            this.issues[i].closedDate = issue.isClosed == '종료' ? this.$moment.utc(issue.closedDate).local().format('YYYY-MM-DD HH:mm:ss') : ''
+            this.issues[i].closedDate = issue.isClosed === '종료' ? this.$moment.utc(issue.closedDate).local().format('YYYY-MM-DD HH:mm:ss') : ''
             if (issue.participants) {
               this.issues[i].participants = issue.participants.length
             } else {

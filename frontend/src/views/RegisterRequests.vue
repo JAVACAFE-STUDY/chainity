@@ -71,11 +71,11 @@ export default {
       modal: {
         busy: false,
         form: {
-          userId : '',
-          email : '',
-          name : '',
-          coins : 0.01,
-          password : ''
+          userId: '',
+          email: '',
+          name: '',
+          coins: 0.01,
+          password: ''
         }
       }
     }
@@ -119,7 +119,7 @@ export default {
     async submit () {
       var self = this
       this.$v.$touch()
-      if(this.$v.$invalid) return
+      if (this.$v.$invalid) return
 
       this.modal.busy = true
 
@@ -128,7 +128,7 @@ export default {
         password: this.modal.form.password
       }
 
-      var before;
+      var before
       try {
         before = this.$toastr.Add({
           title: '거래 내역',
@@ -137,32 +137,32 @@ export default {
           timeout: 0,
           type: 'info'
         })
-        const response = await this.$http.post('/api/users/'+this.modal.form._id+'/coins', body)
+        const response = await this.$http.post('/api/users/' + this.modal.form._id + '/coins', body)
         this.$toastr.Close(before)
 
-        var created =  this.$toastr.Add({
+        this.$toastr.Add({
           title: '거래 내역',
           msg: '블록체인 원장에 등록 중... (<a target="_blank" href="https://rinkeby.etherscan.io/tx/' + response.data.txHash + '">상세보기 <i class="fa fa-external-link" aria-hidden="true"></i></a>)',
           clickClose: false,
           timeout: 10000,
           type: 'info',
           progressBar: true,
-          onClosed: function(){
+          onClosed: function () {
             // TODO - websocket
-            self.$toastr.s('등록 완료 (<a target="_blank" href="https://rinkeby.etherscan.io/tx/' + response.data.txHash + '">상세보기 <i class="fa fa-external-link" aria-hidden="true"></i></a>)', '거래 내역');
+            self.$toastr.s('등록 완료 (<a target="_blank" href="https://rinkeby.etherscan.io/tx/' + response.data.txHash + '">상세보기 <i class="fa fa-external-link" aria-hidden="true"></i></a>)', '거래 내역')
           }
         })
-        
-        this.$http.put('/api/users/'+this.modal.form._id, {status : 'active'})
+
+        this.$http.put('/api/users/' + this.modal.form._id, {status: 'active'})
           .then((response) => {
             this.$toastr.s('승인 완료')
             this.fetchData()
           })
-          
+
         this.hideModal()
       } catch (error) {
         console.error(error)
-        if(undefined !== before) {
+        if (undefined !== before) {
           this.$toastr.Close(before)
         }
         this.$toastr.e('등록 실패' + error.response.data.message ? ': ' + error.response.data.message : '', '거래 내역')
