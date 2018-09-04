@@ -42,7 +42,7 @@ function create(req, res, next) {
     finishDate: req.body.finishDate,
     participants: req.body.participants,
     isClosed: false,
-    createdDate: Date.now(),
+    createdAt: Date.now(),
     createdBy: req.decoded._id
   });
 
@@ -94,8 +94,8 @@ function update(req, res, next) {
   if (req.body.isClosed != '') {
     issue.isClosed = req.body.isClosed;
   }
-  if (req.body.closedDate != '') {
-    issue.closedDate = req.body.closedDate;
+  if (req.body.closedAt != '') {
+    issue.closedAt = req.body.closedAt;
   }
 
   Issue.update({ id: issue.id}, issue)

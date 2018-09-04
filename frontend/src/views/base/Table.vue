@@ -57,9 +57,30 @@
       <template slot="tokensRequestAcceptible" slot-scope="data">
         <b-button variant="success" v-on:click="askPermissionAndTransferFrom(data.item)">승인</b-button>
       </template>
-      <template slot="approve" slot-scope="data">
-        <b-button size="sm" @click.stop="$eventHub.$emit('approve-clicked', data.item)" class="mr-1">승인하기</b-button>
+      <template slot="approveButton" slot-scope="data">
+        <b-button variant="success" size="sm" @click.stop="$eventHub.$emit('approve-clicked', data.item)" class="mr-1">승인</b-button>
         <!-- <b-button size="sm" @click.stop="$root.$emit('bv::show::modal', 'registerRequest', $event.target)" class="mr-1">승인하기</b-button> -->
+      </template>
+       <template slot="issueStatus" slot-scope="data">
+          {{ data.item.isClosed == true ? '종료' : '진행 중' }}
+      </template>
+      <template slot="createdAt" slot-scope="data">
+          {{ (data.item.createdAt && data.item.createdAt != null) ? $moment.utc(data.item.createdAt).local().format('YYYY-MM-DD HH:mm:ss') : '' }}
+      </template>
+      <template slot="closedAt" slot-scope="data">
+          {{ (data.item.closedAt && data.item.closedAt != null) ? $moment.utc(data.item.closedAt).local().format('YYYY-MM-DD HH:mm:ss') : '' }}
+      </template>
+      <template slot="registeredAt" slot-scope="data">
+          {{ (data.item.registeredAt && data.item.registeredAt != null) ? $moment.utc(data.item.registeredAt).local().format('YYYY-MM-DD HH:mm:ss') : '' }}
+      </template>
+      <template slot="approvedAt" slot-scope="data">
+          {{ (data.item.approvedAt && data.item.approvedAt != null) ? $moment.utc(data.item.approvedAt).local().format('YYYY-MM-DD HH:mm:ss') : ''}}
+      </template>
+      <template slot="startDate" slot-scope="data">
+          {{ (data.item.startDate && data.item.startDate != null) ? $moment.utc(data.item.startDate).local().format('YYYY-MM-DD') : '미지정'}}
+      </template>
+      <template slot="finishDate" slot-scope="data">
+          {{ (data.item.finishDate && data.item.finishDate != null) ? $moment.utc(data.item.finishDate).local().format('YYYY-MM-DD') : '미지정' }}
       </template>
     </b-table>
     <nav>
@@ -180,7 +201,7 @@ export default {
                 .then((response) => {
                   console.log(response.data)
                   item.tx = response.data.hash
-                  this.$http.put('/api/tokens-requests/' + item.id, {tx: item.tx, approvedDate: new Date()})
+                  this.$http.put('/api/tokens-requests/' + item._id, {tx: item.tx, approvedAt: new Date()})
                     .then((response) => {
                       alert('승인 되었습니다.')
                     })

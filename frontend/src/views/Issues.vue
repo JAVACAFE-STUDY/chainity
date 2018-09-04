@@ -36,12 +36,11 @@ export default {
         {key: 'id', label: '아이디', sortable: true},
         {key: 'title', label: '제목', sortable: true},
         {key: 'tokens', label: '보상/납부 금액', sortable: true, variant: 'info'},
-        {key: 'createdDate', label: '등록일', sortable: true},
+        {key: 'createdAt', label: '등록일', sortable: true},
         {key: 'startDate', label: '시작일', sortable: true},
         {key: 'finishDate', label: '종료일', sortable: true, variant: 'warning'},
-        {key: 'participants', label: '참여 등록 수', sortable: true},
-        {key: 'isClosed', label: '종료여부', sortable: true},
-        {key: 'closedDate', label: '종료일', sortable: true}
+        {key: 'participants', label: '현재 참여 수', sortable: true},
+        {key: 'issueStatus', label: '상태', sortable: true}
       ],
       user: {}
     }
@@ -55,11 +54,6 @@ export default {
         .then(() => {
           for (let i = 0; i < this.issues.length; i++) {
             const issue = this.issues[i]
-            this.issues[i].startDate = issue.startDate ? this.$moment.utc(issue.startDate).local().format('YYYY-MM-DD') : '미지정'
-            this.issues[i].finishDate = issue.finishDate ? this.$moment.utc(issue.finishDate).local().format('YYYY-MM-DD') : '미지정'
-            this.issues[i].createdDate = this.$moment.utc(issue.createdDate).local().format('YYYY-MM-DD HH:mm:ss')
-            this.issues[i].isClosed = issue.isClosed ? '종료' : ''
-            this.issues[i].closedDate = issue.isClosed === '종료' ? this.$moment.utc(issue.closedDate).local().format('YYYY-MM-DD HH:mm:ss') : ''
             if (issue.participants) {
               this.issues[i].participants = issue.participants.length
             } else {

@@ -11,7 +11,7 @@ mongoose.connect('mongodb://' + config.mongo.host + ':' + config.mongo.port);
  * TokensRequest Schema
  */
 const TokensRequestSchema = new mongoose.Schema({
-  createdDate: {
+  createdAt: {
     type: Date,
     required: true
   },
@@ -42,7 +42,7 @@ const TokensRequestSchema = new mongoose.Schema({
   tx: {
     type: String,
   },
-  approvedDate: {
+  approvedAt: {
     type: Date
   }
 });
@@ -79,7 +79,7 @@ TokensRequestSchema.statics = {
    */
   listByCreatedBy(createdBy, {skip = 0, limit = 50 } = {}) {
     return this.find({ createdBy: createdBy})
-      .sort({ createdDate: 1 })
+      .sort({ createdAt: 1 })
       .skip(+skip)
       .limit(+limit)
       .exec();

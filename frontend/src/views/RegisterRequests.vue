@@ -3,9 +3,9 @@
 
     <b-row>
       <b-col sm="12">
-        <c-table ref="table" v-if="users.length > 0" striped :rows="users" :columns="userFields" caption="<i class='fa fa-align-justify'></i> 가입 승인 요청 목록"></c-table>
-        <b-card v-else header="<i class='fa fa-align-justify'></i> 가입 승인 요청 목록">
-          <p class="text-center">승인 요청 대기자가 없습니다.</p>
+        <c-table ref="table" v-if="users.length > 0" striped :rows="users" :columns="userFields" caption="<i class='fa fa-align-justify'></i> 가입 요청 목록"></c-table>
+        <b-card v-else header="<i class='fa fa-align-justify'></i> 가입 요청 목록">
+          <p class="text-center">가입 요청 대기자가 없습니다.</p>
         </b-card>
       </b-col><!--/.col-->
     </b-row><!--/.row-->
@@ -66,7 +66,7 @@ export default {
         {key: 'name', label: '이름', sortable: true},
         {key: 'email', label: '이메일', sortable: true},
         {key: 'createdAt', label: '가입신청일', sortable: true},
-        {key: 'approve', label: '승인하기'}
+        {key: 'approveButton', label: ' '}
       ],
       modal: {
         busy: false,
