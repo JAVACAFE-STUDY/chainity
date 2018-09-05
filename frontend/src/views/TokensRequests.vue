@@ -30,7 +30,7 @@ export default {
         {key: 'price', label: '입금액', sortable: true},
         {key: 'tokens', label: '토큰'},
         {key: 'createdBy', label: '신청자', sortable: true},
-        {key: 'createdDate', label: '신청일', sortable: true},
+        {key: 'createdAt', label: '신청일', sortable: true},
         {key: 'status', label: '상태', sortable: true},
         {key: 'tokensRequestAcceptible', label: '승인 여부'}
       ]
@@ -45,7 +45,6 @@ export default {
         .then(() => {
           for (let i = 0; i < this.tokensRequests.length; i++) {
             const tokensRequest = this.tokensRequests[i]
-            this.tokensRequests[i].createdDate = this.$moment.utc(tokensRequest.createdDate).local().format('YYYY-MM-DD HH:mm:ss')
             this.tokensRequests[i].tokens = tokensRequest.price / 1000
             if (this.tokensRequests[i].tx) {
               this.tokensRequests[i].status = '완료'

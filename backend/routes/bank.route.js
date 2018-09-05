@@ -1,13 +1,8 @@
 var express = require('express');
-var validate = require('express-validation');
-var expressJwt = require('express-jwt');
-var paramValidation = require('../config/param-validation');
 var config = require('../config/config');
-var userCtrl = require('../controllers/user.controller');
 var bankCtrl = require('../controllers/bank.controller');
 
 const router = express.Router(); // eslint-disable-line new-cap
-const auth = expressJwt({secret: config.jwtSecret, requestProperty: 'decoded'})
 
 router.route('/:id/transfers')
   /** GET /api/banks/nh/transfers - Get trasfer histories */

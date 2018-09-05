@@ -48,6 +48,10 @@ function addressList(req, res) {
  * Load user and append to req.
  */
 function load(req, res, next, id) {
+  if(id === 'me') {
+    id = req.decoded._id
+  }
+
   User.get(id)
     .then((user) => {
       req.user = user; // eslint-disable-line no-param-reassign
@@ -135,28 +139,6 @@ function remove(req, res, next) {
     .catch(e => next(e));
 }
 
-/**
- * Get user tokens.
- * @returns {tokens}
- */
-function getTokens(req, res, next) {
-  const token = User.getToken(req.user.keyStore.address)
-  token.call().then(function(token) {
-    res.json({"tokens" : Number(token) })
-  });
-}
-
-/**
- * Get my token.
- * @returns {token}
- */
-function getMyToken(req, res, next) {
-  const token = User.getToken(req.decoded.address)
-  token.call().then(function(token) {
-    res.json({"token" : Number(token) })
-  });
-}
-
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (!fs.existsSync(profileImagePath)){
@@ -194,4 +176,4 @@ function uploadImage(req, res, next) {
   });
 }
 
-module.exports = { load, get, create, update, list, remove, getTokens, getMyToken, activeList, addressList, uploadImage };
+module.exports = { load, get, create, update, list, remove, activeList, addressList, uploadImage };

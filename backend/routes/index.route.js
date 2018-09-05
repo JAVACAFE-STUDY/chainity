@@ -1,4 +1,6 @@
 var express = require('express');
+var expressJwt = require('express-jwt');
+var config = require('../config/config');
 var authRoutes = require('./auth.route');
 var userRoutes = require('./user.route');
 var issueRoutes = require('./issue.route');
@@ -9,6 +11,7 @@ var contractRoutes = require('./contract.route')
 var imageRoutes = require('./image.route');
 
 const router = express.Router(); // eslint-disable-line new-cap
+const auth = expressJwt({secret: config.jwtSecret, requestProperty: 'decoded'})
 
 /** GET /health-check - Check service health */
 router.get('/health-check', (req, res) =>
@@ -18,57 +21,24 @@ router.get('/health-check', (req, res) =>
 // mount auth routes at /auth
 router.use('/auth', authRoutes);
 
-/**
-* @swagger
-* tags:
-*   name: User
-*   description: User management
-* definitions:
-*   User:
-*     required:
-*       - _id
-*       - email
-*       - status
-*       - role
-*       - createdAt
-*     properties:
-*       _id:
-*         type: string
-*         uniqueItems: true
-*       email:
-*         type: string
-*         uniqueItems: true
-*       name: 
-*         type: string
-*       status:
-*         type: string
-*       role:
-*         type: string
-*       createdAt:
-*         type: integer
-*       registeredAt:
-*         type: integer
-*       keyStore:
-*         type: object
-*/
-router.use('/users', userRoutes);
+router.use('/users', auth, userRoutes);
 
 // mount issue routes at /issues
-router.use('/issues', issueRoutes);
+router.use('/issues', auth, issueRoutes);
 
 // mount mail routes at /mails
-router.use('/mails', mailRoutes);
+router.use('/mails', auth, mailRoutes);
 
 // mount tokens requests routes at /tokens-requests
-router.use('/tokens-requests', tokensRequestRoutes);
+router.use('/tokens-requests', auth, tokensRequestRoutes);
 
 // mount bank routes at /banks
-router.use('/banks', bankRoutes);
+router.use('/banks', auth, bankRoutes);
 
 // mount contract routes at /contracts
-router.use('/contracts', contractRoutes);
+router.use('/contracts', auth, contractRoutes);
 
 // mount image routes at /image
-router.use('/images', imageRoutes);
+router.use('/images', auth, imageRoutes);
 
 module.exports = router;
