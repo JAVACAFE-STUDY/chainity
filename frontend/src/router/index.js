@@ -23,6 +23,7 @@ import Approve from '@/views/Approve'
 import Receipt from '@/views/Receipt'
 import MyTokens from '@/views/MyTokens'
 import RegisterRequests from '@/views/RegisterRequests'
+import UsersRole from '@/views/UsersRole'
 
 import crypto from 'crypto'
 
@@ -129,8 +130,13 @@ export default new Router({
           children: [
             {
               path: 'register-requests',
-              name: '회원가입요청',
+              name: '가입요청관리',
               component: RegisterRequests
+            },
+            {
+              path: 'users-role',
+              name: '회원역할관리',
+              component: UsersRole
             }
           ]
         },

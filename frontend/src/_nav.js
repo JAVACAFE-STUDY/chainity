@@ -38,9 +38,14 @@ export default {
       icon: 'icon-puzzle',
       children: [
         {
-          name: '회원가입요청',
+          name: '가입요청관리',
           url: '/system/register-requests',
-          icon: 'icon-puzzle'
+          icon: 'icon-people'
+        },
+        {
+          name: '회원역활관리',
+          url: '/system/users-role',
+          icon: 'icon-people'
         }
       ]
     }
