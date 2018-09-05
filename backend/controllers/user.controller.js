@@ -48,6 +48,10 @@ function addressList(req, res) {
  * Load user and append to req.
  */
 function load(req, res, next, id) {
+  if(id === 'me') {
+    id = req.decoded._id
+  }
+
   User.get(id)
     .then((user) => {
       req.user = user; // eslint-disable-line no-param-reassign

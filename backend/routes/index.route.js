@@ -51,7 +51,12 @@ router.use('/auth', authRoutes);
 *       keyStore:
 *         type: object
 */
-router.use('/users', userRoutes);
+var express = require('express');
+var expressJwt = require('express-jwt');
+var config = require('../config/config');
+const auth = expressJwt({secret: config.jwtSecret, requestProperty: 'decoded'})
+
+router.use('/users', auth, userRoutes);
 
 // mount issue routes at /issues
 router.use('/issues', issueRoutes);

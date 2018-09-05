@@ -8,34 +8,37 @@ var web3 = new Web3(new Web3.providers.HttpProvider(config.web3Provider));
 
 var nonces = {};
 
-function getTotalTokens(req, res) {
-	req.contract.methods.decimals().call()
-	.then(decimals => {
-		req.contract.methods.totalSupply().call()
-		.then(function (balance) {
-			if(balance > 0) {
-				balance = balance / Math.pow(10, decimals)
-			}
-			return res.send({"tokens" : balance});
-    	});
-	})
+async function getTotalTokens(req, res) {
+	const contract = req.contract;
+	const decimals = await contract.methods.decimals().call();
+
+	contract.methods.totalSupply().call()
+	.then(function (balance) {
+		if(balance > 0) {
+			balance = balance / Math.pow(10, decimals)
+		}
+		return res.send({"tokens" : balance});
+	});
 }
 
-function getUserTokens(req, res) {
-	req.contract.methods.decimals().call()
-	.then(decimals => {
-		req.contract.methods.balanceOf(req.user.keyStore.address).call()
-		.then(function (balance) {
-			if(balance > 0) {
-				balance = balance / Math.pow(10, decimals)
-			}
-			return res.send({"tokens" : balance});
-    	});
-	})
+async function getUserTokens(req, res) {
+	const contract = req.contract
+	const decimals = await contract.methods.decimals().call()
+	const tokenOwner = req.user.keyStore.address
+
+	contract.methods.balanceOf(tokenOwner).call()
+	.then(function (balance) {
+		if(balance > 0) {
+			balance = balance / Math.pow(10, decimals)
+		}
+		return res.send({"tokens" : balance});
+	});
 }
 
 function getReceiptList(req, res) {
-	req.contract.getPastEvents('Transfer', {
+	const contract = req.contract;
+
+	contract.getPastEvents('Transfer', {
 		fromBlock: 0,
 		toBlock: 'latest'
 	}, function(error, events){
@@ -96,6 +99,7 @@ async function _sendTx(walletInfo, to, data, value) {
 }
 
 function sendTokens(req, res, next) {
+	const contract = req.contract;
 	const from = config.systemAddress;
 	const to = req.body.receiver;
 	const tokens = req.body.tokens;
@@ -104,7 +108,7 @@ function sendTokens(req, res, next) {
 	User.get(req.decoded._id)
     .then(async (user) => {
 		var walletInfo = web3.eth.accounts.decrypt(user.keyStore, password);
-		var data = req.contract.methods.transferFrom(from, to, tokens).encodeABI();
+		var data = contract.methods.transferFrom(from, to, tokens).encodeABI();
 		try{
 			res.send(await _sendTx(walletInfo, config.contractAccount, data, 0));
 		} catch (e) {
@@ -117,6 +121,7 @@ function sendTokens(req, res, next) {
 }
 
 function approval(req, res, next) {
+	const contract = req.contract;
 	const spender = req.body.spender;
 	const tokens = req.body.tokens;
 	const password = req.body.password;
@@ -124,7 +129,7 @@ function approval(req, res, next) {
 	User.get(req.decoded._id)
     .then(async (user) => {
 		var walletInfo = web3.eth.accounts.decrypt(user.keyStore, password);
-		var data = req.contract.methods.approve(spender, tokens).encodeABI();
+		var data = contract.methods.approve(spender, tokens).encodeABI();
 		try{
 			res.send(await _sendTx(walletInfo, config.contractAccount, data, 0));
 		} catch (e) {
