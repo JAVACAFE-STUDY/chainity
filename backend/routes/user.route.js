@@ -22,17 +22,18 @@ router.route('/:userId')
   .delete(userCtrl.remove);
 
 router.route('/:userId/tokens-requests')
-/** GET /api/users/me/tokens - Get my tokens requests */
+/** GET /api/users/:userId/tokens-requests - Get my tokens requests */
 .get(tokensRequestCtrl.listMine)
 
 router.route('/:userId/tokens')
   /** GET /api/users/:userId/tokens - Get user tokens */
-  .get(contractCtrl.load, contractCtrl.getUserTokens)
+  .get((req, res, next) => contractCtrl.load(req, res, next), contractCtrl.getUserTokens)
 
 router.route('/:userId/coins')
   /** GET /api/users/:userId/coins - Get user coins */
   .get(contractCtrl.getUserCoins)
   .post(contractCtrl.sendCoins);
+
 
 // need refactoring
 router.route('/:userId/images/profile')

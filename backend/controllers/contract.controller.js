@@ -4,7 +4,9 @@ var Web3 = require('web3');
 var Tx = require('ethereumjs-tx');
 var APIError = require('../helpers/APIError');
 var httpStatus = require('http-status');
-var web3 = new Web3(new Web3.providers.HttpProvider(config.web3Provider));
+
+const web3 = new Web3(new Web3.providers.HttpProvider(config.web3Provider));
+const erc20 = new web3.eth.Contract(JSON.parse(config.contractABI), config.contractAccount);
 
 var nonces = {};
 
@@ -22,8 +24,9 @@ async function getTotalTokens(req, res) {
 }
 
 async function getUserTokens(req, res) {
-	const contract = req.contract
-	const decimals = await contract.methods.decimals().call()
+	const contract = req.contract;
+	console.log(contract);
+	const decimals = await contract.methods.decimals().call();
 	const tokenOwner = req.user.keyStore.address
 
 	contract.methods.balanceOf(tokenOwner).call()
@@ -58,7 +61,8 @@ function getReceiptList(req, res) {
 }
 
 function load(req, res, next, id) {
-  	var erc20 = new web3.eth.Contract(JSON.parse(config.contractABI), config.contractAccount);
+	// TODO - for platform
+  	// var erc20 = new web3.eth.Contract(JSON.parse(config.contractABI), id);
 	req.contract = erc20;
     return next();
 }
