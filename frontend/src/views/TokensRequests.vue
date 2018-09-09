@@ -32,14 +32,25 @@ export default {
         {key: 'createdDate', label: '신청일', sortable: true},
         {key: 'status', label: '상태', sortable: true},
         {key: 'tokensRequestAcceptible', label: '승인 여부'}
-      ]
+      ],
+      userList: []
     }
   },
   methods: {
+    findUserName (userId) {
+      console.log(this.userList)
+      return this.userList.find((user, idx) => {
+        return userId === user._id
+      })
+    },
     fetchData () {
       this.$http.get('/api/tokens-requests')
         .then((response) => {
           this.tokensRequests = response.data
+          return this.$http.get('/api/users')
+        })
+        .then((response) => {
+          this.userList = response.data
         })
         .then(() => {
           for (let i = 0; i < this.tokensRequests.length; i++) {
@@ -53,6 +64,7 @@ export default {
               this.tokensRequests[i].status = '대기중'
               this.tokensRequests[i].tokensRequestAcceptible = true
             }
+            this.tokensRequests[i].name = this.findUserName(this.tokensRequests[i].createdBy).name
           }
         })
     }

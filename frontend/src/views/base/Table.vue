@@ -162,7 +162,7 @@ export default {
         '입금자명: <b>' + item.senderName + '</b><br/>' +
         '입금액: <b>₩ ' + item.price + '</b><br/>' +
         '위와 같은 입금 내역을 확인 하셨습니까?<br/>' +
-        '승인 시, ' + item.createdBy + '님에게 <b>JC ' + item.tokens + '을(를) 충전</b> 합니다.',
+        '승인 시, ' + item.name + '님에게 <b>JC ' + item.tokens + '을(를) 충전</b> 합니다.',
         password => {
           this.$http.get('/api/users/' + item.createdBy)
             .then((response) => {
