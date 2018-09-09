@@ -51,9 +51,9 @@ export default {
       userFields: [
         {key: 'name', label: '이름', sortable: true},
         {key: 'email', label: '이메일', sortable: true},
-        {key: 'role', label: '권한', sortable: true},
+        {key: 'role', label: '역할', sortable: true},
         {key: 'status', label: '상태', sortable: true},
-        {key: 'createdAt', label: '가입일', sortable: true},
+        {key: 'createdAt', label: '가입일시', sortable: true},
         {key: 'tokens', label: '보유토큰', sortable: true}
       ],
       user: {}
@@ -68,7 +68,10 @@ export default {
             const user = this.users[i]
             if (user.keyStore) {
               this.$http.get('/api/users/' + user._id + '/tokens')
-                .then((response) => { this.users[i].tokens = response.data.tokens.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') })
+                .then((response) => {
+                  this.users[i].name = this.users[i].name + ' '
+                  this.users[i].tokens = response.data.tokens
+                })
             }
           }
         })

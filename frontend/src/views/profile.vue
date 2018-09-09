@@ -85,9 +85,9 @@ export default {
         this.previewData = 'http://localhost:3000/api/images/' + this.item._id + '/profile'
       })
 
-    this.$http.get('/api/users/token')
+    this.$http.get('/api/users/me/tokens')
       .then((response) => {
-        this.tokens = response.data.token + ' JC'
+        this.tokens = response.data.tokens + ' JC'
       })
   },
   methods: {
@@ -119,7 +119,7 @@ export default {
       }
     },
     updateProfile: function () {
-      this.$http.put('/api/users/me', this.item)
+      this.$http.put('/api/users/' + this.item._id, this.item)
         .then((response) => {
           if (response.status === 200) {
             alert('업데이트 완료')

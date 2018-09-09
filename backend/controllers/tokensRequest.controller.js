@@ -36,7 +36,7 @@ function listMine(req, res, next) {
  */
 function create(req, res, next) {
   const tokensRequest = new TokensRequest({
-    createdDate: new Date(),
+    createdAt: new Date(),
     createdBy: req.decoded._id,
     senderName: req.body.senderName,
     price: req.body.price,
@@ -73,7 +73,7 @@ function get(req, res) {
 /**
  * Update existing TokensRequest
  * @property {string} req.body.tx
- * @property {string} req.body.approvedDate
+ * @property {string} req.body.approvedAt
  * @returns {TokensRequest}
  */
 function update(req, res, next) {
@@ -81,8 +81,8 @@ function update(req, res, next) {
   if (req.body.tx != '') {
     tokensRequest.tx = req.body.tx;
   }
-  if (req.body.approvedDate != '') {
-    tokensRequest.approvedDate = req.body.approvedDate;
+  if (req.body.approvedAt != '') {
+    tokensRequest.approvedAt = req.body.approvedAt;
   }
   console.log(tokensRequest)
   TokensRequest.update({_id: tokensRequest.id}, tokensRequest)

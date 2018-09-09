@@ -49,7 +49,7 @@
               <strong>기간</strong>
             </div>
             <b-form-group>
-              <label for="start">시작일</label>
+              <label for="start">참여 시작일</label>
               <b-form-checkbox-group>
                 <div class="custom-control custom-checkbox custom-control-inline">
                   <input type="checkbox" class="custom-control-input" id="startCheckboxIn" v-model="enable.start" @change="form.startDate = ''">
@@ -59,7 +59,7 @@
               <datepicker :language="lang" :format="format"  :bootstrap-styling=true v-model="form.startDate" v-bind:disabled="!enable.start"></datepicker>
             </b-form-group>
             <b-form-group>
-              <label for="finish">종료일</label>
+              <label for="finish">참여 마감일</label>
               <b-form-checkbox-group>
                 <div class="custom-control custom-checkbox custom-control-inline">
                   <input type="checkbox" class="custom-control-input" id="finishCheckboxIn" v-model="enable.finish" @change="form.finishDate = ''">

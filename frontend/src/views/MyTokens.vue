@@ -1,7 +1,7 @@
 <template>
   <div class="animated fadeIn">
     <b-row>
-      <b-col cols="6" lg="2">
+      <b-col sm="12" md="4">
         <b-card :no-body="true" footer-class="px-3 py-2">
           <b-card-body class="p-3 clearfix">
             <!-- <i class="fa fa-bell bg-danger p-3 font-2xl mr-3 float-left"></i> -->
@@ -15,7 +15,7 @@
               <span>예금주 : {{ form.receiverName }}</span><br/>
               <span>계좌번호 : {{ form.receiverAccount }}</span><br/><br/>
               <small>충전하고자 하는 JC토큰만큼 <b>원화를 입금</b> 한 후, 아래 입금자명과 입금액을 작성 후 "토큰 충전 신청" 버튼을 누르면 신청이 완료 됩니다.</small><br/>
-              <small class='text-danger'><b>* JC토큰/원화 환율: JC 1 ⇄ ₩ 1,000</b></small><br/><br/>
+              <small class='text-danger'><b>* JC토큰/원화 환율: JC 1,000 ⇄ ₩ 1,000</b></small><br/><br/>
               <b-form @submit="onSubmit" @reset="onReset">
                 <b-form-group id="exampleInputGroup1"
                               label="입금자명"
@@ -29,9 +29,9 @@
                   </b-form-input>
                 </b-form-group>
                 <b-form-group id="exampleInputGroup2"
-                              label="입금액"
+                              label="입금액 (₩)"
                               label-for="exampleInput2"
-                              v-bind:description="'JC ' + (form.price > 0 ? (form.price/1000) : 0)">
+                              v-bind:description="'충전액 JC ' + (form.price > 0 ? form.price : 0)">
                   <b-form-input id="exampleInput2"
                                 type="number"
                                 min="0"
@@ -51,8 +51,8 @@
           </div>
         </b-card>
       </b-col>
-      <b-col cols="6" lg="10">
-        <c-table ref="table" v-if="tokensRequests !== null" striped :rows="tokensRequests" :columns="tokensRequestsFields" caption="<i class='fa fa-align-justify'></i> 충전 신청 내역"></c-table>
+      <b-col sm="12" md="8">
+        <c-table ref="table" v-if="tokensRequests.length > 0" striped :rows="tokensRequests" :columns="tokensRequestsFields" caption="<i class='fa fa-align-justify'></i> 충전 신청 내역"></c-table>
       </b-col><!--/.col-->
     </b-row><!--/.row-->
   </div>
@@ -82,9 +82,10 @@ export default {
       tokensRequestsFields: [
         {key: 'senderName', label: '입금자명'},
         {key: 'price', label: '입금액', sortable: true},
-        {key: 'tokens', label: '토큰'},
-        {key: 'createdDate', label: '신청일', sortable: true},
-        {key: 'status', label: '상태', sortable: true}
+        {key: 'price', label: '토큰'},
+        {key: 'createdAt', label: '신청일시', sortable: true},
+        // {key: 'approveAt', label: '승인일시', sortable: true}
+        {key: 'status', label: '상태'}
       ]
     }
   },
@@ -99,21 +100,22 @@ export default {
         })
     },
     fetchMyTokensRequests () {
+      this.tokensRequests = []
       this.$http.get('/api/users/me/tokens-requests')
         .then((response) => {
-          this.tokensRequests = response.data
-        })
-        .then(() => {
-          for (let i = 0; i < this.tokensRequests.length; i++) {
-            const tokensRequest = this.tokensRequests[i]
-            this.tokensRequests[i].createdDate = this.$moment.utc(tokensRequest.createdDate).local().format('YYYY-MM-DD HH:mm:ss')
-            this.tokensRequests[i].tokens = tokensRequest.price / 1000
-            if (this.tokensRequests[i].tx) {
-              this.tokensRequests[i].status = '완료'
+          let tokensRequests = response.data
+          for(let i = 0; i < tokensRequests.length; i++) {
+            if (tokensRequests[i].approvedAt) {
+              if (tokensRequests[i].tx) {
+                tokensRequests[i].status = '완료'
+              } else {
+                tokensRequests[i].status = '처리중'
+              }
             } else {
-              this.tokensRequests[i].status = '대기중'
+              tokensRequests[i].status = '대기중'
             }
           }
+          this.tokensRequests = tokensRequests
         }).catch((error) => {
           console.error(error)
           alert(error.response.data.message)

@@ -31,6 +31,23 @@ export default {
           icon: 'icon-puzzle'
         }
       ]
+    },
+    {
+      name: '시스템메뉴',
+      url: '/admin',
+      icon: 'icon-puzzle',
+      children: [
+        {
+          name: '가입요청관리',
+          url: '/system/register-requests',
+          icon: 'icon-people'
+        },
+        {
+          name: '회원역활관리',
+          url: '/system/users-role',
+          icon: 'icon-people'
+        }
+      ]
     }
   ]
 }

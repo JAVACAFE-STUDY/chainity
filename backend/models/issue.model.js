@@ -43,7 +43,7 @@ const IssueSchema = new mongoose.Schema({
     type: Boolean,
     required: true
   },
-  createdDate: {
+  createdAt: {
     type: Date,
     required: true
   },
@@ -51,7 +51,7 @@ const IssueSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  closedDate: {
+  closedAt: {
     type: Date,
     required: false
   },

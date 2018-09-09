@@ -17,7 +17,7 @@
         <b-col sm="12">
           <b-form-group>
             <h2>{{ form.title }}</h2>
-            <small>{{ form.createdDate | moment("YYYY-MM-DD HH:MM:SS") }} </small>
+            <small>{{ form.createdAt | moment("YYYY-MM-DD HH:MM:SS") }} </small>
             <small> by </small>
             <small v-if="users[form.createdBy]">{{ users[form.createdBy].name }}</small>
             <small v-else>{{ form.createdBy }}</small>
@@ -82,10 +82,10 @@
               <!-- <b-list-group-item v-for="participant in form.participants">{{ msg }}</b-list-group-item> -->
               <b-list-group-item v-for="participant in form.participants" :key="participant.id">
                 <div class="avatar float-right">
-                  <img class="img-avatar" :src="getProfileUrl(participant)" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
+                  <img class="img-avatar" :src="getProfileUrl(participant._id)" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
                 </div>
                 <div>
-                  <strong>{{ participant }}</strong>
+                  <strong>{{ participant.name }}</strong>
                 </div>
               </b-list-group-item>
             </b-list-group>
@@ -117,7 +117,7 @@ export default {
         title: '',
         createdBy: '',
         createdByName: '',
-        createdDate: '',
+        createdAt: '',
         description: '',
         tokens: '0',
         maxNumberOfParticipants: '',
@@ -250,7 +250,7 @@ export default {
       if (confirm('이슈를 종료하시겠습니까?')) {
         this.$http.put('/api/issues/' + this.$route.params.id, {
           isClosed: true,
-          closedDate: new Date()
+          closedAt: new Date()
         })
           .then((response) => {
             alert('이슈가 종료되었습니다.')
