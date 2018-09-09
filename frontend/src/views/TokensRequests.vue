@@ -38,7 +38,6 @@ export default {
   },
   methods: {
     findUserName (userId) {
-      console.log(this.userList)
       return this.userList.find((user, idx) => {
         return userId === user._id
       })
