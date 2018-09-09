@@ -62,7 +62,7 @@ function loadUserToRegister(req, res, next) {
   const user = {
     _id: req.body._id,
     name: req.body.name,
-    status: 'active',
+    status: 'pending',
     registeredAt: Date.now(),
     keyStore: encryption
   }

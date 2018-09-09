@@ -48,6 +48,10 @@ function addressList(req, res) {
  * Load user and append to req.
  */
 function load(req, res, next, id) {
+  if(id === 'me') {
+    id = req.decoded._id
+  }
+
   User.get(id)
     .then((user) => {
       req.user = user; // eslint-disable-line no-param-reassign
@@ -61,7 +65,6 @@ function load(req, res, next, id) {
  * @returns {User}
  */
 function get(req, res) {
-  console.log(req.user)
   return res.json(req.user);
 }
 
@@ -99,6 +102,10 @@ function update(req, res, next) {
     user.role = req.body.role;
   }
 
+  if (req.body.status != '') {
+    user.status = req.body.status;
+  }
+
   User.update({_id: user.id}, user)
     .then(savedUser => res.json(savedUser))
     .catch(e => next(e));
@@ -112,7 +119,11 @@ function update(req, res, next) {
  */
 function list(req, res, next) {
   const { limit = 50, skip = 0 } = req.query;
-  User.list({ limit, skip })
+  var q = {}
+  if(req.query.status) {
+    q.status = req.query.status
+  }
+  User.list({ limit, skip, q })
     .then(users => res.json(users))
     .catch(e => next(e));
 }
@@ -126,28 +137,6 @@ function remove(req, res, next) {
   user.remove()
     .then(deletedUser => res.json(deletedUser))
     .catch(e => next(e));
-}
-
-/**
- * Get user tokens.
- * @returns {tokens}
- */
-function getTokens(req, res, next) {
-  const token = User.getToken(req.user.keyStore.address)
-  token.call().then(function(token) {
-    res.json({"tokens" : Number(token) })
-  });
-}
-
-/**
- * Get my token.
- * @returns {token}
- */
-function getMyToken(req, res, next) {
-  const token = User.getToken(req.decoded.address)
-  token.call().then(function(token) {
-    res.json({"token" : Number(token) })
-  });
 }
 
 const storage = multer.diskStorage({
@@ -187,4 +176,4 @@ function uploadImage(req, res, next) {
   });
 }
 
-module.exports = { load, get, create, update, list, remove, getTokens, getMyToken, activeList, addressList, uploadImage };
+module.exports = { load, get, create, update, list, remove, activeList, addressList, uploadImage };

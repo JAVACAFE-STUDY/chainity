@@ -36,14 +36,14 @@
                   <b-form-radio-group
                     plain
                     :options="[
-                      {text: '500 coin ',value: '500'},
-                      {text: '1,000 coin ',value: '1000'},
-                      {text: '3,000 coin ',value: '3000'},
+                      {text: '500 JC ',value: '500'},
+                      {text: '1,000 JC ',value: '1000'},
+                      {text: '3,000 JC ',value: '3000'},
                       {text: '기타 ',value: '-1'}
                     ]"
-                    v-model="form.price" @change="etc.price = ''">
+                    v-model="form.tokens" @change="etc.tokens = ''">
                   </b-form-radio-group>
-                  <b-form-input type="number" min="0" v-bind:disabled="form.price!=='-1'" v-model="etc.price"></b-form-input>
+                  <b-form-input type="number" min="0" v-bind:disabled="form.tokens!=='-1'" v-model="etc.tokens"></b-form-input>
                 </b-form-group>
               </b-col>
             </b-row>
@@ -60,10 +60,10 @@
         <b-col sm="6">
           <b-card>
             <div slot="header">
-              <strong>기간</strong>
+              <strong>참여 가능 기간</strong>
             </div>
             <b-form-group>
-              <label for="start">시작일</label>
+              <label for="start">참여 시작일</label>
               <b-form-checkbox-group>
                 <div class="custom-control custom-checkbox custom-control-inline">
                   <input type="checkbox" class="custom-control-input" id="startCheckboxIn" value="true" v-model="enable.start" @change="form.startDate = ''">
@@ -73,7 +73,7 @@
               <datepicker :language="lang" :format="format"  :bootstrap-styling=true v-model="form.startDate" v-bind:disabled="!enable.start"></datepicker>
             </b-form-group>
             <b-form-group>
-              <label for="finish">종료일</label>
+              <label for="finish">참여 마감일</label>
               <b-form-checkbox-group>
                 <div class="custom-control custom-checkbox custom-control-inline">
                   <input type="checkbox" class="custom-control-input" id="finishCheckboxIn" value="false" v-model="enable.finish" @change="form.finishDate = ''">
@@ -85,10 +85,10 @@
           </b-card>
           <b-card>
             <div slot="header">
-              <strong>대상자</strong>
+              <strong>참여 대상자</strong>
             </div>
             <b-form-group>
-              <label for="">참여가능 인원수</label>
+              <label for="">참여 가능 인원 수</label>
               <b-form-radio-group
                   plain
                   :options="[
@@ -162,7 +162,7 @@ export default {
       form: {
         title: '',
         description: '',
-        price: '500',
+        tokens: '500',
         maxNumberOfParticipants: '1',
         startDate: '',
         finishDate: '',
@@ -171,7 +171,7 @@ export default {
         issueType: 'reward'
       },
       etc: {
-        price: '',
+        tokens: '',
         maxNumberOfParticipants: ''
       },
       enable: {
@@ -206,7 +206,7 @@ export default {
         })
     },
     createIssue () {
-      this.form.price = (this.form.price === '-1') ? this.etc.price : this.form.price
+      this.form.tokens = (this.form.tokens === '-1') ? this.etc.tokens : this.form.tokens
       this.form.maxNumberOfParticipants = (this.form.maxNumberOfParticipants === '-1') ? this.etc.maxNumberOfParticipants : this.form.maxNumberOfParticipants
       this.form.participants = this.tags.map(participant => (participant._id))
       this.$http.post('/api/issues', this.form)

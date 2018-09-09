@@ -25,7 +25,7 @@ function list(req, res, next) {
  * Create new issue
  * @property {string} req.body.title
  * @property {string} req.body.description
- * @property {string} req.body.price
+ * @property {string} req.body.tokens
  * @property {string} req.body.maxNumberOfParticipants
  * @property {string} req.body.startDate
  * @property {string} req.body.finishDate
@@ -37,13 +37,13 @@ function create(req, res, next) {
     issueType: req.body.issueType,
     title: req.body.title,
     description: req.body.description,
-    price: req.body.price,
+    tokens: req.body.tokens,
     maxNumberOfParticipants: req.body.maxNumberOfParticipants,
     startDate: req.body.startDate,
     finishDate: req.body.finishDate,
     participants: req.body.participants,
     isClosed: false,
-    createdDate: Date.now(),
+    createdAt: Date.now(),
     createdBy: req.decoded._id
   });
 
@@ -94,6 +94,12 @@ function update(req, res, next) {
   }
   if (req.body.finishDate != '') {
     issue.finishDate = req.body.finishDate;
+  }
+  if (req.body.isClosed != '') {
+    issue.isClosed = req.body.isClosed;
+  }
+  if (req.body.closedAt != '') {
+    issue.closedAt = req.body.closedAt;
   }
 
   Issue.update({ id: issue.id}, issue)

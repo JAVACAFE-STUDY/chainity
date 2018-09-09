@@ -11,13 +11,13 @@
       </div>
       <div slot="footer" class="text-sm-right">
         <b-button variant="info" :to="{name: '이슈'}">확인</b-button>
-        <b-button variant="danger" v-on:click="close" :disabled="form.status === 'close'">종료</b-button>
+        <b-button variant="danger" v-on:click="close" v-if="form.isClosed === false">종료</b-button>
       </div>
       <b-row>
         <b-col sm="12">
           <b-form-group>
             <h2>{{ form.title }}</h2>
-            <small>{{ form.createdDate | moment("YYYY-MM-DD HH:MM:SS") }} </small>
+            <small>{{ form.createdAt | moment("YYYY-MM-DD HH:MM:SS") }} </small>
             <small> by </small>
             <small v-if="users[form.createdBy]">{{ users[form.createdBy].name }}</small>
             <small v-else>{{ form.createdBy }}</small>
@@ -32,7 +32,7 @@
                 <b-form-group>
                   <p v-if="form.issueType === 'reward'" class="h4">보상 금액</p>
                   <p v-else class="h4">납부 금액</p>
-                  <p>{{ form.price }}</p>
+                  <p>{{ form.tokens }}</p>
                 </b-form-group>
               </b-col>
             </b-row>
@@ -47,7 +47,7 @@
             <b-row>
               <b-col sm="12">
                 <b-form-group>
-                  <p class="h4">기간</p>
+                  <p class="h4">참여 가능 기간</p>
                   <p v-if="form.startDate || form.finishDate">
                     {{ form.startDate | moment("YYYY-MM-DD")}} ~ {{ form.finishDate | moment("YYYY-MM-DD")}}
                   </p>
@@ -58,7 +58,7 @@
             <b-row>
               <b-col sm="12">
                 <b-form-group>
-                  <p class="h4">참여가능 인원수</p>
+                  <p class="h4">참여 가능 인원 수</p>
                   <p v-if="form.maxNumberOfParticipants === 9999">멤버 전체</p>
                   <p v-else>{{ form.maxNumberOfParticipants }}</p>
                 </b-form-group>
@@ -115,9 +115,9 @@ export default {
         title: '',
         createdBy: '',
         createdByName: '',
-        createdDate: '',
+        createdAt: '',
         description: '',
-        price: '0',
+        tokens: '0',
         maxNumberOfParticipants: '',
         startDate: '',
         finishDate: '',
@@ -154,11 +154,11 @@ export default {
       var tokenOwnerName = this.users['me'].name
       var spenderName = this.users[this.form.createdBy].name
       var spenderAddress = this.users[this.form.createdBy].keyStore.address
-      var price = this.form.price
+      var tokens = this.form.tokens
 
       this.$http.get('/api/users/me/tokens')
         .then((response) => {
-          if (response.data.tokens < price) {
+          if (response.data.tokens < tokens) {
             alert('토큰 잔액 부족 - 보유량: ' + response.data.tokens)
             throw new Error()
           }
@@ -166,11 +166,11 @@ export default {
         .then(() => {
           this.$eventHub.$emit('pw-modal-open',
             '토큰 전송 수락',
-            tokenOwnerName + '님의 지갑으로부터 <b>' + spenderName + '님이 ' + price + '토큰을 지출</b> 할 수 있도록 수락하시겠습니까?',
+            tokenOwnerName + '님의 지갑으로부터 <b>' + spenderName + '님이 ' + tokens + '토큰을 지출</b> 할 수 있도록 수락하시겠습니까?',
             password => {
               var body = {
                 spender: spenderAddress,
-                tokens: price,
+                tokens: tokens,
                 password: password
               }
               this.$http.post('/api/contracts/mine/approval', body)
@@ -192,11 +192,11 @@ export default {
       var tokenOwnerName = this.users['me'].name
       var spenderName = this.users[this.form.createdBy].name
       var spenderAddress = this.users[this.form.createdBy].keyStore.address
-      var price = this.form.price
+      var tokens = this.form.tokens
 
       this.$eventHub.$emit('pw-modal-open',
         '토큰 전송 취소',
-        tokenOwnerName + '님의 지갑으로부터 <b>' + spenderName + '님이 ' + price + '토큰 지출 수락 건</b>을 취소하시겠습니까?',
+        tokenOwnerName + '님의 지갑으로부터 <b>' + spenderName + '님이 ' + tokens + '토큰 지출 수락 건</b>을 취소하시겠습니까?',
         password => {
           var body = {
             spender: spenderAddress,
@@ -234,35 +234,16 @@ export default {
       this.$router.push('/issues')
     },
     close: function (event) {
-      // address 받아오기
-      this.$http.get('/api/users/address?selected=' + this.selected)
-        .then((response) => {
-          var data = response.data
-          for (var i = 0; i < data.length; i++) {
-            this.item.receiver = JSON.parse(JSON.stringify(data[i].keyStore)).address
-            this.item.tokens = this.item.rewards
-            this.item.user = this.user
-            // 보상 코인 전송
-            this.$http.post('/api/contracts/0x000/tokens', this.item)
-              .then((response) => {
-                this.$http.put('/api/issues/' + this.$route.query.id, {
-                  issue: this.item,
-                  status: 'close'
-                })
-                  .then((response) => {
-                    alert('이슈가 종료되었습니다.')
-                    this.$router.go(-1)
-                  })
-              })
-          }
+      if (confirm('이슈를 종료하시겠습니까?')) {
+        this.$http.put('/api/issues/' + this.$route.params.id, {
+          isClosed: true,
+          closedAt: new Date()
         })
-        .then((response) => {
-          if (response.data.result === 'success') {
-            alert(response.data.hash)
-          } else {
-            alert(response.data.error)
-          }
-        })
+          .then((response) => {
+            alert('이슈가 종료되었습니다.')
+            this.$router.go(-1)
+          })
+      }
     }
   }
 }

@@ -69,8 +69,7 @@ export default {
       }
       this.$http.post('/api/auth/register', this.form)
         .then((response) => {
-          alert('비밀번호가 일치하지 않습니다.')
-          this.$router.push('/login')
+          this.$router.push('/register-complete')
         }).catch((error) => {
           alert(error.response.data.message)
         })

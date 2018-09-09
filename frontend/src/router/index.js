@@ -8,6 +8,7 @@ import Full from '@/containers/Full'
 // import Dashboard from '@/views/Dashboard'
 import Login from '@/views/Login'
 import Register from '@/views/Register'
+import RegisterComplete from '@/views/RegisterComplete'
 import Page404 from '@/views/Page404'
 import Page500 from '@/views/Page500'
 import Users from '@/views/Users'
@@ -21,6 +22,7 @@ import Profile from '@/views/Profile'
 import Approve from '@/views/Approve'
 import Receipt from '@/views/Receipt'
 import MyTokens from '@/views/MyTokens'
+import RegisterRequests from '@/views/RegisterRequests'
 
 import crypto from 'crypto'
 
@@ -118,6 +120,21 @@ export default new Router({
           ]
         },
         {
+          path: 'system',
+          redirect: '/system/register-requests',
+          name: '시스템메뉴',
+          component: {
+            render (c) { return c('router-view') }
+          },
+          children: [
+            {
+              path: 'register-requests',
+              name: '회원가입요청',
+              component: RegisterRequests
+            }
+          ]
+        },
+        {
           path: 'profile',
           name: '프로필',
           component: Profile,
@@ -170,6 +187,11 @@ export default new Router({
           next({name: 'Page500', params: {msg: 'Invalid access.'}})
         }
       }
+    },
+    {
+      path: '/register-complete',
+      name: 'RegisterComplete',
+      component: RegisterComplete
     },
     {
       path: '/500',
