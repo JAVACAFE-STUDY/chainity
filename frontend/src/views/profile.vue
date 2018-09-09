@@ -85,9 +85,9 @@ export default {
         this.previewData = 'http://localhost:3000/api/images/' + this.item._id + '/profile'
       })
 
-    this.$http.get('/api/users/token')
+    this.$http.get('/api/users/me/tokens')
       .then((response) => {
-        this.tokens = response.data.token + ' JC'
+        this.tokens = response.data.tokens + ' JC'
       })
   },
   methods: {

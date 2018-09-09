@@ -29,6 +29,10 @@ router.route('/:userId/tokens')
   /** GET /api/users/:userId/tokens - Get user tokens */
   .get((req, res, next) => contractCtrl.load(req, res, next), contractCtrl.getUserTokens)
 
+router.route('/:userId/tokens-allowance')
+  /** GET /api/users/:userId/tokens-allowance - Get user tokens allowance */
+  .get((req, res, next) => contractCtrl.load(req, res, next), contractCtrl.getUserTokensAllowance)
+
 router.route('/:userId/coins')
   /** GET /api/users/:userId/coins - Get user coins */
   .get(contractCtrl.getUserCoins)

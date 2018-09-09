@@ -24,16 +24,7 @@
              :current-page="currentPage"
              :per-page="perPage">
       <template slot="role" slot-scope="data">
-        <div v-if="(user.role === 'system')">
-          <select class="form-control" v-model="data.item.role" v-on:change="onChange(data.item)">
-              <option value="user">user</option>
-              <option value="admin">admin</option>
-              <option value="system">system</option>
-          </select>
-        </div>
-        <div v-else>
-          {{data.item.role}}
-        </div>
+        {{ getRole(data.item.role) }}
       </template>
       <template slot="status" slot-scope="data">
         <b-badge :variant="getBadge(data.item.status)">{{data.item.status}}</b-badge>
@@ -42,14 +33,14 @@
         <b-link :to="data.item.id.toString()" append>{{data.item.id}}</b-link>
       </template>
       <template slot="price" slot-scope="data">
-        ₩ {{data.item.price}}
+        ₩ {{ data.item.price }}
       </template>
       <template slot="tokens" slot-scope="data">
-        JC {{data.item.tokens}}
+        JC {{ data.item.tokens }}
       </template>
       <template slot="name" slot-scope="data">
         <img class="img-avatar" :src="getProfileUrl(data.item.id)" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
-        {{data.item.name}}
+        {{ data.item.name }}
       </template>
       <template slot="tx" slot-scope="data">
         <b-link :href="'https://rinkeby.etherscan.io/tx/'+data.item.tx" target="_blank">{{data.item.tx}}</b-link>
@@ -59,6 +50,13 @@
       </template>
       <template slot="approveButton" slot-scope="data">
         <b-button variant="success" size="sm" @click.stop="$eventHub.$emit('approve-clicked', data.item)" class="mr-1">승인</b-button>
+        <!-- <b-button size="sm" @click.stop="$root.$emit('bv::show::modal', 'registerRequest', $event.target)" class="mr-1">승인하기</b-button> -->
+      </template>
+      <template slot="roleDropdown" slot-scope="data">
+        <b-dropdown text="변경" size="sm" variant="success">
+          <b-dropdown-item @click.stop="$eventHub.$emit('role-admin-clicked', data.item)">관리자</b-dropdown-item>
+          <b-dropdown-item @click.stop="$eventHub.$emit('role-user-clicked', data.item)">회원</b-dropdown-item>
+        </b-dropdown>
         <!-- <b-button size="sm" @click.stop="$root.$emit('bv::show::modal', 'registerRequest', $event.target)" class="mr-1">승인하기</b-button> -->
       </template>
        <template slot="issueStatus" slot-scope="data">
@@ -160,14 +158,6 @@ export default {
     getRowCount (items) {
       return items.length
     },
-    onChange (item) {
-      this.$http.put('/api/users/' + item.id, {
-        role: item.role
-      })
-        .then((response) => {
-          alert('업데이트 완료')
-        })
-    },
     onFiltered (filteredItems) {
       this.totalRows = filteredItems.length
       this.currentPage = 1
@@ -184,6 +174,10 @@ export default {
             this.form.title = this.form.title + ' '
           }
         })
+    },
+    getRole (role) {
+      return role === 'system' ? '슈퍼 관리자'
+        : role === 'admin' ? '관리자' : '회원'
     },
     askPermissionAndTransferFrom (item) {
       this.$eventHub.$emit('pw-modal-open',
