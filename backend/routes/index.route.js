@@ -39,6 +39,6 @@ router.use('/banks', auth, bankRoutes);
 router.use('/contracts', auth, contractRoutes);
 
 // mount image routes at /image
-router.use('/images', auth, imageRoutes);
+router.use('/images', imageRoutes);
 
 module.exports = router;

@@ -119,7 +119,7 @@ export default {
       }
     },
     updateProfile: function () {
-      this.$http.put('/api/users/me', this.item)
+      this.$http.put('/api/users/' + this.item._id, this.item)
         .then((response) => {
           if (response.status === 200) {
             alert('업데이트 완료')
