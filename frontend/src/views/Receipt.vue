@@ -17,10 +17,40 @@ import cTable from './base/ReceiptTable.vue'
 export default {
   name: 'tables',
   components: {cTable},
+  data () {
+    return {
+      userList: []
+    }
+  },
+  methods: {
+    findUserName (userId) {
+      return this.userList.find((user, idx) => {
+        var address = '0x' + user.keyStore.address
+        return userId.toUpperCase() === address.toUpperCase()
+      })
+    }
+  },
   mounted: function () {
-    this.$http.get('/api/contracts/0x0000/receipts')
+    this.$http.get('/api/users')
+      .then((responce) => {
+        this.userList = responce.data
+        return this.$http.get('/api/contracts/0x0000/receipts')
+      })
       .then((response) => {
-        this.$children[0].items = response.data
+        var requestList = response.data
+        for (let i = 0; i < requestList.length; i++) {
+          var fromUser = this.findUserName(requestList[i].from)
+          var toUser = this.findUserName(requestList[i].to)
+
+          if (fromUser != null) {
+            requestList[i].from = fromUser.name
+          }
+
+          if (toUser != null) {
+            requestList[i].to = toUser.name
+          }
+        }
+        this.$children[0].items = requestList
       })
   }
 }

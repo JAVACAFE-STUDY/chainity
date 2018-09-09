@@ -42,6 +42,10 @@
         <img class="img-avatar" :src="getProfileUrl(data.item.id)" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
         {{ data.item.name }}
       </template>
+      <template slot="tokenRequestUserName" slot-scope="data">
+        <img class="img-avatar" :src="getProfileUrl(data.item.createdBy)" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
+        {{ data.item.tokenRequestUserName }}
+      </template>
       <template slot="tx" slot-scope="data">
         <b-link :href="'https://rinkeby.etherscan.io/tx/'+data.item.tx" target="_blank">{{data.item.tx}}</b-link>
       </template>
@@ -185,7 +189,7 @@ export default {
         '입금자명: <b>' + item.senderName + '</b><br/>' +
         '입금액: <b>₩ ' + item.price + '</b><br/>' +
         '위와 같은 입금 내역을 확인 하셨습니까?<br/>' +
-        '승인 시, ' + item.createdBy + '님에게 <b>JC ' + item.tokens + '을(를) 충전</b> 합니다.',
+        '승인 시, ' + item.tokenRequestUserName + '님에게 <b>JC ' + item.tokens + '을(를) 충전</b> 합니다.',
         password => {
           this.$http.get('/api/users/' + item.createdBy)
             .then((response) => {
