@@ -29,18 +29,28 @@ export default {
         {key: 'senderName', label: '입금자명'},
         {key: 'price', label: '입금액', sortable: true},
         {key: 'tokens', label: '토큰'},
-        {key: 'createdBy', label: '신청자', sortable: true},
+        {key: 'tokenRequestUserName', label: '신청자', sortable: true},
         {key: 'createdAt', label: '신청일', sortable: true},
         {key: 'status', label: '상태', sortable: true},
         {key: 'tokensRequestAcceptible', label: '승인 여부'}
-      ]
+      ],
+      userList: []
     }
   },
   methods: {
+    findUserName (userId) {
+      return this.userList.find((user, idx) => {
+        return userId === user._id
+      })
+    },
     fetchData () {
       this.$http.get('/api/tokens-requests')
         .then((response) => {
           this.tokensRequests = response.data
+          return this.$http.get('/api/users')
+        })
+        .then((response) => {
+          this.userList = response.data
         })
         .then(() => {
           for (let i = 0; i < this.tokensRequests.length; i++) {
@@ -53,6 +63,7 @@ export default {
               this.tokensRequests[i].status = '대기중'
               this.tokensRequests[i].tokensRequestAcceptible = true
             }
+            this.tokensRequests[i].tokenRequestUserName = this.findUserName(this.tokensRequests[i].createdBy).name
           }
         })
     }

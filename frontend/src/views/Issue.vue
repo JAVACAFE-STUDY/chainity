@@ -80,10 +80,10 @@
               <!-- <b-list-group-item v-for="participant in form.participants">{{ msg }}</b-list-group-item> -->
               <b-list-group-item v-for="participant in form.participants" :key="participant.id">
                 <div class="avatar float-right">
-                  <img class="img-avatar" :src="getProfileUrl(participant)" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
+                  <img class="img-avatar" :src="getProfileUrl(participant._id)" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
                 </div>
                 <div>
-                  <strong>{{ participant }}</strong>
+                  <strong>{{ participant.name }}</strong>
                 </div>
               </b-list-group-item>
             </b-list-group>
