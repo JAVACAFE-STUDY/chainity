@@ -12,29 +12,20 @@ var nonces = {};
 
 async function getTotalTokens(req, res) {
 	const contract = req.contract;
-	const decimals = await contract.methods.decimals().call();
 
 	contract.methods.totalSupply().call()
 	.then(function (balance) {
-		if(balance > 0) {
-			balance = balance / Math.pow(10, decimals)
-		}
-		return res.send({"tokens" : balance});
+		return res.send({"tokens" : web3.utils.fromWei(balance)});
 	});
 }
 
 async function getUserTokens(req, res) {
 	const contract = req.contract;
-	console.log(contract);
-	const decimals = await contract.methods.decimals().call();
-	const tokenOwner = req.user.keyStore.address
+	const tokenOwner = req.user.keyStore.address;
 
 	contract.methods.balanceOf(tokenOwner).call()
 	.then(function (balance) {
-		if(balance > 0) {
-			balance = balance / Math.pow(10, decimals)
-		}
-		return res.send({"tokens" : balance});
+		return res.send({"tokens" : web3.utils.fromWei(balance)});
 	});
 }
 
@@ -127,7 +118,7 @@ function sendTokens(req, res, next) {
 function approval(req, res, next) {
 	const contract = req.contract;
 	const spender = req.body.spender;
-	const tokens = req.body.tokens;
+	const tokens = web3.utils.toWei(req.body.tokens.toString(), 'ether');
 	const password = req.body.password;
 
 	User.get(req.decoded._id)
@@ -170,6 +161,19 @@ function sendCoins(req, res, next) {
 	});
 }
 
+async function getUserTokensAllowance(req, res, next) {
+	const contract = req.contract;
+	const me = await User.get(req.decoded._id);
+	// const tokenOwner = config.systemAddress;
+	const tokenOwner = me.keyStore.address;
+	const spender = req.user.keyStore.address;
+	
+	contract.methods.allowance(tokenOwner, spender).call()
+	.then(function (tokens) {
+		return res.send({"allowance" : web3.utils.fromWei(tokens)});
+	});
+}
+
 function getUpdatedNonce(address, systemNonce) {
 	if(nonces[address]) {
 		nonces[address] = (nonces[address] < systemNonce) ? systemNonce : nonces[address]+1;
@@ -179,4 +183,4 @@ function getUpdatedNonce(address, systemNonce) {
 	return nonces[address];
 }
 
-module.exports = { getTotalTokens, getReceiptList, load, sendTokens, approval, getUserTokens, sendCoins, getUserCoins };
+module.exports = { getTotalTokens, getReceiptList, load, sendTokens, approval, getUserTokens, sendCoins, getUserCoins, getUserTokensAllowance };
