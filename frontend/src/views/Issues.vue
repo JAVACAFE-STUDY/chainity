@@ -39,7 +39,7 @@ export default {
         {key: 'createdAt', label: '등록일시', sortable: true},
         {key: 'startDate', label: '참여 시작일', sortable: true},
         {key: 'finishDate', label: '참여 마감일', sortable: true, variant: 'warning'},
-        {key: 'participants', label: '참여 수', sortable: true},
+        {key: 'participants', label: '참여자 수', sortable: true},
         {key: 'issueStatus', label: '상태', sortable: true}
       ],
       user: {}
