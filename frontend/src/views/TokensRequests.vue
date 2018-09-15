@@ -3,7 +3,7 @@
 
     <b-row>
       <b-col sm="12">
-        <c-table ref="table" v-if="tokensRequests !== null" striped :rows="tokensRequests" :columns="tokensRequestFields" caption="<i class='fa fa-align-justify'></i> 토큰 충전 신청 목록"></c-table>
+        <c-table ref="table" v-if="tokensRequestList !== null" striped :rows="tokensRequestList" :columns="tokensRequestFields" caption="<i class='fa fa-align-justify'></i> 토큰 충전 신청 목록"></c-table>
       </b-col><!--/.col-->
     </b-row><!--/.row-->
 
@@ -24,6 +24,7 @@ export default {
   },
   data () {
     return {
+      tokensRequestList: null,
       tokensRequests: null,
       tokensRequestFields: [
         {key: 'senderName', label: '입금자명'},
@@ -65,6 +66,7 @@ export default {
             }
             this.tokensRequests[i].tokenRequestUserName = this.findUserName(this.tokensRequests[i].createdBy).name
           }
+          this.tokensRequestList = this.tokensRequests
         })
     }
   }
