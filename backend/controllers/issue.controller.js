@@ -58,10 +58,7 @@ function create(req, res, next) {
 function load(req, res, next, issueId) {
   Issue.get(issueId)
     .then((issue) => {
-      req.issue = issue
-      return User.findAll(issue.participants);
-    }).then((users) => {
-      req.issue.participants = users;
+      req.issue = issue;
       return next()
     }) 
     .catch(e => next(e));
