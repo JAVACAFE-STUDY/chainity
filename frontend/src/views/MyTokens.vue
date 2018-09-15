@@ -104,7 +104,7 @@ export default {
       this.$http.get('/api/users/me/tokens-requests')
         .then((response) => {
           let tokensRequests = response.data
-          for(let i = 0; i < tokensRequests.length; i++) {
+          for (let i = 0; i < tokensRequests.length; i++) {
             if (tokensRequests[i].approvedAt) {
               if (tokensRequests[i].tx) {
                 tokensRequests[i].status = '완료'
