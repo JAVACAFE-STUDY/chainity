@@ -153,9 +153,15 @@ export default {
           }
         })
 
+        this.$http.post('/api/mails/approval', {
+          email: this.modal.form.email,
+          name: this.modal.form.name})
+          .then((response) => {
+            this.$toastr.s('이메일 전송 완료')
+          })
+
         this.$http.put('/api/users/' + this.modal.form._id, {status: 'active'})
           .then((response) => {
-            this.$toastr.s('승인 완료')
             this.fetchData()
           })
 

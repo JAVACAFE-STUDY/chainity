@@ -39,12 +39,13 @@ function sendInvitation(req, res, next) {
     'contact': config.smtp.user
   }, function (err, data) {
     if (err) {
-        console.log(err);
+        console.error(err);
+        next(err);
     } else {
       var mailOptions = {
         from: 'no-reply@community.com', // sender address
         to: req.receiver.email, // list of receivers
-        subject: 'Invitation to join Community Rewards', // Subject line
+        subject: 'JAVACAFE 초대장', // Subject line
         html: data
       };
       
@@ -59,4 +60,46 @@ function sendInvitation(req, res, next) {
 
 }
 
-module.exports = { sendInvitation};
+/**
+ * Send approved
+ * @param {string} req.body.email - email of user to be approved.
+ * @param {string} req.body.name - name of user to be approved.
+ * @param res
+ * @param next
+ * @returns {*}
+ */
+function sendApprovalComplete(req, res, next) {
+  var receiver = {
+    email : req.body.email,
+    name : req.body.name
+  }
+  var loginLink = 'http://' + config.domain  + '/login';
+
+  ejs.renderFile(__dirname + "/../emails/welcome.ejs", {
+    'email': receiver.email, 
+    'name': receiver.name,
+    'loginLink': loginLink,
+    'groupName': 'JAVACAFE',
+    'contact': config.smtp.user
+  }, function (err, data) {
+    if (err) {
+      console.error(err);
+    } else {
+      var mailOptions = {
+        from: 'no-reply@community.com', // sender address
+        to: receiver.email, // list of receivers
+        subject: 'JAVACAFE 회원 가입 승인 안내', // Subject line
+        html: data
+      };
+      
+      transporter.sendMail(mailOptions, function (err, info) {
+        if(err)
+          next(err);
+        else
+          res.json(info);
+      });
+    }
+  })
+}
+
+module.exports = { sendInvitation, sendApprovalComplete};
