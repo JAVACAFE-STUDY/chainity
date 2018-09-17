@@ -29,7 +29,19 @@ async function getUserTokens(req, res) {
 	});
 }
 
-function getReceiptList(req, res) {
+async function getReceiptList(req, res) {
+
+	var userNameSet = {};
+	await User.list()
+    .then(users => {
+		for (i in users) {
+			if(users[i].keyStore) {
+				userNameSet[web3.utils.toHex(users[i].keyStore.address).toUpperCase()] = users[i].name;
+			}
+		}
+    })
+    .catch(e => console.error);
+
 	const contract = req.contract;
 
 	contract.getPastEvents('Transfer', {
@@ -38,17 +50,18 @@ function getReceiptList(req, res) {
 	}, function(error, events){
 		var eventsArray = []
 		for (i in events) {
-			eventsArray.push({"from" : events[i].returnValues.from, "to" : events[i].returnValues.to, "value" : events[i].returnValues.value})
+			var from = events[i].returnValues.from;
+			if(userNameSet[from.toUpperCase()]) {
+				from = userNameSet[from.toUpperCase()];
+			}
+			var to = events[i].returnValues.to;
+			if(userNameSet[to.toUpperCase()]) {
+				to = userNameSet[to.toUpperCase()];
+			}
+			eventsArray.push({"from" : from, "to" : to, "value" : events[i].returnValues.value})
 		}
 		return res.send(eventsArray);
 	})
-	// req.contract.getPastEvents('Transfer', {
-	// 	filter: {to: req.decoded.address},
-	// 	fromBlock: 0,
-	// 	toBlock: 'latest'
-	// }, function(error, events){ 
-	// 	return res.send(events);
-	// });
 }
 
 function load(req, res, next, id) {
