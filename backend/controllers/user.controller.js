@@ -1,14 +1,12 @@
 var multer = require('multer');
 var fs= require('fs');
-var gm = require('gm');
-var Thumbnail = require('thumbnail');
 var httpStatus = require('http-status');
 var APIError = require('../helpers/APIError');
 var User = require('../models/user.model');
 var config = require('../config/config');
+var thumb = require('node-thumbnail').thumb;
 var profileImagePath = config.imageUploadPath
 var profileThumbnailImagePath = config.imageThumbnailUploadPath
-var thumbnail = new Thumbnail(profileImagePath,  profileThumbnailImagePath);
 
 /* Create root user */
 User.list()
@@ -141,23 +139,21 @@ function remove(req, res, next) {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    if (!fs.existsSync(profileImagePath)){
-      fs.mkdirSync(profileImagePath);
-    }
-
-    if (!fs.existsSync(profileThumbnailImagePath)){
-      fs.mkdirSync(profileThumbnailImagePath);
-    }
-
     cb(null, profileImagePath);
   },
   filename: (req, file, cb) => {
     const fileName = "profile_" + file.originalname + ".jpg";
     cb(null, fileName);
-    thumbnail.ensureThumbnail(fileName, 50, 50, function(err, filename){
-      if (err) {
-        console.error(err);
-      }
+
+    thumb({
+      source: profileImagePath + fileName, // could be a filename: dest/path/image.jpg
+      destination: profileThumbnailImagePath,
+      concurrency: 4,
+      suffix: '-50x50',
+      width: 50,
+      overwrite: true
+    }, function(files, err, stdout, stderr) {
+      console.log('Thumbnail file created successfully!');
     });
   }
 });

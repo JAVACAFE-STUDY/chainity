@@ -39,8 +39,10 @@
         JC {{ data.item.tokens }}
       </template>
       <template slot="name" slot-scope="data">
-        <img class="img-avatar" :src="getProfileUrl(data.item.id)" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
-        {{ data.item.name }}
+        <div class="avatar">
+          <img class="img-avatar" :src="getProfileUrl(data.item.id)" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
+        </div>
+        &nbsp;{{ data.item.name }}
       </template>
       <template slot="tokenRequestUserName" slot-scope="data">
         <img class="img-avatar" :src="getProfileUrl(data.item.createdBy)" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
