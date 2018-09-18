@@ -47,7 +47,7 @@
         {{ data.item.tokenRequestUserName }}
       </template>
       <template slot="tx" slot-scope="data">
-        <b-link :href="'https://rinkeby.etherscan.io/tx/'+data.item.tx" target="_blank">{{data.item.tx}}</b-link>
+        <b-link :href="'https://rinkeby.etherscan.io/tx/'+data.item.tx" target="_blank">{{data.item.tx.substring(0, 10) + '...'}}</b-link>
       </template>
       <template slot="tokensRequestAcceptible" slot-scope="data">
         <b-button variant="success" v-on:click="askPermissionAndTransferFrom(data.item)">승인</b-button>
@@ -87,6 +87,17 @@
       </template>
       <template slot="finishDate" slot-scope="data">
           {{ (data.item.finishDate && data.item.finishDate != null) ? $moment.utc(data.item.finishDate).local().format('YYYY-MM-DD') : '미지정' }}
+      </template>
+      <template slot="eventFrom" slot-scope="data">
+        <!-- <b-link :href="'https://rinkeby.etherscan.io/address/'+data.item.from" target="_blank">{{ data.item['from-ref'] ? data.item['from-ref'].name : (data.item.from.substring(0, 10) + '...') }}</b-link> -->
+        {{ data.item['from-ref'] ? data.item['from-ref'].name : data.item.from }}
+      </template>
+      <template slot="eventTo" slot-scope="data">
+        <!-- <b-link :href="'https://rinkeby.etherscan.io/address/'+data.item.to" target="_blank">{{ data.item['to-ref'] ? data.item['to-ref'].name : (data.item.to.substring(0, 10) + '...') }}</b-link> -->
+        {{ data.item['to-ref'] ? data.item['to-ref'].name : data.item.to }}
+      </template>
+      <template slot="value" slot-scope="data">
+        JC {{ data.item.value }}
       </template>
     </b-table>
     <nav>
