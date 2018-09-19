@@ -82,12 +82,9 @@
               <!-- <b-list-group-item v-for="participant in form.participants">{{ msg }}</b-list-group-item> -->
               <b-list-group-item v-for="participant in form.participants" :key="participant.id">
                 <div class="avatar float-auto">
-                  <img class="img-avatar" :src="getProfileUrl(participant._id)" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
-                  <strong>{{ participant }}</strong>
+                  <img class="img-avatar" :src="getProfileUrl(participant)" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
                 </div>
-                <div class="avatar float-right">
-                  <checkbox>
-                </div>
+                <strong>{{ findUserName(participant).name }}</strong>
               </b-list-group-item>
             </b-list-group>
             <p v-else class="card-text text-center">
@@ -127,12 +124,17 @@ export default {
         issueType: 'reward',
         participants: []
       },
+      userList: [],
       users: {}
     }
   },
   methods: {
     fetchIssue () {
-      this.$http.get('/api/issues/' + this.$route.params.id)
+      this.$http.get('/api/users')
+        .then((response) => {
+          this.userList = response.data
+          return this.$http.get('/api/issues/' + this.$route.params.id)
+        })
         .then((response) => {
           this.form = response.data
         })
@@ -163,6 +165,11 @@ export default {
             this.form.title = this.form.title + ' '
           }
         })
+    },
+    findUserName (userId) {
+      return this.userList.find((user, idx) => {
+        return userId === user._id
+      })
     },
     askPermissionAndOptIn () {
       var tokenOwnerName = this.users['me'].name
