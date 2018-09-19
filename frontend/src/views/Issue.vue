@@ -83,8 +83,11 @@
               <b-list-group-item v-for="participant in form.participants" :key="participant.id">
                 <div class="avatar float-auto">
                   <img class="img-avatar" :src="getProfileUrl(participant._id)" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
+                  <strong>{{ participant }}</strong>
                 </div>
-                <strong>{{ participant.name }}</strong>
+                <div class="avatar float-right">
+                  <checkbox>
+                </div>
               </b-list-group-item>
             </b-list-group>
             <p v-else class="card-text text-center">
