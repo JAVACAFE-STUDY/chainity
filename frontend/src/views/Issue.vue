@@ -82,9 +82,12 @@
               <!-- <b-list-group-item v-for="participant in form.participants">{{ msg }}</b-list-group-item> -->
               <b-list-group-item v-for="participant in form.participants" :key="participant.id">
                 <div class="avatar float-auto">
-                  <img class="img-avatar" :src="getProfileUrl(participant)" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
+                  <img class="img-avatar" :src="getProfileUrl(participant.userId)" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
                 </div>
-                <strong>{{ findUserName(participant).name }}</strong>
+                <strong>{{ findUserName(participant.userId).name }}</strong>
+                <div class="float-right" v-if="(users['me'].role === 'system' || users['me'].role === 'admin') && form.issueType === 'reward' && !participant.isReceiveReward">
+                  <b-button variant="info" :to="{name: '이슈'}">보상하기</b-button>
+                </div>
               </b-list-group-item>
             </b-list-group>
             <p v-else class="card-text text-center">
@@ -151,13 +154,14 @@ export default {
           this.users[userId] = response.data
         })
         .then(() => {
+          // alert(this.form.participants[0].userId)
           // 로그인 한 사람이 이미 참여한 이슈인지 체크한 후, 참여하기 또는 참여취소 버튼의 visibility 설정
           if (userId === 'me') {
             var loginUserId = this.users[userId].id
-            var participantId = this.form.participants.filter(function (objectId) {
-              return loginUserId === objectId
+            var participant = this.form.participants.filter(function (object) {
+              return loginUserId === object.userId
             })
-            this.isParticipant = participantId.length !== 0
+            this.isParticipant = participant.length !== 0
           }
           if (userId === this.form.createdBy) {
             this.form.createdByName = this.users[userId].name
