@@ -31,12 +31,12 @@ async function getUserTokens(req, res) {
 
 async function getReceiptList(req, res) {
 
-	var userNameSet = {};
+	var userSet = {};
 	await User.list()
     .then(users => {
 		for (i in users) {
 			if(users[i].keyStore) {
-				userNameSet[web3.utils.toHex(users[i].keyStore.address).toUpperCase()] = users[i].name;
+				userSet[web3.utils.toHex(users[i].keyStore.address).toUpperCase()] = users[i];
 			}
 		}
     })
@@ -50,15 +50,20 @@ async function getReceiptList(req, res) {
 	}, function(error, events){
 		var eventsArray = []
 		for (i in events) {
-			var from = events[i].returnValues.from;
-			if(userNameSet[from.toUpperCase()]) {
-				from = userNameSet[from.toUpperCase()];
+			var event = {
+				'tx' : events[i].transactionHash,
+				'block' : events[i].blockHash,
+				'from' : events[i].returnValues.from,
+				'to' : events[i].returnValues.to,
+				'value' : events[i].returnValues.value
 			}
-			var to = events[i].returnValues.to;
-			if(userNameSet[to.toUpperCase()]) {
-				to = userNameSet[to.toUpperCase()];
+			if(userSet[event.from.toUpperCase()]) {
+				event['from-ref'] = userSet[event.from.toUpperCase()];
 			}
-			eventsArray.push({"from" : from, "to" : to, "value" : events[i].returnValues.value})
+			if(userSet[event.to.toUpperCase()]) {
+				event['to-ref'] = userSet[event.to.toUpperCase()];
+			}
+			eventsArray.push(event)
 		}
 		return res.send(eventsArray);
 	})
