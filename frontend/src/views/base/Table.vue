@@ -46,7 +46,10 @@
         {{ data.item.name }}
       </template>
       <template slot="tokenRequestUserName" slot-scope="data">
-        <img class="img-avatar" :src="getProfileUrl(data.item.createdBy)" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
+        <div class="avatar">
+          <img class="img-avatar" :src="data.item.avatar ? $http.defaults.baseURL + '/api/images/' + data.item.avatar : 'static/img/avatars/profile_thumbnail.jpg'" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
+        </div>
+        &nbsp;
         {{ data.item.tokenRequestUserName }}
       </template>
       <template slot="tx" slot-scope="data">
