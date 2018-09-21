@@ -23,9 +23,10 @@ export default {
     return {
       receipts: [],
       receiptFields: [
-        {key: 'from', label: '발신자', sortable: true},
-        {key: 'to', label: '수신자', sortable: true},
-        {key: 'value', label: '전송토큰', sortable: true}
+        {key: 'eventFrom', label: '발신자'},
+        {key: 'eventTo', label: '수신자'},
+        {key: 'value', label: '전송토큰', sortable: true},
+        {key: 'tx', label: '상세이력'}
       ]
     }
   },

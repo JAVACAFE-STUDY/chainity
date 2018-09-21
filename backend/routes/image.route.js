@@ -3,10 +3,9 @@ var imageCtrl = require('../controllers/image.controller');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
-router.route('/:userId/profile')
-  .get(imageCtrl.profileImage)
+router.route('/:relPath')
+  .get(imageCtrl.get)
 
-router.route('/:userId/profile/thumbnail')
-  .get(imageCtrl.profileThumbnail)
+router.param('relPath', imageCtrl.load);
 
-  module.exports = router;
+module.exports = router;
