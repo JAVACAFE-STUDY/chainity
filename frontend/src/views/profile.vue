@@ -108,25 +108,25 @@ export default {
     this.fetchToken()
   },
   methods: {
-    fetchUser() {
+    fetchUser () {
       this.user = {}
       this.$http.get('/api/users/me')
-      .then((response) => {
-        this.user = response.data
-      })
+        .then((response) => {
+          this.user = response.data
+        })
     },
-    fetchToken() {
+    fetchToken () {
       this.$http.get('/api/users/me/tokens')
-      .then((response) => {
-        this.tokens = response.data.tokens + ' JC'
-      })
+        .then((response) => {
+          this.tokens = response.data.tokens + ' JC'
+        })
     },
-    handleUploaded(resp) {
+    handleUploaded (resp) {
       this.$toastr.s('프로필 사진 업데이트 완료')
       this.$eventHub.$emit('thumbnail-changed')
       this.fetchUser()
     },
-    onSubmit(event) {
+    onSubmit (event) {
       this.$http.put('/api/users/' + this.user._id, this.user)
         .then((response) => {
           this.$toastr.s('프로필 업데이트 완료')

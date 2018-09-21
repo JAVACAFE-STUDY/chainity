@@ -26,12 +26,12 @@ export default {
     })
   },
   methods: {
-    fetchUser() {
+    fetchUser () {
       this.user = {}
       this.$http.get('/api/users/me')
-      .then((response) => {
-        this.user = response.data
-      })
+        .then((response) => {
+          this.user = response.data
+        })
     },
     logout (e) {
       e.preventDefault()
