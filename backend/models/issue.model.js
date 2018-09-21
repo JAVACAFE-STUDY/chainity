@@ -35,10 +35,10 @@ const IssueSchema = new mongoose.Schema({
     type: Date,
     required: false
   },
-  participants: {
-    type: Array,
-    required: false
-  },
+  participants: [{ 
+      userId: String, 
+      isReceiveReward: Boolean 
+  }],
   isClosed: {
     type: Boolean,
     required: true
