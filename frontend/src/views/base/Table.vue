@@ -40,9 +40,10 @@
       </template>
       <template slot="name" slot-scope="data">
         <div class="avatar">
-          <img class="img-avatar" :src="getProfileUrl(data.item.id)" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
+          <img class="img-avatar" :src="data.item.avatar ? $http.defaults.baseURL + '/api/images/' + data.item.avatar : 'static/img/avatars/profile_thumbnail.jpg'" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
         </div>
-        &nbsp;{{ data.item.name }}
+        &nbsp;
+        {{ data.item.name }}
       </template>
       <template slot="tokenRequestUserName" slot-scope="data">
         <img class="img-avatar" :src="getProfileUrl(data.item.createdBy)" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">

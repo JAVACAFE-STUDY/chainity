@@ -1,7 +1,7 @@
 <template>
       <b-nav-item-dropdown right no-caret>
         <template slot="button-content">
-          <img class="img-avatar" :src="previewData" onerror="this.onerror=null;this.src='static/img/avatars/profile_thumbnail.jpg';">
+          <img class="img-avatar" :src="user.thumbnail ? $http.defaults.baseURL + '/api/images/' + user.thumbnail : 'static/img/avatars/profile_thumbnail.jpg'" onerror="this.onerror=null;this.src='static/img/avatars/profile_thumbnail.jpg';">
         </template>
         <b-dropdown-header tag="div" class="text-center"><strong>설정</strong></b-dropdown-header>
         <b-dropdown-item @click="profile"><i class="fa fa-user"></i> 프로필</b-dropdown-item>
@@ -16,16 +16,23 @@ export default {
   data: () => {
     return {
       itemsCount: 42,
-      previewData: null
+      user: {}
     }
   },
-  mounted: function () {
-    this.$http.get('/api/users/me')
-      .then((response) => {
-        this.previewData = 'http://localhost:3000/api/images/' + response.data._id + '/profile/thumbnail'
-      })
+  created () {
+    this.fetchUser()
+    this.$eventHub.$on('thumbnail-changed', () => {
+      this.fetchUser()
+    })
   },
   methods: {
+    fetchUser() {
+      this.user = {}
+      this.$http.get('/api/users/me')
+      .then((response) => {
+        this.user = response.data
+      })
+    },
     logout (e) {
       e.preventDefault()
       this.$session.destroy()
