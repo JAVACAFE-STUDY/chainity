@@ -64,6 +64,7 @@ export default {
               this.tokensRequests[i].status = '대기중'
               this.tokensRequests[i].tokensRequestAcceptible = true
             }
+            this.tokensRequests[i].avatar = this.findUserName(this.tokensRequests[i].createdBy).avatar
             this.tokensRequests[i].tokenRequestUserName = this.findUserName(this.tokensRequests[i].createdBy).name
           }
           this.tokensRequestList = this.tokensRequests
