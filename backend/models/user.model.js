@@ -36,6 +36,12 @@ const UserSchema = new mongoose.Schema({
   },
   keyStore: {
     type: JSON
+  },
+  avatar: {
+    type: String
+  },
+  thumbnail: {
+    type: String
   }
 }, {
   toObject: {

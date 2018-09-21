@@ -81,9 +81,10 @@
             <b-list-group v-if="form.participants.length > 0" flush>
               <!-- <b-list-group-item v-for="participant in form.participants">{{ msg }}</b-list-group-item> -->
               <b-list-group-item v-for="participant in form.participants" :key="participant.id">
-                <div class="avatar float-auto">
+                <div class="avatar">
                   <img class="img-avatar" :src="getProfileUrl(participant)" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
                 </div>
+                &nbsp;
                 <strong>{{ findUserName(participant).name }}</strong>
               </b-list-group-item>
             </b-list-group>

@@ -1,14 +1,10 @@
 var multer = require('multer');
 var fs= require('fs');
-var gm = require('gm');
-var Thumbnail = require('thumbnail');
 var httpStatus = require('http-status');
 var APIError = require('../helpers/APIError');
 var User = require('../models/user.model');
 var config = require('../config/config');
-var profileImagePath = config.imageUploadPath
-var profileThumbnailImagePath = config.imageThumbnailUploadPath
-var thumbnail = new Thumbnail(profileImagePath,  profileThumbnailImagePath);
+var thumb = require('node-thumbnail').thumb;
 
 /* Create root user */
 User.list()
@@ -138,40 +134,48 @@ function remove(req, res, next) {
     .then(deletedUser => res.json(deletedUser))
     .catch(e => next(e));
 }
-
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    if (!fs.existsSync(profileImagePath)){
-      fs.mkdirSync(profileImagePath);
-    }
-
-    if (!fs.existsSync(profileThumbnailImagePath)){
-      fs.mkdirSync(profileThumbnailImagePath);
-    }
-
-    cb(null, profileImagePath);
+    cb(null, config.imageUploadPath);
   },
   filename: (req, file, cb) => {
-    const fileName = "profile_" + file.originalname + ".jpg";
+    const fileName = req.user._id+'_'+Date.now()+'_profile.jpg';
     cb(null, fileName);
-    thumbnail.ensureThumbnail(fileName, 50, 50, function(err, filename){
-      if (err) {
-        console.error(err);
-      }
-    });
   }
 });
 
 const upload = multer({
   storage: storage
-}).single('profile');
+}).single('file');
 
 function uploadImage(req, res, next) {
   upload(req, res, err => {
     if (err) {
-      res.json({"result" : "Fail" })
+      next(new APIError(err.message, httpStatus.BAD_REQUEST));
     } else {
-      res.json({"result" : "Success" })
+      thumb({
+        source: req.file.path,
+        destination: config.imageUploadPath,
+        // digest: true,
+        basename: req.user._id+'_'+Date.now(),
+        // suffix: '_thumb',
+        width: 50,
+        skip: true
+      }).then(function(files) {
+        const user = new User(req.user);
+        user.avatar = req.file.path.replace(config.imageUploadPath,'');
+        user.thumbnail = files[0].dstPath.replace(config.imageUploadPath, '');
+        User.update({_id: user.id}, user)
+          .then(() => res.json({
+            'avatar' : user.avatar,
+            'thumbnail': user.thumbnail
+          }))
+          .catch(e => next(e));
+      }).catch(function(e) {
+        console.error( e.toString());
+        next(new APIError(e.toString(), httpStatus.BAD_REQUEST));
+      });
+
     }
   });
 }
