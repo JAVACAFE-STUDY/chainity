@@ -86,7 +86,7 @@
                 </div>
                 <strong>{{ findUserName(participant.userId).name }}</strong>
                 <div class="float-right" v-if="(users['me'].role === 'system' || users['me'].role === 'admin') && form.issueType === 'reward' && !participant.isReceiveReward">
-                  <b-button variant="info" :to="{name: '이슈'}">보상하기</b-button>
+                  <b-button variant="info" :to="{name: '이슈'}" @click.stop="$eventHub.$emit('reward', form.tokens, participant)">보상하기</b-button>
                 </div>
               </b-list-group-item>
             </b-list-group>
@@ -98,18 +98,44 @@
         </b-col>
       </b-row>
     </b-card>
-  <pw-modal></pw-modal>
+    <pw-modal></pw-modal>
+    <b-modal ref="rewardModalRef" :title="'보상하기'" :busy="modal.busy" :header-bg-variant="'dark'" :header-text-variant="'light'" @ok="handleOk">
+      <b-form @submit="onSubmit">
+        <b-row>
+          <b-col sm="12">
+            <b-form-group>
+              <label for="name">이름:</label>
+              <span><b>{{ modal.form.name }}</b></span>
+            </b-form-group>
+            <b-form-group>
+              <label for="tokens">보상금액</label>
+              <b-form-input type="number" step="any" v-model="modal.form.tokens"></b-form-input>
+            </b-form-group>
+            <b-form-group>
+              <label for="password">비밀번호</label>
+              <b-form-input type="password" v-model="modal.form.password" :state='!$v.modal.form.password.$error'></b-form-input>
+              <b-form-invalid-feedback v-if="!$v.modal.form.password.required">
+                비밀번호를 입력해주세요
+              </b-form-invalid-feedback>
+            </b-form-group>
+          </b-col>
+        </b-row>
+      </b-form>
+    </b-modal>
   </div>
 </template>
 
 <script>
 import pwModal from './notifications/PasswordModal.vue'
+import { validationMixin } from 'vuelidate'
+import { required } from 'vuelidate/lib/validators'
 
 export default {
   name: 'issue',
   components: {pwModal},
   created () {
     this.fetchIssue()
+    this.$eventHub.$on('reward', this.reward)
   },
   data () {
     return {
@@ -128,8 +154,32 @@ export default {
         participants: []
       },
       userList: [],
-      users: {}
+      users: {},
+      modal: {
+        busy: false,
+        form: {
+          userId: '',
+          name: '',
+          tokens: 0,
+          password: ''
+        }
+      }
     }
+  },
+  mixins: [
+    validationMixin
+  ],
+  validations: {
+    modal: {
+      form: {
+        password: {
+          required
+        }
+      }
+    }
+  },
+  beforeDestroy: function () {
+    eventHub.$off('reward', this.reward)
   },
   methods: {
     fetchIssue () {
@@ -154,7 +204,6 @@ export default {
           this.users[userId] = response.data
         })
         .then(() => {
-          // alert(this.form.participants[0].userId)
           // 로그인 한 사람이 이미 참여한 이슈인지 체크한 후, 참여하기 또는 참여취소 버튼의 visibility 설정
           if (userId === 'me') {
             var loginUserId = this.users[userId].id
@@ -169,6 +218,15 @@ export default {
             this.form.title = this.form.title + ' '
           }
         })
+    },
+    reward: function (tokens, participant) {
+      alert(this.findUserName(participant.userId).name+" tokens: "+tokens)
+      this.modal.form.userId = participant.userId
+      this.modal.form.name = this.findUserName(participant.userId).name
+      this.modal.form.tokens = form.tokens
+      this.modal.busy = false
+      this.$v.$reset()
+      this.showModal()
     },
     findUserName (userId) {
       return this.userList.find((user, idx) => {
@@ -269,6 +327,85 @@ export default {
             this.$router.go(-1)
           })
       }
+    },
+    showModal () {
+      alert("11")
+      this.$refs.rewardModalRef.show()
+    },
+    hideModal () {
+      this.$refs.rewardModalRef.hide()
+    },
+    resetModal () {
+      this.modal = {}
+    },
+    handleOk (evt) {
+      // Prevent modal from closing
+      evt.preventDefault()
+      this.submit()
+    },
+    onSubmit (evt) {
+      evt.preventDefault()
+      this.submit()
+    },
+    async submit () {
+      var self = this
+      this.$v.$touch()
+      if (this.$v.$invalid) return
+
+      this.modal.busy = true
+
+      var body = {
+        coins: this.modal.form.tokens,
+        password: this.modal.form.password
+      }
+
+      var before
+      try {
+        before = this.$toastr.Add({
+          title: '거래 내역',
+          msg: '생성 중...',
+          clickClose: false,
+          timeout: 0,
+          type: 'info'
+        })
+        const response = await this.$http.post('/api/users/' + this.modal.form._id + '/coins', body)
+        this.$toastr.Close(before)
+
+        this.$toastr.Add({
+          title: '거래 내역',
+          msg: '블록체인 원장에 등록 중... (<a target="_blank" href="https://rinkeby.etherscan.io/tx/' + response.data.txHash + '">상세보기 <i class="fa fa-external-link" aria-hidden="true"></i></a>)',
+          clickClose: false,
+          timeout: 10000,
+          type: 'info',
+          progressBar: true,
+          onClosed: function () {
+            // TODO - websocket
+            self.$toastr.s('등록 완료 (<a target="_blank" href="https://rinkeby.etherscan.io/tx/' + response.data.txHash + '">상세보기 <i class="fa fa-external-link" aria-hidden="true"></i></a>)', '거래 내역')
+          }
+        })
+
+        this.$http.post('/api/mails/approval', {
+          email: this.modal.form.email,
+          name: this.modal.form.name})
+          .then((response) => {
+            this.$toastr.s('이메일 전송 완료')
+          })
+
+        this.$http.put('/api/users/' + this.modal.form._id, {status: 'active'})
+          .then((response) => {
+            this.fetchData()
+          })
+
+        this.hideModal()
+      } catch (error) {
+        console.error(error)
+        if (undefined !== before) {
+          this.$toastr.Close(before)
+        }
+        this.$toastr.e('등록 실패' + error.response.data.message ? ': ' + error.response.data.message : '', '거래 내역')
+      }
+
+      this.modal.busy = false
     }
   }
 }
