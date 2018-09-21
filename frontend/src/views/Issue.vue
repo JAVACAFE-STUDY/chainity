@@ -179,7 +179,7 @@ export default {
     }
   },
   beforeDestroy: function () {
-    eventHub.$off('reward', this.reward)
+    this.$eventHub.$off('reward', this.reward)
   },
   methods: {
     fetchIssue () {
@@ -220,10 +220,10 @@ export default {
         })
     },
     reward: function (tokens, participant) {
-      alert(this.findUserName(participant.userId).name+" tokens: "+tokens)
+      alert(this.findUserName(participant.userId).name + ' tokens: ' + tokens)
       this.modal.form.userId = participant.userId
       this.modal.form.name = this.findUserName(participant.userId).name
-      this.modal.form.tokens = form.tokens
+      this.modal.form.tokens = tokens
       this.modal.busy = false
       this.$v.$reset()
       this.showModal()
@@ -329,7 +329,6 @@ export default {
       }
     },
     showModal () {
-      alert("11")
       this.$refs.rewardModalRef.show()
     },
     hideModal () {
