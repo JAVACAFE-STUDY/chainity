@@ -55,8 +55,9 @@
       <template slot="tx" slot-scope="data">
         <b-link :href="'https://rinkeby.etherscan.io/tx/'+data.item.tx" target="_blank">{{data.item.tx.substring(0, 10) + '...'}}</b-link>
       </template>
-      <template slot="tokensRequestAcceptible" slot-scope="data">
-        <b-button variant="success" v-on:click="askPermissionAndTransferFrom(data.item)">승인</b-button>
+      <template slot="tokensRequestButton" slot-scope="data">
+        <b-button v-if="data.item.tx" variant="info" size="sm" :href="'https://rinkeby.etherscan.io/tx/'+data.item.tx" target="_blank" class="mr-1">충전완료</b-button>
+        <b-button v-else variant="success" size="sm" @click.stop="$eventHub.$emit('toekens-request-clicked', data.item)" class="mr-1">요청수락</b-button>
       </template>
       <template slot="approveButton" slot-scope="data">
         <b-button variant="success" size="sm" @click.stop="$eventHub.$emit('approve-clicked', data.item)" class="mr-1">승인</b-button>
@@ -199,37 +200,6 @@ export default {
     getRole (role) {
       return role === 'system' ? '슈퍼 관리자'
         : role === 'admin' ? '관리자' : '회원'
-    },
-    askPermissionAndTransferFrom (item) {
-      this.$eventHub.$emit('pw-modal-open',
-        '토큰 충전 요청 승인',
-        '입금자명: <b>' + item.senderName + '</b><br/>' +
-        '입금액: <b>₩ ' + item.price + '</b><br/>' +
-        '위와 같은 입금 내역을 확인 하셨습니까?<br/>' +
-        '승인 시, ' + item.tokenRequestUserName + '님에게 <b>JC ' + item.tokens + '을(를) 충전</b> 합니다.',
-        password => {
-          this.$http.get('/api/users/' + item.createdBy)
-            .then((response) => {
-              var body = {
-                receiver: response.data.keyStore.address,
-                tokens: item.tokens,
-                password: password
-              }
-
-              this.$http.post('/api/contracts/0x000/tokens', body)
-                .then((response) => {
-                  console.log(response.data)
-                  item.tx = response.data.hash
-                  this.$http.put('/api/tokens-requests/' + item._id, {tx: item.tx, approvedAt: new Date()})
-                    .then((response) => {
-                      alert('승인 되었습니다.')
-                    })
-                }).catch((error) => {
-                  alert(error.response.data.message)
-                })
-            })
-        }
-      )
     },
     getProfileUrl (userId) {
       return 'http://localhost:3000/api/images/' + userId + '/profile/thumbnail'
