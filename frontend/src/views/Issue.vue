@@ -82,7 +82,7 @@
               <!-- <b-list-group-item v-for="participant in form.participants">{{ msg }}</b-list-group-item> -->
               <b-list-group-item v-for="participant in form.participants" :key="participant.id">
                 <div class="avatar float-auto">
-                  <img class="img-avatar" :src="getProfileUrl(participant.userId)" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
+                  <img class="img-avatar" :src="findUserName(participant.userId).avatar ? $http.defaults.baseURL + '/api/images/' + findUserName(participant.userId).avatar : 'static/img/avatars/profile_thumbnail.jpg'" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
                 </div>
                 <strong>{{ findUserName(participant.userId).name }}</strong>
                 <div class="float-right" v-if="(users['me'].role === 'system' || users['me'].role === 'admin') && form.issueType === 'reward' && !participant.isReceiveReward">
