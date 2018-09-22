@@ -1,7 +1,7 @@
 <template>
       <b-nav-item-dropdown right no-caret>
         <template slot="button-content">
-          <img class="img-avatar" :src="user.thumbnail ? $http.defaults.baseURL + '/api/images/' + user.thumbnail : 'static/img/avatars/profile_thumbnail.jpg'" onerror="this.onerror=null;this.src='static/img/avatars/profile_thumbnail.jpg';">
+          <img class="img-avatar" :src="user.thumbnail ? $http.defaults.baseURL + '/api/images/' + user.thumbnail : '/static/img/avatars/profile_thumbnail.jpg'" onerror="this.onerror=null;this.src='/static/img/avatars/profile_thumbnail.jpg';">
         </template>
         <b-dropdown-header tag="div" class="text-center"><strong>설정</strong></b-dropdown-header>
         <b-dropdown-item @click="profile"><i class="fa fa-user"></i> 프로필</b-dropdown-item>

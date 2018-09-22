@@ -40,14 +40,14 @@
       </template>
       <template slot="name" slot-scope="data">
         <div class="avatar">
-          <img class="img-avatar" :src="data.item.avatar ? $http.defaults.baseURL + '/api/images/' + data.item.avatar : 'static/img/avatars/profile_thumbnail.jpg'" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
+          <img class="img-avatar" :src="data.item.avatar ? $http.defaults.baseURL + '/api/images/' + data.item.avatar : '/static/img/avatars/profile_thumbnail.jpg'" onerror="this.onerror=null;this.src='/static/img/avatars/profile_thumbnail.jpg';">
         </div>
         &nbsp;
         {{ data.item.name }}
       </template>
       <template slot="createdBy" slot-scope="data">
         <div class="avatar">
-          <img class="img-avatar" :src="data.item.createdBy.avatar ? $http.defaults.baseURL + '/api/images/' + data.item.createdBy.avatar : 'static/img/avatars/profile_thumbnail.jpg'" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
+          <img class="img-avatar" :src="data.item.createdBy.avatar ? $http.defaults.baseURL + '/api/images/' + data.item.createdBy.avatar : '/static/img/avatars/profile_thumbnail.jpg'" onerror="this.onerror=null;this.src='/static/img/avatars/profile_thumbnail.jpg';">
         </div>
         &nbsp;
         {{ data.item.createdBy.name }}
