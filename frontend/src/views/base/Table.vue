@@ -36,7 +36,7 @@
         ₩ {{ data.item.price }}
       </template>
       <template slot="tokens" slot-scope="data">
-        JC {{ data.item.tokens }}
+        JC {{ data.item.tokens || data.item.price}}
       </template>
       <template slot="name" slot-scope="data">
         <div class="avatar">
@@ -45,12 +45,12 @@
         &nbsp;
         {{ data.item.name }}
       </template>
-      <template slot="tokenRequestUserName" slot-scope="data">
+      <template slot="createdBy" slot-scope="data">
         <div class="avatar">
-          <img class="img-avatar" :src="data.item.avatar ? $http.defaults.baseURL + '/api/images/' + data.item.avatar : 'static/img/avatars/profile_thumbnail.jpg'" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
+          <img class="img-avatar" :src="data.item.createdBy.avatar ? $http.defaults.baseURL + '/api/images/' + data.item.createdBy.avatar : 'static/img/avatars/profile_thumbnail.jpg'" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
         </div>
         &nbsp;
-        {{ data.item.tokenRequestUserName }}
+        {{ data.item.createdBy.name }}
       </template>
       <template slot="tx" slot-scope="data">
         <b-link :href="'https://rinkeby.etherscan.io/tx/'+data.item.tx" target="_blank">{{data.item.tx.substring(0, 10) + '...'}}</b-link>

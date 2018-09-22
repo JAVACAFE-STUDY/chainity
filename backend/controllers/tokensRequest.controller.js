@@ -20,7 +20,7 @@ function list(req, res, next) {
 function listMine(req, res, next) {
   const { limit = 50, skip = 0 } = req.query;
   TokensRequest.listByCreatedBy(req.decoded._id, { limit, skip })
-    .then(tokensRequest => res.json(tokensRequest))
+    .then(tokensRequests => res.json(tokensRequests))
     .catch(e => next(e));
 }
 
