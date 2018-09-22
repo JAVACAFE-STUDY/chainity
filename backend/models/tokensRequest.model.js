@@ -16,7 +16,8 @@ const TokensRequestSchema = new mongoose.Schema({
     required: true
   },
   createdBy: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true
   },
   senderName: {
@@ -65,7 +66,8 @@ TokensRequestSchema.statics = {
    */
   list({ skip = 0, limit = 50} = {}) {
     return this.find()
-      .sort({ dueDate: 1 })
+      .populate('createdBy')
+      .sort({ createdAt: -1 })
       .skip(+skip)
       .limit(+limit)
       .exec();
@@ -79,7 +81,8 @@ TokensRequestSchema.statics = {
    */
   listByCreatedBy(createdBy, {skip = 0, limit = 50 } = {}) {
     return this.find({ createdBy: createdBy})
-      .sort({ createdAt: 1 })
+      .populate('createdBy')
+      .sort({ createdAt: -1 })
       .skip(+skip)
       .limit(+limit)
       .exec();
