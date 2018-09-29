@@ -62,7 +62,7 @@
           <div class="card-body p-4">
             <b-row>
               <b-card show-footer>
-                <b-img width="200px" :src="user.avatar ? $http.defaults.baseURL + '/api/images/' + user.avatar : 'static/img/avatars/profile_thumbnail.jpg'" alt="로딩중..." />
+                <b-img width="200px" :src="user.avatar ? $http.defaults.baseURL + '/api/images/' + user.avatar : '/static/img/avatars/profile_thumbnail.jpg'" alt="로딩중..." />
                 <div slot="header">프로필 사진</div>
                 <div slot="footer" class="text-sm-right">
                   <b-button id="pick-avatar" block variant="success">프로필 사진 올리기</b-button>

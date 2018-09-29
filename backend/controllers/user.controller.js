@@ -91,14 +91,13 @@ function create(req, res, next) {
  */
 function update(req, res, next) {
   const user = new User(req.user);
-  if (req.body.name != '') {
+  if (req.body.name) {
     user.name = req.body.name;
   }
-  if (req.body.role != '') {
+  if (req.body.role) {
     user.role = req.body.role;
   }
-
-  if (req.body.status != '') {
+  if (req.body.status) {
     user.status = req.body.status;
   }
 

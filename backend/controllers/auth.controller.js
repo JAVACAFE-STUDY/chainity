@@ -18,8 +18,11 @@ function login(req, res, next) {
 
   User.getByEmail(req.body.email)
     .then((user) => {
-      if(user.status !== 'active') {
-        throw new APIError('User status: ' + user.status, httpStatus.UNAUTHORIZED, true);
+      if(user.status == 'invited') {
+        throw new APIError('회원 가입 안내 메일을 확인해주세요. 메일 확인이 되지 않을 경우, 스팸으로 분류되었을 수도 있습니다.', httpStatus.UNAUTHORIZED, true);
+      }
+      if(user.status == 'pending') {
+        throw new APIError('시스템 관리자의 승인 후 이용하실 수 있습니다.', httpStatus.UNAUTHORIZED, true);
       }
       var walletInfo = {};
       if(config.root.id === user.email) {
