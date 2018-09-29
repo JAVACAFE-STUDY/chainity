@@ -4,7 +4,7 @@
     <b-row>
       <b-col sm="12">
         <c-table ref="table" v-if="tokensRequests.length > 0" striped :rows="tokensRequests" :columns="tokensRequestFields" caption="<i class='fa fa-align-justify'></i> 토큰 충전 요청 목록"></c-table>
-        <b-card v-else header="<i class='fa fa-align-justify'></i> 토큰 충전 요청 내역">
+        <b-card v-else header="<i class='fa fa-align-justify'></i> 토큰 충전 요청 목록">
           <p class="text-center">토큰 충전 요청 내역이 없습니다.</p>
         </b-card>
       </b-col><!--/.col-->

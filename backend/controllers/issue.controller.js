@@ -129,22 +129,10 @@ function addParticipant(req, res, next) {
   }
 
   const issue = new Issue(req.issue);
-  var participant = { userId: userId, isReceiveReward: false };
-  var isExist = false;
 
-  for(var i = 0; i < issue.participants.length; i++){
-    if(issue.participants[i].userId === userId) {
-      isExist = true;
-      break;
-    }
-  }
-  if(!isExist) {
-    issue.participants.push(participant);
-
-    Issue.update({ id: issue.id}, issue)
+  Issue.update({ id: issue.id}, { $addToSet: { participants: userId } })
     .then(savedIssue => res.json(savedIssue))
     .catch(e => next(e));
-  }
 }
 
 /**
@@ -152,20 +140,13 @@ function addParticipant(req, res, next) {
  */
 function removeParticipant(req, res, next) {
   var userId = req.params.userId;
-
   if('me' === userId) {
     userId = req.decoded._id;
   }
 
   const issue = new Issue(req.issue);
 
-  for(var i = 0; i < issue.participants.length; i++){
-    if(issue.participants[i].userId === userId) {
-      issue.participants.id(issue.participants[i]._id).remove();
-    }
-  }
-
-  Issue.update({ id: issue.id}, issue)
+  Issue.update({ id: issue.id}, { $pull: { participants: userId } })
     .then(savedIssue => res.json(savedIssue))
     .catch(e => next(e));
 }
