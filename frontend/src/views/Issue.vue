@@ -194,7 +194,7 @@ export default {
           this.user = response.data
         })
     },
-    isParticipant() {
+    isParticipant () {
       var self = this
       var participant = this.form.participants.filter(function (object) {
         return self.user._id === object._id

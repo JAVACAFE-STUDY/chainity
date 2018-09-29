@@ -117,8 +117,8 @@ export default {
     },
     handleOk (evt) {
       // Prevent modal from closing
-    evt.preventDefault()
-    this.submit()
+      evt.preventDefault()
+      this.submit()
     },
     onSubmit (evt) {
       evt.preventDefault()

@@ -120,10 +120,6 @@ export default {
   created () {
     this.items = this.rows
     this.fields = this.columns
-    this.$http.get('/api/users/me')
-      .then((response) => {
-        this.user = response.data
-      })
   },
   props: {
     rows: {
@@ -184,25 +180,9 @@ export default {
       this.totalRows = filteredItems.length
       this.currentPage = 1
     },
-    fetchUser (userId) {
-      this.$http.get('/api/users/' + userId)
-        .then((response) => {
-          this.users[userId] = response.data
-        })
-        .then(() => {
-          if (userId === this.form.createdBy) {
-            this.form.createdByName = this.users[userId].name
-            // trick to change createdByName
-            this.form.title = this.form.title + ' '
-          }
-        })
-    },
     getRole (role) {
       return role === 'system' ? '슈퍼 관리자'
         : role === 'admin' ? '관리자' : '회원'
-    },
-    getProfileUrl (userId) {
-      return 'http://localhost:3000/api/images/' + userId + '/profile/thumbnail'
     }
   }
 }
