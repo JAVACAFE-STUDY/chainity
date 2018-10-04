@@ -5,7 +5,7 @@
         <strong>이슈 #{{ $route.params.id }}</strong>
         <small v-if="form.issueType === 'reward'">(타입: 보상)</small>
         <small v-else>(타입: 납부)</small>
-        <div v-if="form.createdBy" class="card-actions">
+        <div v-if="form.createdBy ? (form.createdBy._id === user._id) : false" class="card-actions">
           <b-link :to="'edit'" append><i class="fa fa-gear"></i></b-link>
         </div>
       </div>
@@ -19,8 +19,9 @@
             <h2>{{ form.title }}</h2>
             <small>{{ form.createdAt | moment("YYYY-MM-DD HH:MM:SS") }} </small>
             <small> by </small>
-            <small v-if="users[form.createdBy]">{{ users[form.createdBy].name }}</small>
-            <small v-else>{{ form.createdBy }}</small>
+            <small>{{ form.createdBy ? form.createdBy.name : ''}}</small>
+            <!-- <small v-if="users[form.createdBy]">{{ users[form.createdBy].name }}</small>
+            <small v-else>{{ form.createdBy.name }}</small> -->
           </b-form-group>
         </b-col>
       </b-row>
@@ -71,21 +72,21 @@
             <div slot="header">
               <strong v-if="form.issueType === 'reward'">참여자</strong>
               <strong v-if="form.issueType != 'reward'">납부자</strong>
-              <small>현재: {{ form.participants.length }}</small>
+              <small>현재: {{ form.participants ? form.participants.length : 0 }}</small>
             </div>
             <div slot="footer" class="text-sm-center" v-if="form.isClosed === false">
               <b-button variant="success" v-if="form.issueType != 'reward'" v-on:click="askPermissionAndOptIn()">납부하기</b-button>
-              <b-button variant="success" v-if="form.issueType === 'reward' && !isParticipant" v-on:click="optIn()">참여하기</b-button>
-              <b-button variant="danger" v-if="form.issueType === 'reward' && isParticipant" v-on:click="form.issueType === 'reward' ? optOut() : askPermissionAndOptOut()">참여취소</b-button>
+              <b-button variant="success" v-if="form.issueType === 'reward' && !isParticipant()" v-on:click="optIn()">참여하기</b-button>
+              <b-button variant="danger" v-if="form.issueType === 'reward' && isParticipant()" v-on:click="form.issueType === 'reward' ? optOut() : askPermissionAndOptOut()">참여취소</b-button>
             </div>
-            <b-list-group v-if="form.participants.length > 0" flush>
+            <b-list-group v-if="form.participants && form.participants.length > 0" flush>
               <!-- <b-list-group-item v-for="participant in form.participants">{{ msg }}</b-list-group-item> -->
               <b-list-group-item v-for="participant in form.participants" :key="participant.id">
                 <div class="avatar float-auto">
-                  <img class="img-avatar" :src="findUserName(participant.userId).avatar ? $http.defaults.baseURL + '/api/images/' + findUserName(participant.userId).avatar : 'static/img/avatars/profile_thumbnail.jpg'" onerror="this.onerror=null;this.src='../static/img/avatars/profile_thumbnail.jpg';">
+                  <img class="img-avatar" :src="participant.avatar ? $http.defaults.baseURL + '/api/images/' + participant.avatar : '/static/img/avatars/profile_thumbnail.jpg'" onerror="this.onerror=null;this.src='/static/img/avatars/profile_thumbnail.jpg';">
                 </div>
-                <strong>{{ findUserName(participant.userId).name }}</strong>
-                <div class="float-right" v-if="(users['me'].role === 'system' || users['me'].role === 'admin') && form.issueType === 'reward' && !participant.isReceiveReward">
+                <strong>{{ participant.name }}</strong>
+                <div class="float-right" v-if="(user.role === 'system' || user.role === 'admin') && form.issueType === 'reward' && !participant.isReceiveReward">
                   <b-button variant="info" :to="{name: '이슈'}" @click.stop="$eventHub.$emit('reward', form.tokens, participant)">보상하기</b-button>
                 </div>
               </b-list-group-item>
@@ -133,17 +134,15 @@ import { required } from 'vuelidate/lib/validators'
 export default {
   name: 'issue',
   components: {pwModal},
-  created () {
-    this.fetchIssue()
-    this.$eventHub.$on('reward', this.reward)
+  async created () {
+    await this.fetchUser()
+    await this.fetchIssue()
   },
   data () {
     return {
-      isParticipant: false,
       form: {
         title: '',
-        createdBy: '',
-        createdByName: '',
+        createdBy: {},
         createdAt: '',
         description: '',
         tokens: '0',
@@ -153,8 +152,7 @@ export default {
         issueType: 'reward',
         participants: []
       },
-      userList: [],
-      users: {},
+      user: {},
       modal: {
         busy: false,
         form: {
@@ -183,55 +181,33 @@ export default {
   },
   methods: {
     fetchIssue () {
-      this.$http.get('/api/users')
-        .then((response) => {
-          this.userList = response.data
-          return this.$http.get('/api/issues/' + this.$route.params.id)
-        })
+      this.form = {}
+      this.$http.get('/api/issues/' + this.$route.params.id)
         .then((response) => {
           this.form = response.data
         })
-        .then(() => {
-          this.fetchUser(this.form.createdBy)
-        })
-        .then(() => {
-          this.fetchUser('me')
+    },
+    fetchUser () {
+      this.user = {}
+      this.$http.get('/api/users/me')
+        .then((response) => {
+          this.user = response.data
         })
     },
-    fetchUser (userId) {
-      this.$http.get('/api/users/' + userId)
-        .then((response) => {
-          this.users[userId] = response.data
-        })
-        .then(() => {
-          // 로그인 한 사람이 이미 참여한 이슈인지 체크한 후, 참여하기 또는 참여취소 버튼의 visibility 설정
-          if (userId === 'me') {
-            var loginUserId = this.users[userId].id
-            var participant = this.form.participants.filter(function (object) {
-              return loginUserId === object.userId
-            })
-            this.isParticipant = participant.length !== 0
-          }
-          if (userId === this.form.createdBy) {
-            this.form.createdByName = this.users[userId].name
-            // trick to change createdByName
-            this.form.title = this.form.title + ' '
-          }
-        })
+    isParticipant () {
+      var self = this
+      var participant = this.form.participants.filter(function (object) {
+        return self.user._id === object._id
+      })
+      return participant.length !== 0
     },
     reward: function (tokens, participant) {
-      alert(this.findUserName(participant.userId).name + ' tokens: ' + tokens)
       this.modal.form.userId = participant.userId
-      this.modal.form.name = this.findUserName(participant.userId).name
+      this.modal.form.name = participant.name
       this.modal.form.tokens = tokens
       this.modal.busy = false
       this.$v.$reset()
       this.showModal()
-    },
-    findUserName (userId) {
-      return this.userList.find((user, idx) => {
-        return userId === user._id
-      })
     },
     askPermissionAndOptIn () {
       var tokenOwnerName = this.users['me'].name
@@ -296,9 +272,6 @@ export default {
         }
       )
     },
-    getProfileUrl (userId) {
-      return 'http://localhost:3000/api/images/' + userId + '/profile/thumbnail'
-    },
     optIn () {
       this.$http.put('/api/issues/' + this.$route.params.id + '/participants/me')
         .then((response) => {
@@ -313,9 +286,6 @@ export default {
           alert('참여가 취소되었습니다.')
         })
     },
-    cancel () {
-      this.$router.push('/issues')
-    },
     close: function (event) {
       if (confirm('이슈를 종료하시겠습니까?')) {
         this.$http.put('/api/issues/' + this.$route.params.id, {
@@ -324,7 +294,7 @@ export default {
         })
           .then((response) => {
             alert('이슈가 종료되었습니다.')
-            this.$router.go(-1)
+            this.$router.push('/issues')
           })
       }
     },

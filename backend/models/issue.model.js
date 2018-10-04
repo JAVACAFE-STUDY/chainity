@@ -36,8 +36,8 @@ const IssueSchema = new mongoose.Schema({
     required: false
   },
   participants: [{ 
-      userId: String, 
-      isReceiveReward: Boolean 
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
   }],
   isClosed: {
     type: Boolean,
@@ -48,7 +48,8 @@ const IssueSchema = new mongoose.Schema({
     required: true
   },
   createdBy: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true
   },
   closedAt: {
@@ -72,14 +73,13 @@ IssueSchema.method({
  */
 IssueSchema.statics = {
   /**
-   * List issues in ascending order of 'dueDate'.
    * @param {number} skip - Number of issues to be skipped.
    * @param {number} limit - Limit number of issues to be returned.
    * @returns {Promise<Issue[]>}
    */
   list({ skip = 0, limit = 50 } = {}) {
     return this.find()
-      .sort({ dueDate: 1 })
+      .sort({ createdAt: -1 })
       .skip(+skip)
       .limit(+limit)
       .exec();
@@ -92,6 +92,8 @@ IssueSchema.statics = {
    */
   get(id) {
     return this.findOne({ id: parseInt(id) })
+      .populate('participants')
+      .populate('createdBy')
       .exec()
       .then((issue) => {
         if (issue) {
