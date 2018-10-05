@@ -72,7 +72,7 @@
               <strong v-if="form.issueType != 'reward'">납부자</strong>
               <small>현재: {{ form.participants ? form.participants.length : 0 }}</small>
             </div>
-            <div slot="footer" class="text-sm-center" v-if="form.isClosed === false">
+            <div slot="footer" class="text-sm-center" v-if="form.isClosed === false && !isRewardedParticipant()">
               <b-button variant="success" v-if="form.issueType != 'reward'" v-on:click="askPermissionAndOptIn()">납부하기</b-button>
               <b-button variant="success" v-if="form.issueType === 'reward' && !isParticipant()" v-on:click="optIn()">참여하기</b-button>
               <b-button variant="danger" v-if="form.issueType === 'reward' && isParticipant()" v-on:click="form.issueType === 'reward' ? optOut() : askPermissionAndOptOut()">참여취소</b-button>
@@ -86,6 +86,12 @@
                 <div class="float-right" v-if="(user.role === 'system' || user.role === 'admin') && form.issueType === 'reward' && !participant.isReceiveReward">
                   <b-button variant="primary">보상하기</b-button>
                 </div>
+              </b-list-group-item>
+              <b-list-group-item v-for="participant in form.rewardedParticipants" :key="participant.id">
+                <div class="avatar float-auto">
+                  <img class="img-avatar" :src="participant.avatar ? $http.defaults.baseURL + '/api/images/' + participant.avatar : '/static/img/avatars/profile_thumbnail.jpg'" onerror="this.onerror=null;this.src='/static/img/avatars/profile_thumbnail.jpg';">
+                </div>
+                <strong>{{ participant.name }}</strong>
               </b-list-group-item>
             </b-list-group>
             <p v-else class="card-text text-center">
@@ -124,7 +130,8 @@ export default {
         startDate: '',
         finishDate: '',
         issueType: 'reward',
-        participants: []
+        participants: [],
+        rewardedParticipants: []
       },
       user: {}
     }
@@ -150,6 +157,13 @@ export default {
         return self.user._id === object._id
       })
       return participant.length !== 0
+    },
+    isRewardedParticipant () {
+      var self = this
+      var rewardedParticipant = this.form.rewardedParticipants.filter(function (object) {
+        return self.user._id === object._id
+      })
+      return rewardedParticipant.length !== 0
     },
     askPermissionAndOptIn () {
       var tokenOwnerName = this.user.name
