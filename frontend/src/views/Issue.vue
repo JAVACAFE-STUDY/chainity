@@ -90,7 +90,6 @@
             <p v-else class="card-text text-center">
               <br/>
               아직 참여자가 없습니다.
-              &nbsp;
             </p>
           </b-card>
 
@@ -110,7 +109,7 @@
             <p v-else class="card-text text-center">
               <br/>
               아직 참여자가 없습니다.
-              &nbsp;
+              <br/><br/>
             </p>
           </b-card>
         </b-col>
@@ -195,7 +194,7 @@ export default {
         .then(() => {
           this.$eventHub.$emit('pw-modal-open',
             '토큰 전송 수락',
-            tokenOwnerName + '님의 지갑으로부터 <b>' + spenderName + '님이 ' + tokens + '토큰을 지출</b> 할 수 있도록 수락하시겠습니까?',
+            '<b>' + tokenOwnerName + '</b>님의 지갑으로부터 <b>' + spenderName + '님이 ' + tokens + '토큰을 지출</b> 할 수 있도록 수락하시겠습니까?',
             password => {
               var body = {
                 spender: spenderAddress,
