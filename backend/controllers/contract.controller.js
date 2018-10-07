@@ -115,7 +115,7 @@ function sendTokens(req, res, next) {
 	const contract = req.contract;
 	const from = config.systemAddress;
 	const to = req.body.receiver;
-	const tokens = req.body.tokens;
+	const tokens = web3.utils.toWei(req.body.tokens.toString(), 'ether');
 	const password = req.body.password;
 
 	User.get(req.decoded._id)
