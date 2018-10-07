@@ -20,8 +20,6 @@
             <small>{{ form.createdAt | moment("YYYY-MM-DD HH:MM:SS") }} </small>
             <small> by </small>
             <small>{{ form.createdBy ? form.createdBy.name : ''}}</small>
-            <!-- <small v-if="users[form.createdBy]">{{ users[form.createdBy].name }}</small>
-            <small v-else>{{ form.createdBy.name }}</small> -->
           </b-form-group>
         </b-col>
       </b-row>
@@ -74,21 +72,26 @@
               <strong v-if="form.issueType != 'reward'">납부자</strong>
               <small>현재: {{ form.participants ? form.participants.length : 0 }}</small>
             </div>
-            <div slot="footer" class="text-sm-center" v-if="form.isClosed === false">
+            <div slot="footer" class="text-sm-center" v-if="form.isClosed === false && !isRewardedParticipant()">
               <b-button variant="success" v-if="form.issueType != 'reward'" v-on:click="askPermissionAndOptIn()">납부하기</b-button>
               <b-button variant="success" v-if="form.issueType === 'reward' && !isParticipant()" v-on:click="optIn()">참여하기</b-button>
               <b-button variant="danger" v-if="form.issueType === 'reward' && isParticipant()" v-on:click="form.issueType === 'reward' ? optOut() : askPermissionAndOptOut()">참여취소</b-button>
             </div>
             <b-list-group v-if="form.participants && form.participants.length > 0" flush>
-              <!-- <b-list-group-item v-for="participant in form.participants">{{ msg }}</b-list-group-item> -->
               <b-list-group-item v-for="participant in form.participants" :key="participant.id">
                 <div class="avatar float-auto">
                   <img class="img-avatar" :src="participant.avatar ? $http.defaults.baseURL + '/api/images/' + participant.avatar : '/static/img/avatars/profile_thumbnail.jpg'" onerror="this.onerror=null;this.src='/static/img/avatars/profile_thumbnail.jpg';">
                 </div>
                 <strong>{{ participant.name }}</strong>
                 <div class="float-right" v-if="(user.role === 'system' || user.role === 'admin') && form.issueType === 'reward' && !participant.isReceiveReward">
-                  <b-button variant="info" :to="{name: '이슈'}" @click.stop="$eventHub.$emit('reward', form.tokens, participant)">보상하기</b-button>
+                  <b-button variant="primary">보상하기</b-button>
                 </div>
+              </b-list-group-item>
+              <b-list-group-item v-for="participant in form.rewardedParticipants" :key="participant.id">
+                <div class="avatar float-auto">
+                  <img class="img-avatar" :src="participant.avatar ? $http.defaults.baseURL + '/api/images/' + participant.avatar : '/static/img/avatars/profile_thumbnail.jpg'" onerror="this.onerror=null;this.src='/static/img/avatars/profile_thumbnail.jpg';">
+                </div>
+                <strong>{{ participant.name }}</strong>
               </b-list-group-item>
             </b-list-group>
             <p v-else class="card-text text-center">
@@ -100,40 +103,17 @@
       </b-row>
     </b-card>
     <pw-modal></pw-modal>
-    <b-modal ref="rewardModalRef" :title="'보상하기'" :busy="modal.busy" :header-bg-variant="'dark'" :header-text-variant="'light'" @ok="handleOk">
-      <b-form @submit="onSubmit">
-        <b-row>
-          <b-col sm="12">
-            <b-form-group>
-              <label for="name">이름:</label>
-              <span><b>{{ modal.form.name }}</b></span>
-            </b-form-group>
-            <b-form-group>
-              <label for="tokens">보상금액</label>
-              <b-form-input type="number" step="any" v-model="modal.form.tokens"></b-form-input>
-            </b-form-group>
-            <b-form-group>
-              <label for="password">비밀번호</label>
-              <b-form-input type="password" v-model="modal.form.password" :state='!$v.modal.form.password.$error'></b-form-input>
-              <b-form-invalid-feedback v-if="!$v.modal.form.password.required">
-                비밀번호를 입력해주세요
-              </b-form-invalid-feedback>
-            </b-form-group>
-          </b-col>
-        </b-row>
-      </b-form>
-    </b-modal>
   </div>
 </template>
 
 <script>
 import pwModal from './notifications/PasswordModal.vue'
-import { validationMixin } from 'vuelidate'
-import { required } from 'vuelidate/lib/validators'
 
 export default {
   name: 'issue',
-  components: {pwModal},
+  components: {
+    pwModal
+  },
   async created () {
     await this.fetchUser()
     await this.fetchIssue()
@@ -150,34 +130,11 @@ export default {
         startDate: '',
         finishDate: '',
         issueType: 'reward',
-        participants: []
+        participants: [],
+        rewardedParticipants: []
       },
-      user: {},
-      modal: {
-        busy: false,
-        form: {
-          userId: '',
-          name: '',
-          tokens: 0,
-          password: ''
-        }
-      }
+      user: {}
     }
-  },
-  mixins: [
-    validationMixin
-  ],
-  validations: {
-    modal: {
-      form: {
-        password: {
-          required
-        }
-      }
-    }
-  },
-  beforeDestroy: function () {
-    this.$eventHub.$off('reward', this.reward)
   },
   methods: {
     fetchIssue () {
@@ -201,18 +158,17 @@ export default {
       })
       return participant.length !== 0
     },
-    reward: function (tokens, participant) {
-      this.modal.form.userId = participant.userId
-      this.modal.form.name = participant.name
-      this.modal.form.tokens = tokens
-      this.modal.busy = false
-      this.$v.$reset()
-      this.showModal()
+    isRewardedParticipant () {
+      var self = this
+      var rewardedParticipant = this.form.rewardedParticipants.filter(function (object) {
+        return self.user._id === object._id
+      })
+      return rewardedParticipant.length !== 0
     },
     askPermissionAndOptIn () {
-      var tokenOwnerName = this.users['me'].name
-      var spenderName = this.users[this.form.createdBy].name
-      var spenderAddress = this.users[this.form.createdBy].keyStore.address
+      var tokenOwnerName = this.user.name
+      var spenderName = this.form.createdBy.name
+      var spenderAddress = this.form.createdBy.keyStore.address
       var tokens = this.form.tokens
 
       this.$http.get('/api/users/me/tokens')
@@ -248,9 +204,9 @@ export default {
         })
     },
     askPermissionAndOptOut () {
-      var tokenOwnerName = this.users['me'].name
-      var spenderName = this.users[this.form.createdBy].name
-      var spenderAddress = this.users[this.form.createdBy].keyStore.address
+      var tokenOwnerName = this.user.name
+      var spenderName = this.form.createdBy.name
+      var spenderAddress = this.form.createdBy.keyStore.address
       var tokens = this.form.tokens
 
       this.$eventHub.$emit('pw-modal-open',
@@ -297,84 +253,6 @@ export default {
             this.$router.push('/issues')
           })
       }
-    },
-    showModal () {
-      this.$refs.rewardModalRef.show()
-    },
-    hideModal () {
-      this.$refs.rewardModalRef.hide()
-    },
-    resetModal () {
-      this.modal = {}
-    },
-    handleOk (evt) {
-      // Prevent modal from closing
-      evt.preventDefault()
-      this.submit()
-    },
-    onSubmit (evt) {
-      evt.preventDefault()
-      this.submit()
-    },
-    async submit () {
-      var self = this
-      this.$v.$touch()
-      if (this.$v.$invalid) return
-
-      this.modal.busy = true
-
-      var body = {
-        coins: this.modal.form.tokens,
-        password: this.modal.form.password
-      }
-
-      var before
-      try {
-        before = this.$toastr.Add({
-          title: '거래 내역',
-          msg: '생성 중...',
-          clickClose: false,
-          timeout: 0,
-          type: 'info'
-        })
-        const response = await this.$http.post('/api/users/' + this.modal.form._id + '/coins', body)
-        this.$toastr.Close(before)
-
-        this.$toastr.Add({
-          title: '거래 내역',
-          msg: '블록체인 원장에 등록 중... (<a target="_blank" href="https://rinkeby.etherscan.io/tx/' + response.data.txHash + '">상세보기 <i class="fa fa-external-link" aria-hidden="true"></i></a>)',
-          clickClose: false,
-          timeout: 10000,
-          type: 'info',
-          progressBar: true,
-          onClosed: function () {
-            // TODO - websocket
-            self.$toastr.s('등록 완료 (<a target="_blank" href="https://rinkeby.etherscan.io/tx/' + response.data.txHash + '">상세보기 <i class="fa fa-external-link" aria-hidden="true"></i></a>)', '거래 내역')
-          }
-        })
-
-        this.$http.post('/api/mails/approval', {
-          email: this.modal.form.email,
-          name: this.modal.form.name})
-          .then((response) => {
-            this.$toastr.s('이메일 전송 완료')
-          })
-
-        this.$http.put('/api/users/' + this.modal.form._id, {status: 'active'})
-          .then((response) => {
-            this.fetchData()
-          })
-
-        this.hideModal()
-      } catch (error) {
-        console.error(error)
-        if (undefined !== before) {
-          this.$toastr.Close(before)
-        }
-        this.$toastr.e('등록 실패' + error.response.data.message ? ': ' + error.response.data.message : '', '거래 내역')
-      }
-
-      this.modal.busy = false
     }
   }
 }

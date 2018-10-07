@@ -39,6 +39,10 @@ const IssueSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
   }],
+  rewardedParticipants: [{ 
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+  }],
   isClosed: {
     type: Boolean,
     required: true
@@ -93,6 +97,7 @@ IssueSchema.statics = {
   get(id) {
     return this.findOne({ id: parseInt(id) })
       .populate('participants')
+      .populate('rewardedParticipants')
       .populate('createdBy')
       .exec()
       .then((issue) => {
