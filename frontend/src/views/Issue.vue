@@ -83,7 +83,7 @@
                 </div>
                 <strong>{{ participant.name }}</strong>
                 <div class="float-right" v-if="(user.role === 'system' || user.role === 'admin') && form.issueType === 'reward' && !participant.isReceiveReward">
-                  <b-button variant="primary">보상하기</b-button>
+                  <b-button variant="primary" v-on:click="rewardParticipant(form.tokens, participant)">보상하기</b-button>
                 </div>
               </b-list-group-item>
             </b-list-group>
@@ -116,16 +116,19 @@
       </b-row>
     </b-card>
     <pw-modal></pw-modal>
+    <reward-modal></reward-modal>
   </div>
 </template>
 
 <script>
 import pwModal from './notifications/PasswordModal.vue'
+import rewardModal from './notifications/RewardModal.vue'
 
 export default {
   name: 'issue',
   components: {
-    pwModal
+    pwModal,
+    rewardModal
   },
   async created () {
     await this.fetchUser()
@@ -266,6 +269,27 @@ export default {
             this.$router.push('/issues')
           })
       }
+    },
+    rewardParticipant (tokens, participant) {
+      var spenderAddress = this.form.createdBy.keyStore.address
+      this.$eventHub.$emit('reward-modal-open',
+        tokens,
+        participant,
+        password => {
+          var body = {
+            spender: spenderAddress,
+            tokens: tokens,
+            password: password
+          }
+          this.$http.post('/api/contracts/mine/approval', body)
+            .then((response) => {
+              // this.optOut()
+            })
+            .catch((error) => {
+              alert(error.response.data.message)
+            })
+        }
+      )
     }
   }
 }
