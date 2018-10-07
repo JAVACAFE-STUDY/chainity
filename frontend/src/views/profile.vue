@@ -80,7 +80,7 @@
               :labels="{submit: '완료', cancel: '취소'}"
               :upload-headers="{Authorization: 'Bearer '+$session.get('user-token')}"
               :upload-url="$http.defaults.baseURL+'/api/users/me/images/profile'" />
-    <b-modal ref="roleModalRef" :title="'프로필 사진 업데이트 완료'" :busy="modal.busy" :header-bg-variant="'dark'" :header-text-variant="'light'" @ok="handleOk">
+    <b-modal ref="modalRef" :title="'프로필 사진 업데이트 완료'" :busy="modal.busy" :header-bg-variant="'dark'" :header-text-variant="'light'" @ok="handleOk">
       <b-form @submit="onSubmit">
         <b-row>
           <b-col sm="12">
@@ -184,10 +184,10 @@ export default {
         })
     },
     showModal () {
-      this.$refs.roleModalRef.show()
+      this.$refs.modalRef.show()
     },
     hideModal () {
-      this.$refs.roleModalRef.hide()
+      this.$refs.modalRef.hide()
     },
     resetModal () {
       this.modal = {}

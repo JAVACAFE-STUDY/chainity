@@ -68,8 +68,7 @@
         <b-col sm="4">
           <b-card no-body>
             <div slot="header">
-              <strong v-if="form.issueType === 'reward'">참여자</strong>
-              <strong v-if="form.issueType != 'reward'">납부자</strong>
+              <strong>참여 중</strong>
               <small>현재: {{ form.participants ? form.participants.length : 0 }}</small>
             </div>
             <div slot="footer" class="text-sm-center" v-if="form.isClosed === false && !isRewardedParticipant()">
@@ -87,6 +86,19 @@
                   <b-button variant="primary">보상하기</b-button>
                 </div>
               </b-list-group-item>
+            </b-list-group>
+            <p v-else class="card-text text-center">
+              <br/>
+              아직 참여자가 없습니다.
+            </p>
+          </b-card>
+
+          <b-card no-body>
+            <div slot="header">
+              <strong>완료</strong>
+              <small>현재: {{ form.rewardedParticipants ? form.rewardedParticipants.length : 0 }}</small>
+            </div>
+            <b-list-group v-if="form.rewardedParticipants && form.rewardedParticipants.length > 0" flush>
               <b-list-group-item v-for="participant in form.rewardedParticipants" :key="participant.id">
                 <div class="avatar float-auto">
                   <img class="img-avatar" :src="participant.avatar ? $http.defaults.baseURL + '/api/images/' + participant.avatar : '/static/img/avatars/profile_thumbnail.jpg'" onerror="this.onerror=null;this.src='/static/img/avatars/profile_thumbnail.jpg';">
@@ -95,8 +107,9 @@
               </b-list-group-item>
             </b-list-group>
             <p v-else class="card-text text-center">
-              <br>
+              <br/>
               아직 참여자가 없습니다.
+              <br/><br/>
             </p>
           </b-card>
         </b-col>
@@ -181,7 +194,7 @@ export default {
         .then(() => {
           this.$eventHub.$emit('pw-modal-open',
             '토큰 전송 수락',
-            tokenOwnerName + '님의 지갑으로부터 <b>' + spenderName + '님이 ' + tokens + '토큰을 지출</b> 할 수 있도록 수락하시겠습니까?',
+            '<b>' + tokenOwnerName + '</b>님의 지갑으로부터 <b>' + spenderName + '님이 ' + tokens + '토큰을 지출</b> 할 수 있도록 수락하시겠습니까?',
             password => {
               var body = {
                 spender: spenderAddress,

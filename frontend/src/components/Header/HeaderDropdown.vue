@@ -4,8 +4,8 @@
           <img :title="user.email" class="img-avatar" :src="user.thumbnail ? $http.defaults.baseURL + '/api/images/' + user.thumbnail : '/static/img/avatars/profile_thumbnail.jpg'" onerror="this.onerror=null;this.src='/static/img/avatars/profile_thumbnail.jpg';">
         </template>
         <b-dropdown-header tag="div" class="text-center"><strong>설정</strong></b-dropdown-header>
-        <b-dropdown-item :to="'profile'"><i class="fa fa-user"></i> 프로필</b-dropdown-item>
-        <b-dropdown-item :to="'my-tokens'"><i class="fa fa-usd"></i> 토큰 관리<b-badge variant="secondary">{{itemsCount}}</b-badge></b-dropdown-item>
+        <b-dropdown-item :to="{name: '프로필'}"><i class="fa fa-user"></i> 프로필</b-dropdown-item>
+        <b-dropdown-item :to="{name: '토큰 관리'}"><i class="fa fa-usd"></i> 토큰 관리<b-badge variant="secondary">{{itemsCount}}</b-badge></b-dropdown-item>
         <b-dropdown-divider></b-dropdown-divider>
         <b-dropdown-item @click="logout"><i class="fa fa-lock"></i> 로그아웃</b-dropdown-item>
       </b-nav-item-dropdown>
