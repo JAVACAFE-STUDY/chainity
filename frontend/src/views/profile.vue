@@ -239,7 +239,7 @@ export default {
           }
         })
 
-        this.fetchData()
+        this.fetchUser()
         this.hideModal()
       } catch (error) {
         console.error(error)
