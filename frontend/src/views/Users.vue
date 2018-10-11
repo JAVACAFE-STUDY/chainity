@@ -72,6 +72,9 @@ export default {
                   this.users[i].name = this.users[i].name + ' '
                   this.users[i].tokens = response.data.tokens
                 })
+            } else {
+              this.users[i].name = '(미가입)'
+              this.users[i].tokens = '0'
             }
           }
         })
