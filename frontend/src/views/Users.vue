@@ -52,9 +52,9 @@ export default {
         {key: 'name', label: '이름', sortable: true},
         {key: 'email', label: '이메일', sortable: true},
         {key: 'role', label: '역할', sortable: true},
-        {key: 'status', label: '상태', sortable: true},
-        {key: 'createdAt', label: '가입일시', sortable: true},
-        {key: 'tokens', label: '보유토큰', sortable: true}
+        {key: 'registeredAt', label: '가입일시', sortable: true},
+        {key: 'tokens', label: '보유토큰', sortable: true},
+        {key: 'status', label: '상태', sortable: true}
       ],
       user: {}
     }
