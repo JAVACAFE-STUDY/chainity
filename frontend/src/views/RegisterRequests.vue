@@ -128,7 +128,7 @@ export default {
       if (this.$v.$invalid) return
       this.modal.busy = true
 
-      await Promise.all([this.submitCoin(), this.submitAllowance()]);
+      await Promise.all([this.submitCoin(), this.submitAllowance()])
       await this.activeUser()
       this.sendEmail()
       this.fetchData()
@@ -216,17 +216,17 @@ export default {
     },
     sendEmail () {
       this.$http.post('/api/mails/approval', {
-          email: this.modal.form.email,
-          name: this.modal.form.name })
-          .then((response) => {
-            this.$toastr.s('이메일 전송 완료')
-          })
-    }, 
-    activeUser() {
-        this.$http.put('/api/users/' + this.modal.form._id, {status: 'active'})
-          .then((response) => {
-            // this.fetchData()
-          })
+        email: this.modal.form.email,
+        name: this.modal.form.name })
+        .then((response) => {
+          this.$toastr.s('이메일 전송 완료')
+        })
+    },
+    activeUser () {
+      this.$http.put('/api/users/' + this.modal.form._id, {status: 'active'})
+        .then((response) => {
+          // this.fetchData()
+        })
     }
   }
 }
