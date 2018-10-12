@@ -82,7 +82,7 @@
                   <img class="img-avatar" :src="participant.avatar ? $http.defaults.baseURL + '/api/images/' + participant.avatar : '/static/img/avatars/profile_thumbnail.jpg'" onerror="this.onerror=null;this.src='/static/img/avatars/profile_thumbnail.jpg';">
                 </div>
                 <strong>{{ participant.name }}</strong>
-                <div class="float-right" v-if="(user.role === 'system' || user.role === 'admin') && form.issueType === 'reward' && !participant.isReceiveReward">
+                <div class="float-right" v-if="form.createdBy._id === user._id && form.issueType === 'reward' && !participant.isReceiveReward">
                   <b-button variant="primary" v-on:click="rewardParticipant(form.tokens, participant)">보상하기</b-button>
                 </div>
               </b-list-group-item>
