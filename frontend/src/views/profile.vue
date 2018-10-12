@@ -1,79 +1,61 @@
 <template>
   <div class="animated fadeIn">
-    <div class="card mx-4">
-      <div class="card-body">
-        <h1>프로필</h1>
-      </div>
+    <b-card>
       <b-row>
-          <!-- <div class="card-body p-4">
-            <b-img center fluid :src="previewData" onerror="this.onerror=null;this.src='static/img/avatars/profile.jpg';" alt="center image" />
-            <br>
-            <input type="file" @change="previewImage" accept="image/*">
-          </div> -->
-        <b-col cols="7">
-          <div class="card-body p-4">
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <i class="icon-user"></i>
-                </span>
-              </div>
-              <input type="text" class="form-control" v-model="user.name" placeholder="Username">
-            </div>
-
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text">@</span>
-              </div>
-              <input type="text" class="form-control" v-model="user.email" placeholder="Email" readonly>
-            </div>
-
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <i class="icon-pie-chart"></i>
-                </span>
-              </div>
-              <input type="text" class="form-control" v-model="tokens" readonly>
-            </div>
-
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <i class="icon-home"></i>
-                </span>
-              </div>
-              <input type="text" class="form-control" :value="user.keyStore ? '0x'+user.keyStore.address : ''" readonly>
-            </div>
-
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <i class="icon-people"></i>
-                </span>
-              </div>
-              <input type="text" class="form-control" v-model="user.role" placeholder="Role" readonly>
-            </div>
-
-            <button type="button" v-on:click="onSubmit" class="btn btn-block btn-success">수정</button>
-          </div>
+        <b-col sm="12">
+          <h4 class="card-title mb-0">프로필</h4>
+          <div class="small text-muted">가입일시: {{ $moment.utc(user.createdAt).local().format('YYYY-MM-DD HH:mm:ss') }}</div>
         </b-col>
-        <b-col cols="5">
-          <div class="card-body p-4">
-            <b-row>
-              <b-card show-footer>
-                <b-img width="200px" :src="user.avatar ? $http.defaults.baseURL + '/api/images/' + user.avatar : '/static/img/avatars/profile.jpg'" alt="로딩중..." />
-                <div slot="header">프로필 사진</div>
+      </b-row>
+      <b-row>
+        <b-col sm="8">
+          <b-row>
+            <b-col sm="12">
+              <Callout variant="success">
+                <small class="text-muted">이름</small><br>
+                <strong class="h4" v-if="!editable">{{ user.name }} <span class="h3 text-muted text-left mb-4"><b-link v-on:click="setEditable(true)"><i class="icon-pencil"></i></b-link></span></strong>
+                <b-input-group v-else>
+                  <b-btn variant="success" slot="append" v-on:click="updateUser">변경</b-btn>
+                  <b-btn variant="secondary" slot="append" v-on:click="setEditable(false)">취소</b-btn>
+                  <b-form-input :value="user.name" @input="updateNewName"></b-form-input>
+                </b-input-group>
+              </Callout>
+            </b-col>
+            <b-col sm="12">
+              <Callout variant="info">
+                <small class="text-muted">이메일</small><br>
+                <strong class="h4">{{ user.email }}</strong>
+              </Callout>
+            </b-col>
+            <b-col sm="12">
+              <Callout variant="info">
+                <small class="text-muted">역활</small><br>
+                <strong class="h4">{{ user.role === 'system' ? '슈퍼 관리자' : user.role === 'admin' ? '관리자' : '회원' }}</strong>
+              </Callout>
+            </b-col>
+            <b-col sm="12">
+              <Callout variant="danger">
+                <small class="text-muted">지갑주소</small><br>
+                <strong class="h4">{{ user.keyStore ? '0x'+user.keyStore.address : '' }}</strong>
+              </Callout>
+            </b-col>
+          </b-row>
+        </b-col>
+        <b-col sm="4">
+          <b-row>
+            <b-col sm="12">
+              <b-card show-footer border-variant="white" footer-border-variant="white" footer-bg-variant="transparent">
+                <b-img thumbnail fluid :src="user.avatar ? $http.defaults.baseURL + '/api/images/' + user.avatar : '/static/img/avatars/profile.jpg'" alt="로딩중..." />
                 <div slot="footer" class="text-sm-center">
                   <b-button id="pick-avatar" block variant="success">프로필 사진 올리기</b-button>
                   <small v-if="!user.avatar">※ 최초 프로필 사진 등록시 1,000 JC 지급!</small>
                 </div>
               </b-card>
-            </b-row>
-          </div>
+            </b-col>
+          </b-row>
         </b-col>
       </b-row>
-    </div>
+    </b-card>
     <avatar-cropper
               @uploaded="handleUploaded"
               trigger="#pick-avatar"
@@ -110,10 +92,14 @@
 import AvatarCropper from 'vue-avatar-cropper'
 import { validationMixin } from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
+import { Callout } from '../components/'
 
 export default {
   name: 'Profile',
-  components: { AvatarCropper },
+  components: {
+    AvatarCropper,
+    Callout
+  },
   data: () => {
     return {
       user: {},
@@ -131,7 +117,8 @@ export default {
         form: {
           tokens: 1000
         }
-      }
+      },
+      editable: false
     }
   },
   created () {
@@ -167,8 +154,8 @@ export default {
     handleUploaded (resp) {
       this.$toastr.s('프로필 사진 업데이트 완료')
       this.$eventHub.$emit('thumbnail-changed')
-      if(!this.user.avatar) {
-        this.benefitFirstProfile();
+      if (!this.user.avatar) {
+        this.benefitFirstProfile()
       }
       this.fetchUser()
     },
@@ -177,9 +164,20 @@ export default {
       this.$v.$reset()
       this.showModal()
     },
-    onSubmit (event) {
-      this.$http.put('/api/users/' + this.user._id, this.user)
+    setEditable (value) {
+      if (value) {
+        this.newName = this.user.name
+      }
+      this.editable = value
+    },
+    updateNewName (value) {
+      this.newName = value
+    },
+    updateUser () {
+      this.$http.put('/api/users/' + this.user._id, { name: this.newName })
         .then((response) => {
+          this.editable = false
+          this.fetchUser()
           this.$toastr.s('프로필 업데이트 완료')
         })
     },
@@ -239,7 +237,7 @@ export default {
           }
         })
 
-        this.fetchData()
+        this.fetchUser()
         this.hideModal()
       } catch (error) {
         console.error(error)
