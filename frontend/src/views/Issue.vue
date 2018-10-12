@@ -71,7 +71,7 @@
               <strong>참여 중</strong>
               <small>현재: {{ form.participants ? form.participants.length : 0 }}</small>
             </div>
-            <div slot="footer" class="text-sm-center" v-if="form.isClosed === false && !isRewardedParticipant()">
+            <div slot="footer" class="text-sm-center" v-if="form.isClosed === false && !isCompletedParticipant()">
               <b-button variant="success" v-if="form.issueType != 'reward'" v-on:click="askPermissionAndOptIn()">납부하기</b-button>
               <b-button variant="success" v-if="form.issueType === 'reward' && !isParticipant()" v-on:click="optIn()">참여하기</b-button>
               <b-button variant="danger" v-if="form.issueType === 'reward' && isParticipant()" v-on:click="form.issueType === 'reward' ? optOut() : askPermissionAndOptOut()">참여취소</b-button>
@@ -82,7 +82,7 @@
                   <img class="img-avatar" :src="participant.avatar ? $http.defaults.baseURL + '/api/images/' + participant.avatar : '/static/img/avatars/profile_thumbnail.jpg'" onerror="this.onerror=null;this.src='/static/img/avatars/profile_thumbnail.jpg';">
                 </div>
                 <strong>{{ participant.name }}</strong>
-                <div class="float-right" v-if="(user.role === 'system' || user.role === 'admin') && form.issueType === 'reward' && !participant.isReceiveReward">
+                <div class="float-right" v-if="form.createdBy._id === user._id && form.issueType === 'reward' && !participant.isReceiveReward">
                   <b-button variant="primary" v-on:click="rewardParticipant(form.tokens, participant)">보상하기</b-button>
                 </div>
               </b-list-group-item>
@@ -96,10 +96,10 @@
           <b-card no-body>
             <div slot="header">
               <strong>완료</strong>
-              <small>현재: {{ form.rewardedParticipants ? form.rewardedParticipants.length : 0 }}</small>
+              <small>현재: {{ form.completedParticipants ? form.completedParticipants.length : 0 }}</small>
             </div>
-            <b-list-group v-if="form.rewardedParticipants && form.rewardedParticipants.length > 0" flush>
-              <b-list-group-item v-for="participant in form.rewardedParticipants" :key="participant.id">
+            <b-list-group v-if="form.completedParticipants && form.completedParticipants.length > 0" flush>
+              <b-list-group-item v-for="participant in form.completedParticipants" :key="participant.id">
                 <div class="avatar float-auto">
                   <img class="img-avatar" :src="participant.avatar ? $http.defaults.baseURL + '/api/images/' + participant.avatar : '/static/img/avatars/profile_thumbnail.jpg'" onerror="this.onerror=null;this.src='/static/img/avatars/profile_thumbnail.jpg';">
                 </div>
@@ -142,12 +142,12 @@ export default {
         createdAt: '',
         description: '',
         tokens: '0',
-        maxNumberOfParticipants: '',
+        maxNumberOfParticipants: 0,
         startDate: '',
         finishDate: '',
         issueType: 'reward',
         participants: [],
-        rewardedParticipants: []
+        completedParticipants: []
       },
       user: {}
     }
@@ -174,14 +174,19 @@ export default {
       })
       return participant.length !== 0
     },
-    isRewardedParticipant () {
+    isCompletedParticipant () {
       var self = this
-      var rewardedParticipant = this.form.rewardedParticipants.filter(function (object) {
+      var completedParticipant = this.form.completedParticipants.filter(function (object) {
         return self.user._id === object._id
       })
-      return rewardedParticipant.length !== 0
+      return completedParticipant.length !== 0
     },
     askPermissionAndOptIn () {
+      var participants = this.form.participants.length + this.form.completedParticipants.length
+      if (participants >= this.form.maxNumberOfParticipants) {
+        alert("참여 가능 인원 수가 이미 꽉 찼습니다.")
+        return        
+      }
       var tokenOwnerName = this.user.name
       var spenderName = this.form.createdBy.name
       var spenderAddress = this.form.createdBy.keyStore.address
@@ -245,6 +250,11 @@ export default {
       )
     },
     optIn () {
+      var participants = this.form.participants.length + this.form.completedParticipants.length
+      if (participants >= this.form.maxNumberOfParticipants) {
+        alert("참여 가능 인원 수가 이미 꽉 찼습니다.")
+        return        
+      }
       this.$http.put('/api/issues/' + this.$route.params.id + '/participants/me')
         .then((response) => {
           this.fetchIssue()
