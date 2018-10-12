@@ -39,7 +39,7 @@ const IssueSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
   }],
-  rewardedParticipants: [{ 
+  completedParticipants: [{ 
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
   }],
@@ -97,7 +97,7 @@ IssueSchema.statics = {
   get(id) {
     return this.findOne({ id: parseInt(id) })
       .populate('participants')
-      .populate('rewardedParticipants')
+      .populate('completedParticipants')
       .populate('createdBy')
       .exec()
       .then((issue) => {
