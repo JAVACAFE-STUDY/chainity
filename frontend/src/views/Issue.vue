@@ -142,7 +142,7 @@ export default {
         createdAt: '',
         description: '',
         tokens: '0',
-        maxNumberOfParticipants: '',
+        maxNumberOfParticipants: 0,
         startDate: '',
         finishDate: '',
         issueType: 'reward',
@@ -182,6 +182,11 @@ export default {
       return completedParticipant.length !== 0
     },
     askPermissionAndOptIn () {
+      var participants = this.form.participants.length + this.form.completedParticipants.length
+      if (participants >= this.form.maxNumberOfParticipants) {
+        alert("참여 가능 인원 수가 이미 꽉 찼습니다.")
+        return        
+      }
       var tokenOwnerName = this.user.name
       var spenderName = this.form.createdBy.name
       var spenderAddress = this.form.createdBy.keyStore.address
@@ -245,6 +250,11 @@ export default {
       )
     },
     optIn () {
+      var participants = this.form.participants.length + this.form.completedParticipants.length
+      if (participants >= this.form.maxNumberOfParticipants) {
+        alert("참여 가능 인원 수가 이미 꽉 찼습니다.")
+        return        
+      }
       this.$http.put('/api/issues/' + this.$route.params.id + '/participants/me')
         .then((response) => {
           this.fetchIssue()
