@@ -72,10 +72,12 @@
               <strong v-if="form.issueType !== 'reward'">납부자</strong>
               <small>현재: {{ form.participants ? form.participants.length : 0 }}</small>
             </div>
-            <div slot="footer" class="text-sm-center" v-if="form.isClosed === false && !isCompletedParticipant()">
-              <b-button variant="success" v-if="form.issueType != 'reward'" v-on:click="payToken()">납부하기</b-button>
-              <b-button variant="success" v-if="form.issueType === 'reward' && !isParticipant()" v-on:click="optIn()">참여하기</b-button>
-              <b-button variant="danger" v-if="form.issueType === 'reward' && isParticipant()" v-on:click="optOut()">참여취소</b-button>
+            <div slot="footer" class="text-sm-center" v-if="form.issueType === 'reward' && form.isClosed === false && !isRewardedParticipants()">
+              <b-button variant="success" v-if="!isParticipant()" v-on:click="optIn()">참여하기</b-button>
+              <b-button variant="danger" v-if="isParticipant()" v-on:click="optOut()">참여취소</b-button>
+            </div>
+            <div slot="footer" class="text-sm-center" v-if="form.issueType !== 'reward' && form.isClosed === false && !isParticipant()">
+              <b-button variant="success" v-on:click="payToken()">납부하기</b-button>
             </div>
             <b-list-group v-if="form.participants && form.participants.length > 0" flush>
               <b-list-group-item v-for="participant in form.participants" :key="participant.id">
@@ -83,7 +85,7 @@
                   <img class="img-avatar" :src="participant.avatar ? $http.defaults.baseURL + '/api/images/' + participant.avatar : '/static/img/avatars/profile_thumbnail.jpg'" onerror="this.onerror=null;this.src='/static/img/avatars/profile_thumbnail.jpg';">
                 </div>
                 <strong>{{ participant.name }}</strong>
-                <div class="float-right" v-if="form.createdBy._id === user._id && form.issueType === 'reward' && !participant.isReceiveReward">
+                <div class="float-right" v-if="form.createdBy._id === user._id && form.issueType === 'reward'">
                   <b-button variant="primary" v-on:click="rewardParticipant(form.tokens, participant)">보상하기</b-button>
                 </div>
               </b-list-group-item>
@@ -176,12 +178,12 @@ export default {
       })
       return participant.length !== 0
     },
-    isCompletedParticipant () {
+    isRewardedParticipants () {
       var self = this
-      var completedParticipant = this.form.rewardedParticipants.filter(function (object) {
+      var rewardedParticipant = this.form.rewardedParticipants.filter(function (object) {
         return self.user._id === object._id
       })
-      return completedParticipant.length !== 0
+      return rewardedParticipant.length !== 0
     },
     payToken () {
       var participants = this.form.participants.length + this.form.rewardedParticipants.length
