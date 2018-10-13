@@ -68,13 +68,14 @@
         <b-col sm="4">
           <b-card no-body>
             <div slot="header">
-              <strong>참여 중</strong>
+              <strong v-if="form.issueType === 'reward'">참여자</strong>
+              <strong v-if="form.issueType !== 'reward'">납부자</strong>
               <small>현재: {{ form.participants ? form.participants.length : 0 }}</small>
             </div>
             <div slot="footer" class="text-sm-center" v-if="form.isClosed === false && !isCompletedParticipant()">
-              <b-button variant="success" v-if="form.issueType != 'reward'" v-on:click="askPermissionAndOptIn()">납부하기</b-button>
+              <b-button variant="success" v-if="form.issueType != 'reward'" v-on:click="payToken()">납부하기</b-button>
               <b-button variant="success" v-if="form.issueType === 'reward' && !isParticipant()" v-on:click="optIn()">참여하기</b-button>
-              <b-button variant="danger" v-if="form.issueType === 'reward' && isParticipant()" v-on:click="form.issueType === 'reward' ? optOut() : askPermissionAndOptOut()">참여취소</b-button>
+              <b-button variant="danger" v-if="form.issueType === 'reward' && isParticipant()" v-on:click="optOut()">참여취소</b-button>
             </div>
             <b-list-group v-if="form.participants && form.participants.length > 0" flush>
               <b-list-group-item v-for="participant in form.participants" :key="participant.id">
@@ -87,19 +88,20 @@
                 </div>
               </b-list-group-item>
             </b-list-group>
-            <p v-else class="card-text text-center">
+            <div v-else class="card-text text-center">
               <br/>
-              아직 참여자가 없습니다.
-            </p>
+              <p v-if="form.issueType === 'reward'">아직 참여자가 없습니다.</p>
+              <p v-if="form.issueType !== 'reward'">아직 납부자가 없습니다.</p>
+            </div>
           </b-card>
 
-          <b-card no-body>
+          <b-card v-if="form.issueType === 'reward'" no-body>
             <div slot="header">
-              <strong>완료</strong>
-              <small>현재: {{ form.completedParticipants ? form.completedParticipants.length : 0 }}</small>
+              <strong>보상 완료</strong>
+              <small>현재: {{ form.rewardedParticipants ? form.rewardedParticipants.length : 0 }}</small>
             </div>
-            <b-list-group v-if="form.completedParticipants && form.completedParticipants.length > 0" flush>
-              <b-list-group-item v-for="participant in form.completedParticipants" :key="participant.id">
+            <b-list-group v-if="form.rewardedParticipants && form.rewardedParticipants.length > 0" flush>
+              <b-list-group-item v-for="participant in form.rewardedParticipants" :key="participant.id">
                 <div class="avatar float-auto">
                   <img class="img-avatar" :src="participant.avatar ? $http.defaults.baseURL + '/api/images/' + participant.avatar : '/static/img/avatars/profile_thumbnail.jpg'" onerror="this.onerror=null;this.src='/static/img/avatars/profile_thumbnail.jpg';">
                 </div>
@@ -141,13 +143,13 @@ export default {
         createdBy: {},
         createdAt: '',
         description: '',
-        tokens: '0',
+        tokens: 0,
         maxNumberOfParticipants: 0,
         startDate: '',
         finishDate: '',
         issueType: 'reward',
         participants: [],
-        completedParticipants: []
+        rewardedParticipants: []
       },
       user: {}
     }
@@ -176,22 +178,18 @@ export default {
     },
     isCompletedParticipant () {
       var self = this
-      var completedParticipant = this.form.completedParticipants.filter(function (object) {
+      var completedParticipant = this.form.rewardedParticipants.filter(function (object) {
         return self.user._id === object._id
       })
       return completedParticipant.length !== 0
     },
-    askPermissionAndOptIn () {
-      var participants = this.form.participants.length + this.form.completedParticipants.length
+    payToken () {
+      var participants = this.form.participants.length + this.form.rewardedParticipants.length
       if (participants >= this.form.maxNumberOfParticipants) {
-        alert("참여 가능 인원 수가 이미 꽉 찼습니다.")
-        return        
+        alert('참여 가능 인원 수가 이미 꽉 찼습니다.')
+        return
       }
-      var tokenOwnerName = this.user.name
-      var spenderName = this.form.createdBy.name
-      var spenderAddress = this.form.createdBy.keyStore.address
       var tokens = this.form.tokens
-
       this.$http.get('/api/users/me/tokens')
         .then((response) => {
           if (response.data.tokens < tokens) {
@@ -200,60 +198,25 @@ export default {
           }
         })
         .then(() => {
-          this.$eventHub.$emit('pw-modal-open',
-            '토큰 전송 수락',
-            '<b>' + tokenOwnerName + '</b>님의 지갑으로부터 <b>' + spenderName + '님이 ' + tokens + '토큰을 지출</b> 할 수 있도록 수락하시겠습니까?',
-            password => {
-              var body = {
-                spender: spenderAddress,
-                tokens: tokens,
-                password: password
-              }
-              this.$http.post('/api/contracts/mine/approval', body)
-                .then((response) => {
-                  this.optIn()
-                })
-                .catch((error) => {
-                  alert(error.response.data.message)
-                })
-            }
-          )
+          // 토큰 전송
+        })
+        .then(() => {
+          this.$http.put('/api/issues/' + this.$route.params.id + '/participants/me')
+            .then((response) => {
+              this.fetchIssue()
+              alert('납부가 완료되었습니다.')
+            })
         })
         .catch((error) => {
           console.error(error)
           alert(error.response.data.message)
         })
     },
-    askPermissionAndOptOut () {
-      var tokenOwnerName = this.user.name
-      var spenderName = this.form.createdBy.name
-      var spenderAddress = this.form.createdBy.keyStore.address
-      var tokens = this.form.tokens
-
-      this.$eventHub.$emit('pw-modal-open',
-        '토큰 전송 취소',
-        tokenOwnerName + '님의 지갑으로부터 <b>' + spenderName + '님이 ' + tokens + '토큰 지출 수락 건</b>을 취소하시겠습니까?',
-        password => {
-          var body = {
-            spender: spenderAddress,
-            tokens: 0,
-            password: password
-          }
-          this.$http.post('/api/contracts/mine/approval', body)
-            .then((response) => {
-              this.optOut()
-            })
-            .catch((error) => {
-              alert(error.response.data.message)
-            })
-        }
-      )
-    },
     optIn () {
-      var participants = this.form.participants.length + this.form.completedParticipants.length
+      var participants = this.form.participants.length + this.form.rewardedParticipants.length
       if (participants >= this.form.maxNumberOfParticipants) {
-        alert("참여 가능 인원 수가 이미 꽉 찼습니다.")
-        return        
+        alert('참여 가능 인원 수가 이미 꽉 찼습니다.')
+        return
       }
       this.$http.put('/api/issues/' + this.$route.params.id + '/participants/me')
         .then((response) => {
@@ -282,24 +245,32 @@ export default {
     },
     rewardParticipant (tokens, participant) {
       var spenderAddress = this.form.createdBy.keyStore.address
-      this.$eventHub.$emit('reward-modal-open',
-        tokens,
-        participant,
-        password => {
-          var body = {
-            spender: spenderAddress,
-            tokens: tokens,
-            password: password
+
+      this.$http.get('/api/users/me/tokens')
+        .then((response) => {
+          if (response.data.tokens < tokens) {
+            alert('토큰 잔액 부족 - 보유량: ' + response.data.tokens)
+            throw new Error()
           }
-          this.$http.post('/api/contracts/mine/approval', body)
-            .then((response) => {
-              // this.optOut()
-            })
-            .catch((error) => {
-              alert(error.response.data.message)
-            })
-        }
-      )
+        })
+        .then(() => {
+          this.$eventHub.$emit('reward-modal-open',
+            tokens,
+            participant,
+            password => {
+              var body = {
+                spender: spenderAddress,
+                tokens: tokens,
+                password: password
+              }
+              // 토큰 전송
+            }
+          )
+        })
+        .catch((error) => {
+          console.error(error)
+          alert(error.response.data.message)
+        })
     }
   }
 }
