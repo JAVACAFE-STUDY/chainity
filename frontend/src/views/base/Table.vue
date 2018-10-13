@@ -1,13 +1,15 @@
 <template>
   <b-card :header="caption">
-    <b-row>
-      <b-col sm="12">
-        <b-input-group>
-          <b-form-input v-model="filter" placeholder="검색어를 입력해주세요." />
-          <b-input-group-append>
-            <b-btn :disabled="!filter" @click="filter = ''">지움</b-btn>
-          </b-input-group-append>
-        </b-input-group>
+    <b-row class="justify-content-end">
+      <b-col sm="7" md="5" lg="4" xl="3">
+        <form class="pb-2">
+          <b-input-group>
+            <b-form-input v-model="filter" placeholder="검색어를 입력해주세요." />
+            <b-input-group-append>
+              <b-btn :disabled="!filter" @click="filter = ''">지움</b-btn>
+            </b-input-group-append>
+          </b-input-group>
+        </form>
       </b-col>
     </b-row>
     <b-table ref="table"
