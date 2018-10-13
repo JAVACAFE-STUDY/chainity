@@ -4,11 +4,12 @@
       <b-row>
           <b-col sm="12">
             <b-form-group>
-              <label for="name">이름:</label>
+              <label for="name">이름: </label>
+              <b>{{ participant.name }}</b>
             </b-form-group>
             <b-form-group>
-              <label for="tokens">보상금액</label>
-              <b-form-input type="number" step="any" v-model="tokens"></b-form-input>
+              <label for="tokens">보상금액: </label>
+              <b>{{tokens}}</b>
             </b-form-group>
             <b-form-group>
               <label for="password">비밀번호</label>
