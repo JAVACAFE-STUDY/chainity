@@ -114,6 +114,12 @@
           </b-card>
         </b-col>
       </b-row>
+
+      <b-row>
+        <b-col sm="12">
+          <c-table ref="table" v-if="transactions.length > 0" striped :rows="transactions" :columns="transactionFields" caption="<i class='fa fa-align-justify'></i> 토큰 거래 내역"></c-table>
+        </b-col><!--/.col-->
+      </b-row><!--/.row-->
     </b-card>
     <pw-modal></pw-modal>
     <reward-modal></reward-modal>
@@ -123,12 +129,14 @@
 <script>
 import pwModal from './notifications/PasswordModal.vue'
 import rewardModal from './notifications/RewardModal.vue'
+import cTable from './base/Table.vue'
 
 export default {
   name: 'issue',
   components: {
     pwModal,
-    rewardModal
+    rewardModal,
+    cTable
   },
   async created () {
     await this.fetchUser()
@@ -149,7 +157,16 @@ export default {
         participants: [],
         completedParticipants: []
       },
-      user: {}
+      user: {},
+      transactions: [],
+      transactionFields: [
+        {key: 'transactionFromName', label: '발신자', sortable: true},
+        {key: 'transactionToName', label: '수신자', sortable: true},
+        {key: 'tokenValue', label: '전송토큰', sortable: true},
+        {key: 'txType', label: '타입', sortable: true},
+        {key: 'createdAt', label: 'createdAt', sortable: true},
+        {key: 'txHash', label: '상세이력', sortable: true}
+      ]
     }
   },
   methods: {
@@ -158,6 +175,7 @@ export default {
       this.$http.get('/api/issues/' + this.$route.params.id)
         .then((response) => {
           this.form = response.data
+          this.transactions = response.data.transactions
         })
     },
     fetchUser () {
@@ -184,8 +202,8 @@ export default {
     askPermissionAndOptIn () {
       var participants = this.form.participants.length + this.form.completedParticipants.length
       if (participants >= this.form.maxNumberOfParticipants) {
-        alert("참여 가능 인원 수가 이미 꽉 찼습니다.")
-        return        
+        alert('참여 가능 인원 수가 이미 꽉 찼습니다.')
+        return
       }
       var tokenOwnerName = this.user.name
       var spenderName = this.form.createdBy.name
@@ -252,8 +270,8 @@ export default {
     optIn () {
       var participants = this.form.participants.length + this.form.completedParticipants.length
       if (participants >= this.form.maxNumberOfParticipants) {
-        alert("참여 가능 인원 수가 이미 꽉 찼습니다.")
-        return        
+        alert('참여 가능 인원 수가 이미 꽉 찼습니다.')
+        return
       }
       this.$http.put('/api/issues/' + this.$route.params.id + '/participants/me')
         .then((response) => {
@@ -291,9 +309,22 @@ export default {
             tokens: tokens,
             password: password
           }
+          var transactionBody = {
+            toAddress: participant._id,
+            fromAddress: this.form.createdBy._id,
+            tokenValue: tokens,
+            txType: this.form.issueType
+          }
           this.$http.post('/api/contracts/mine/approval', body)
             .then((response) => {
+              transactionBody.txHash = response.data.txHash
+              return this.$http.post('/api/transactions', transactionBody)
               // this.optOut()
+            })
+            .then((response) => {
+              return this.$http.put('/api/issues/' + this.$route.params.id + '/transaction/' + response.data._id)
+            }).then((response) => {
+              alert('토큰 전송완료')
             })
             .catch((error) => {
               alert(error.response.data.message)
