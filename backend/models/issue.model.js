@@ -104,6 +104,20 @@ IssueSchema.statics = {
       .populate('completedParticipants')
       .populate('transactions')
       .populate('createdBy')
+      .populate({ 
+        path: 'transactions',
+        populate: {
+          path: 'toAddress',
+          model: 'User'
+        } 
+      })
+      .populate({ 
+        path: 'transactions',
+        populate: {
+          path: 'fromAddress',
+          model: 'User'
+        } 
+      })
       .exec()
       .then((issue) => {
         if (issue) {
