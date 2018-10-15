@@ -254,7 +254,7 @@ export default {
       }
     },
     rewardParticipant (tokens, participant) {
-      this.$http.get('/api/users/me/tokens')
+      this.$http.get('/api/users/me/tokens-allowance')
         .then((response) => {
           if (response.data.tokens < tokens) {
             alert('토큰 잔액 부족 - 보유량: ' + response.data.tokens)
@@ -294,7 +294,8 @@ export default {
           type: 'info'
         })
 
-        const response = await this.$http.post('/api/contracts/mine/trasfer', body)
+        var url = (this.form.issueType === 'reward') ? '/api/contracts/mine/tokens' : '/api/contracts/mine/trasfer'
+        const response = await this.$http.post(url, body)
         this.$toastr.Close(before)
 
         this.$toastr.Add({
