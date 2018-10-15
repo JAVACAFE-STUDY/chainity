@@ -21,6 +21,11 @@ export default {
       icon: 'icon-speedometer'
     },
     {
+      name: '거래내역(DB)',
+      url: '/transaction',
+      icon: 'icon-speedometer'
+    },
+    {
       name: '관리자메뉴',
       url: '/admin',
       icon: 'icon-puzzle',

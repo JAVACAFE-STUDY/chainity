@@ -5,13 +5,14 @@ var authRoutes = require('./auth.route');
 var userRoutes = require('./user.route');
 var issueRoutes = require('./issue.route');
 var mailRoutes = require('./mail.route');
-var bankRoutes = require('./bank.route')
-var tokensRequestRoutes = require('./tokensRequest.route')
-var contractRoutes = require('./contract.route')
+var bankRoutes = require('./bank.route');
+var transactions = require('./transaction.route');
+var tokensRequestRoutes = require('./tokensRequest.route');
+var contractRoutes = require('./contract.route');
 var imageRoutes = require('./image.route');
 
 const router = express.Router(); // eslint-disable-line new-cap
-const auth = expressJwt({secret: config.jwtSecret, requestProperty: 'decoded'})
+const auth = expressJwt({secret: config.jwtSecret, requestProperty: 'decoded'});
 
 /** GET /health-check - Check service health */
 router.get('/health-check', (req, res) =>
@@ -37,6 +38,9 @@ router.use('/banks', auth, bankRoutes);
 
 // mount contract routes at /contracts
 router.use('/contracts', auth, contractRoutes);
+
+// mount transaction routes at /transactions
+router.use('/transactions', auth, transactions);
 
 // mount image routes at /image
 router.use('/images', imageRoutes);

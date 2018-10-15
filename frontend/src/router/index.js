@@ -24,6 +24,7 @@ import Receipt from '@/views/Receipt'
 import MyTokens from '@/views/MyTokens'
 import RegisterRequests from '@/views/RegisterRequests'
 import UsersRole from '@/views/UsersRole'
+import Transaction from '@/views/Transaction'
 
 import crypto from 'crypto'
 
@@ -103,6 +104,12 @@ export default new Router({
           path: 'purchase',
           name: 'Purchase',
           component: Purchase,
+          beforeEnter: requireAuth
+        },
+        {
+          path: 'transaction',
+          name: '거래내역',
+          component: Transaction,
           beforeEnter: requireAuth
         },
         {
