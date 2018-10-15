@@ -1,6 +1,6 @@
 <template>
   <div class="animated fadeIn">
-    <b-row v-if="(user.role === 'system' || user.role === 'admin')">
+    <b-row v-if="user.role === 'admin'">
       <b-col sm="12">
         <div class="text-sm-right">
           <b-button variant="primary" :to="'new-issue'" append>이슈 등록</b-button>
