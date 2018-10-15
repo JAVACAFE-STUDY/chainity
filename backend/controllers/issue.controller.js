@@ -151,4 +151,27 @@ function removeParticipant(req, res, next) {
     .catch(e => next(e));
 }
 
-module.exports = { list, create, load, get, update, remove, addParticipant, removeParticipant };
+/**
+ * Add rewarded participants
+ */
+function addRewardedParticipants(req, res, next) {
+  var userId = req.params.userId;
+  if('me' === userId) {
+    userId = req.decoded._id;
+  }
+
+  const issue = new Issue(req.issue);
+
+  // Issue.update({ id: issue.id}, { $pull: { participants: userId }, $addToSet: { rewardedParticipants: userId } })
+  //   .then(savedIssue => res.json(savedIssue))
+  //   .catch(e => next(e)); 
+  Issue.update({ id: issue.id}, { $pull: { participants: userId } })
+    .then(savedIssue => res.json(savedIssue))
+    .catch(e => next(e));
+  
+  Issue.update({ id: issue.id}, { $addToSet: { rewardedParticipants: userId } })
+    .then(savedIssue => res.json(savedIssue))
+    .catch(e => next(e));
+}
+
+module.exports = { list, create, load, get, update, remove, addParticipant, removeParticipant, addRewardedParticipants };

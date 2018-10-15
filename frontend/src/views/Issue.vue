@@ -191,7 +191,10 @@ export default {
         alert('참여 가능 인원 수가 이미 꽉 찼습니다.')
         return
       }
+      var senderName = this.form.createdBy.name
+      var receiverAddress = this.user.keyStore.address
       var tokens = this.form.tokens
+
       this.$http.get('/api/users/me/tokens')
         .then((response) => {
           if (response.data.tokens < tokens) {
@@ -200,14 +203,19 @@ export default {
           }
         })
         .then(() => {
-          // 토큰 전송
-        })
-        .then(() => {
-          this.$http.put('/api/issues/' + this.$route.params.id + '/participants/me')
-            .then((response) => {
-              this.fetchIssue()
-              alert('납부가 완료되었습니다.')
-            })
+          this.$eventHub.$emit('reward-modal-open',
+            '납부하기',
+            tokens,
+            senderName,
+            password => {
+              var body = {
+                receiver: receiverAddress,
+                tokens: tokens,
+                password: password
+              }
+              this.sendToken(body)
+            }
+          )
         })
         .catch((error) => {
           console.error(error)
@@ -246,8 +254,6 @@ export default {
       }
     },
     rewardParticipant (tokens, participant) {
-      var spenderAddress = this.form.createdBy.keyStore.address
-
       this.$http.get('/api/users/me/tokens')
         .then((response) => {
           if (response.data.tokens < tokens) {
@@ -257,15 +263,18 @@ export default {
         })
         .then(() => {
           this.$eventHub.$emit('reward-modal-open',
+            '보상하기',
             tokens,
-            participant,
+            participant.name,
             password => {
               var body = {
-                spender: spenderAddress,
+                receiverId: participant._id,
+                receiver: participant.keyStore.address,
                 tokens: tokens,
-                password: password
+                password: password,
+
               }
-              // 토큰 전송
+              this.sendToken(body)
             }
           )
         })
@@ -273,6 +282,54 @@ export default {
           console.error(error)
           alert(error.response.data.message)
         })
+    },
+    async sendToken (body) {
+      var before
+      try {
+        before = this.$toastr.Add({
+          title: '거래 내역',
+          msg: '생성 중...',
+          clickClose: false,
+          timeout: 0,
+          type: 'info'
+        })
+
+        const response = await this.$http.post('/api/contracts/mine/trasfer', body)
+        this.$toastr.Close(before)
+
+        this.$toastr.Add({
+          title: '거래 내역',
+          msg: '블록체인 원장에 등록 중... (<a target="_blank" href="https://rinkeby.etherscan.io/tx/' + response.data.txHash + '">상세보기 <i class="fa fa-external-link" aria-hidden="true"></i></a>)',
+          clickClose: false,
+          timeout: 10000,
+          type: 'info',
+          progressBar: true,
+          onClosed: function () {
+            // TODO - websocket
+            self.$toastr.s('등록 완료 (<a target="_blank" href="https://rinkeby.etherscan.io/tx/' + response.data.txHash + '">상세보기 <i class="fa fa-external-link" aria-hidden="true"></i></a>)', '거래 내역')
+          }
+        })
+
+        if (this.form.issueType === 'reward') {
+          this.$http.put('/api/issues/' + this.$route.params.id + '/rewardedParticipants/' + body.receiverId)
+            .then((response) => {
+              this.fetchIssue()
+              alert('보상이 완료되었습니다.')
+            })
+        } else {
+          this.$http.put('/api/issues/' + this.$route.params.id + '/participants/me')
+            .then((response) => {
+              this.fetchIssue()
+              alert('납부가 완료되었습니다.')
+            })
+        }
+      } catch (error) {
+        console.error(error)
+        if (undefined !== before) {
+          this.$toastr.Close(before)
+        }
+        this.$toastr.e('등록 실패' + error.response.data.message ? ': ' + error.response.data.message : '', '거래 내역')
+      }
     }
   }
 }

@@ -133,6 +133,27 @@ function sendTokens(req, res, next) {
     });
 }
 
+function trasfer(req, res, next) {
+	const contract = req.contract;
+	const to = req.body.receiver;
+	const tokens = web3.utils.toWei(req.body.tokens.toString(), 'ether');
+	const password = req.body.password;
+
+	User.get(req.decoded._id)
+    .then(async (user) => {
+		var walletInfo = web3.eth.accounts.decrypt(user.keyStore, password);
+		var data = contract.methods.transfer(to, tokens).encodeABI();
+		try{
+			res.send(await _sendTx(walletInfo, config.contractAccount, data, 0));
+		} catch (e) {
+			throw e;
+		}
+    })
+    .catch((e) => {
+      next(new APIError(e.message, httpStatus.INTERNAL_SERVER_ERROR, true));
+    });
+}
+
 function approval(req, res, next) {
 	const contract = req.contract;
 	const spender = req.body.spender;
@@ -201,4 +222,4 @@ function getUpdatedNonce(address, systemNonce) {
 	return nonces[address];
 }
 
-module.exports = { getTotalTokens, getReceiptList, load, sendTokens, approval, getUserTokens, sendCoins, getUserCoins, getUserTokensAllowance };
+module.exports = { getTotalTokens, getReceiptList, load, sendTokens, approval, getUserTokens, sendCoins, getUserCoins, getUserTokensAllowance, trasfer };
