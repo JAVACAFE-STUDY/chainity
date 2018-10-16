@@ -87,6 +87,23 @@ UserSchema.statics = {
   },
 
   /**
+   * Get system
+   * @returns {Promise<User, APIError>}
+   */
+  getSystem() {
+    return this.findOne({'role' : 'system'})
+      .exec()
+      .then((user) => {
+        if (user) {
+          console.log("model getSystem: " + user);
+          return user;
+        }
+        const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
+        return Promise.reject(err);
+      });
+  },
+
+  /**
    * Get user by email
    * @param {ObjectId} email - The email of user.
    * @returns {Promise<User, APIError>}

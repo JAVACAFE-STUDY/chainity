@@ -27,7 +27,11 @@ router.route('/:issueId/participants/:userId')
 
 router.route('/:issueId/rewardedParticipants/:userId')
   // PUT /api/issues/:issueId/rewardedParticipants/:userId - Add rewarded participant in issue
-  .put(issueCtrl.addRewardedParticipants)
+  .put(issueCtrl.addRewardedParticipants);
+
+router.route('/:issueId/transaction/:transactionId')
+  // PUT /api/issues/:issueId/transaction/:transactionId - Add transaction in issue
+  .put(issueCtrl.addTransaction);
 
 // Load issue when API with issueId route parameter is hit
 router.param('issueId', issueCtrl.load);

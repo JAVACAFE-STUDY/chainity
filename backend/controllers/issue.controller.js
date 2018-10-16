@@ -135,6 +135,13 @@ function addParticipant(req, res, next) {
     .catch(e => next(e));
 }
 
+function addTransaction(req, res, next) {
+  const issue = new Issue(req.issue);
+  Issue.update({ id: issue.id}, { $addToSet: { transactions: req.params.transactionId } })
+    .then(savedIssue => res.json(savedIssue))
+    .catch(e => next(e));
+}
+
 /**
  * Remove participant
  */
@@ -174,4 +181,4 @@ function addRewardedParticipants(req, res, next) {
     .catch(e => next(e));
 }
 
-module.exports = { list, create, load, get, update, remove, addParticipant, removeParticipant, addRewardedParticipants };
+module.exports = { list, create, load, get, update, remove, addParticipant, removeParticipant, addRewardedParticipants, addTransaction };

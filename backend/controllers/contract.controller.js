@@ -133,7 +133,7 @@ function sendTokens(req, res, next) {
     });
 }
 
-function trasfer(req, res, next) {
+function transfer(req, res, next) {
 	const contract = req.contract;
 	const to = req.body.receiver;
 	const tokens = web3.utils.toWei(req.body.tokens.toString(), 'ether');
@@ -222,4 +222,4 @@ function getUpdatedNonce(address, systemNonce) {
 	return nonces[address];
 }
 
-module.exports = { getTotalTokens, getReceiptList, load, sendTokens, approval, getUserTokens, sendCoins, getUserCoins, getUserTokensAllowance, trasfer };
+module.exports = { getTotalTokens, getReceiptList, load, sendTokens, approval, getUserTokens, sendCoins, getUserCoins, getUserTokensAllowance, transfer };

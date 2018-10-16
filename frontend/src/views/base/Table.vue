@@ -97,6 +97,15 @@
       <template slot="finishDate" slot-scope="data">
           {{ (data.item.finishDate && data.item.finishDate != null) ? $moment.utc(data.item.finishDate).local().format('YYYY-MM-DD') : '미지정' }}
       </template>
+      <template slot="transactionToName" slot-scope="data">
+        {{ data.item['toAddress'].name }}
+      </template>
+      <template slot="transactionFromName" slot-scope="data">
+        {{ data.item['fromAddress'].name }}
+      </template>
+      <template slot="txHash" slot-scope="data">
+        <b-link :href="'https://rinkeby.etherscan.io/tx/'+data.item['txHash']" target="_blank">{{data.item['txHash'].substring(0, 10) + '...'}}</b-link>
+      </template>
       <template slot="eventFrom" slot-scope="data">
         <!-- <b-link :href="'https://rinkeby.etherscan.io/address/'+data.item.from" target="_blank">{{ data.item['from-ref'] ? data.item['from-ref'].name : (data.item.from.substring(0, 10) + '...') }}</b-link> -->
         {{ data.item['from-ref'] ? data.item['from-ref'].name : data.item.from }}
@@ -104,6 +113,12 @@
       <template slot="eventTo" slot-scope="data">
         <!-- <b-link :href="'https://rinkeby.etherscan.io/address/'+data.item.to" target="_blank">{{ data.item['to-ref'] ? data.item['to-ref'].name : (data.item.to.substring(0, 10) + '...') }}</b-link> -->
         {{ data.item['to-ref'] ? data.item['to-ref'].name : data.item.to }}
+      </template>
+      <template slot="tokenValue" slot-scope="data">
+        JC {{ data.item['tokenValue'] }}
+      </template>
+      <template slot="txType" slot-scope="data">
+        {{ getRewardType(data.item['txType']) }}
       </template>
       <template slot="value" slot-scope="data">
         JC {{ data.item.value }}
@@ -185,6 +200,9 @@ export default {
     getRole (role) {
       return role === 'system' ? '슈퍼 관리자'
         : role === 'admin' ? '관리자' : '회원'
+    },
+    getRewardType (type) {
+      return type === 'reward' ? '보상' : '납부'
     }
   }
 }

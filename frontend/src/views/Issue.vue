@@ -118,6 +118,12 @@
           </b-card>
         </b-col>
       </b-row>
+
+      <b-row>
+        <b-col sm="12">
+          <c-table ref="table" v-if="transactions.length > 0" striped :rows="transactions" :columns="transactionFields" caption="<i class='fa fa-align-justify'></i> 토큰 거래 내역"></c-table>
+        </b-col><!--/.col-->
+      </b-row><!--/.row-->
     </b-card>
     <pw-modal></pw-modal>
     <reward-modal></reward-modal>
@@ -127,12 +133,14 @@
 <script>
 import pwModal from './notifications/PasswordModal.vue'
 import rewardModal from './notifications/RewardModal.vue'
+import cTable from './base/Table.vue'
 
 export default {
   name: 'issue',
   components: {
     pwModal,
-    rewardModal
+    rewardModal,
+    cTable
   },
   async created () {
     await this.fetchUser()
@@ -153,7 +161,17 @@ export default {
         participants: [],
         rewardedParticipants: []
       },
-      user: {}
+      user: {},
+      system: {},
+      transactions: [],
+      transactionFields: [
+        {key: 'transactionFromName', label: '발신자', sortable: true},
+        {key: 'transactionToName', label: '수신자', sortable: true},
+        {key: 'tokenValue', label: '전송토큰', sortable: true},
+        {key: 'txType', label: '타입', sortable: true},
+        {key: 'createdAt', label: 'createdAt', sortable: true},
+        {key: 'txHash', label: '상세이력', sortable: true}
+      ]
     }
   },
   methods: {
@@ -162,6 +180,7 @@ export default {
       this.$http.get('/api/issues/' + this.$route.params.id)
         .then((response) => {
           this.form = response.data
+          this.transactions = response.data.transactions
         })
     },
     fetchUser () {
@@ -169,6 +188,12 @@ export default {
       this.$http.get('/api/users/me')
         .then((response) => {
           this.user = response.data
+        })
+        .then((response) => {
+          this.$http.get('/api/users/me/system')
+            .then((response) => {
+              this.system = response.data
+            })
         })
     },
     isParticipant () {
@@ -191,9 +216,12 @@ export default {
         alert('참여 가능 인원 수가 이미 꽉 찼습니다.')
         return
       }
-      var senderName = this.form.createdBy.name
-      var receiverAddress = this.user.keyStore.address
+      var senderId = this.user._id
+      var receiverId = this.system._id
+      var receiverAddress = this.system.keyStore.address
+      var receiverName = this.form.createdBy.name
       var tokens = this.form.tokens
+      var txType = this.form.issueType
 
       this.$http.get('/api/users/me/tokens')
         .then((response) => {
@@ -206,12 +234,15 @@ export default {
           this.$eventHub.$emit('reward-modal-open',
             '납부하기',
             tokens,
-            senderName,
+            receiverName,
             password => {
               var body = {
+                senderId: senderId,
+                receiverId: receiverId,
                 receiver: receiverAddress,
                 tokens: tokens,
-                password: password
+                password: password,
+                txType: txType
               }
               this.sendToken(body)
             }
@@ -254,6 +285,8 @@ export default {
       }
     },
     rewardParticipant (tokens, participant) {
+      var senderId = this.form.createdBy._id
+      var txType = this.form.issueType
       this.$http.get('/api/users/me/tokens-allowance')
         .then((response) => {
           if (response.data.tokens < tokens) {
@@ -268,11 +301,12 @@ export default {
             participant.name,
             password => {
               var body = {
+                senderId: senderId,
                 receiverId: participant._id,
                 receiver: participant.keyStore.address,
                 tokens: tokens,
                 password: password,
-
+                txType: txType
               }
               this.sendToken(body)
             }
@@ -294,7 +328,7 @@ export default {
           type: 'info'
         })
 
-        var url = (this.form.issueType === 'reward') ? '/api/contracts/mine/tokens' : '/api/contracts/mine/trasfer'
+        var url = (this.form.issueType === 'reward') ? '/api/contracts/mine/tokens' : '/api/contracts/mine/transfer'
         const response = await this.$http.post(url, body)
         this.$toastr.Close(before)
 
@@ -314,16 +348,21 @@ export default {
         if (this.form.issueType === 'reward') {
           this.$http.put('/api/issues/' + this.$route.params.id + '/rewardedParticipants/' + body.receiverId)
             .then((response) => {
-              this.fetchIssue()
               alert('보상이 완료되었습니다.')
             })
         } else {
           this.$http.put('/api/issues/' + this.$route.params.id + '/participants/me')
             .then((response) => {
-              this.fetchIssue()
               alert('납부가 완료되었습니다.')
             })
         }
+
+        body.txHash = response.data.txHash
+        this.$http.post('/api/transactions', body)
+          .then((response) => {
+            this.$http.put('/api/issues/' + this.$route.params.id + '/transaction/' + response.data._id)
+            this.fetchIssue()
+          })
       } catch (error) {
         console.error(error)
         if (undefined !== before) {
