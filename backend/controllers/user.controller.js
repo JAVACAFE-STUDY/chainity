@@ -184,7 +184,6 @@ function uploadImage(req, res, next) {
  * @returns {User}
  */
 function getSystem(req, res) {
-  console.log("===============");
   User.getSystem()
     .then(user => res.json(user))
     .catch(e => next(e));;
