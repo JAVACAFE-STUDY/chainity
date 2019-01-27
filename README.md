@@ -13,13 +13,13 @@ This is a dApp based on Ethreum block chain. So you need to join a network of Et
 
 Install Geth
 ```
-wget https://gethstore.blob.core.windows.net/builds/geth-darwin-amd64-1.8.8-2688dab4.tar.gz
-tar -xf geth-darwin-amd64-1.8.8-2688dab4.tar.gz
+wget https://gethstore.blob.core.windows.net/builds/geth-darwin-amd64-1.8.21-9dc5d1a9.tar.gz
+tar -xf geth-darwin-amd64-1.8.21-9dc5d1a9.tar.gz
 ```
 
 Start Geth
 ```
-geth-darwin-amd64-1.8.8-2688dab4/geth --rpc --rinkeby
+geth-darwin-amd64-1.8.21-9dc5d1a9/geth --rpc --rinkeby
 ```
 
 Install MongoDB
