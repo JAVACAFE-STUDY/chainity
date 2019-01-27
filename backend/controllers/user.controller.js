@@ -179,4 +179,14 @@ function uploadImage(req, res, next) {
   });
 }
 
-module.exports = { load, get, create, update, list, remove, activeList, addressList, uploadImage };
+/**
+ * Get system
+ * @returns {User}
+ */
+function getSystem(req, res) {
+  User.getSystem()
+    .then(user => res.json(user))
+    .catch(e => next(e));;
+}
+
+module.exports = { load, get, create, update, list, remove, activeList, addressList, uploadImage, getSystem };

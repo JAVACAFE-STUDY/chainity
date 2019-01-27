@@ -27,9 +27,9 @@ function list(req, res, next) {
 function create(req, res, next) {
     const transaction = new Transaction({
         txHash: req.body.txHash,
-        toAddress: req.body.toAddress,
-        fromAddress: req.body.fromAddress,
-        tokenValue: req.body.tokenValue,
+        toAddress: req.body.receiverId,
+        fromAddress: req.body.senderId,
+        tokenValue: req.body.tokens,
         txType: req.body.txType
     });
 

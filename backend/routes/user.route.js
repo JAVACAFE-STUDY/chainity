@@ -12,7 +12,7 @@ router.route('/')
   .get(userCtrl.list)
   /** POST /api/users - Create user */
   .post(validate(paramValidation.createUser), userCtrl.create);
-    
+
 router.route('/:userId')
   /** GET /api/users/:userId - Get user */
   .get(userCtrl.get)
@@ -20,6 +20,10 @@ router.route('/:userId')
   .put(validate(paramValidation.updateUser), userCtrl.update)
   /** DELETE /api/users/:userId - Delete user */
   .delete(userCtrl.remove);
+
+router.route('/:userId/system')
+  /** GET /api/users/system - Get system */
+  .get(userCtrl.getSystem)
 
 router.route('/:userId/tokens-requests')
 /** GET /api/users/:userId/tokens-requests - Get my tokens requests */
@@ -37,7 +41,6 @@ router.route('/:userId/coins')
   /** GET /api/users/:userId/coins - Get user coins */
   .get(contractCtrl.getUserCoins)
   .post(contractCtrl.sendCoins);
-
 
 // need refactoring
 router.route('/:userId/images/profile')

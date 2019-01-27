@@ -1,14 +1,15 @@
 <template>
-  <b-modal :title="'보상하기'" v-model="isActiveRewardModal" @ok="handleOk">
+  <b-modal :title="title" v-model="isActiveRewardModal" @ok="handleOk">
     <b-form @submit="onSubmit">
       <b-row>
           <b-col sm="12">
             <b-form-group>
-              <label for="name">이름:</label>
+              <label for="name">이름: </label>
+              <b>{{ receiverName }}</b>
             </b-form-group>
             <b-form-group>
-              <label for="tokens">보상금액</label>
-              <b-form-input type="number" step="any" v-model="tokens"></b-form-input>
+              <label for="tokens">금액: </label>
+              <b>{{tokens}}</b>
             </b-form-group>
             <b-form-group>
               <label for="password">비밀번호</label>
@@ -29,9 +30,10 @@ import { required } from 'vuelidate/lib/validators'
 export default {
   name: 'reward-modal',
   created () {
-    this.$eventHub.$on('reward-modal-open', (tokens, participant, callback) => {
+    this.$eventHub.$on('reward-modal-open', (title, tokens, receiverName, callback) => {
+      this.title = title
       this.form.password = ''
-      this.participant = participant
+      this.receiverName = receiverName
       this.tokens = tokens
       this.callback = callback
       this.activate()
@@ -39,8 +41,9 @@ export default {
   },
   data () {
     return {
+      title: '',
       tokens: 0,
-      participant: {},
+      receiverName: '',
       isActiveRewardModal: false,
       form: {
         password: ''

@@ -9,6 +9,9 @@ router.route('/:id/tokens')
   .get(contractCtrl.getTotalTokens)
   .post(contractCtrl.sendTokens)
 
+router.route('/:id/transfer')
+  .post(contractCtrl.transfer)
+
 router.route('/:id/approval')
   .post(contractCtrl.approval)
   
