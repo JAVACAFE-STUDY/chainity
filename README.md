@@ -7,7 +7,7 @@ So it encourages members of your community to fully participate by giving reward
 
 ## Getting Started
 
-This is a dApp based on Ethreum block chain. So you need to join a network of Ethereum before running.
+This is a App based on Ethreum block chain. So you need to join a network of Ethereum before running.
 
 ### Prerequisites
 
