@@ -55,7 +55,7 @@ async function getReceiptList(req, res) {
 				'block' : events[i].blockHash,
 				'from' : events[i].returnValues.from,
 				'to' : events[i].returnValues.to,
-				'value' : events[i].returnValues.value
+				'value' : web3.utils.fromWei(events[i].returnValues.value)
 			}
 			if(userSet[event.from.toUpperCase()]) {
 				event['from-ref'] = userSet[event.from.toUpperCase()];
