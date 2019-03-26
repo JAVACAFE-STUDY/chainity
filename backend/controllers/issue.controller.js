@@ -18,9 +18,8 @@ function list(req, res, next) {
   const { limit = 0, offset = 0 } = req.query;
   Issue.list({ limit, offset })
     .then(events => {
-      var totalDocs = JSON.parse(JSON.stringify(events)).length;
       let result = {
-        totalDocs: totalDocs,
+        totalDocs: events.length,
         limit: req.query.limit,
         offset: req.query.offset,
         docs: events
