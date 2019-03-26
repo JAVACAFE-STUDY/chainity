@@ -15,8 +15,7 @@ var erc20 = new web3.eth.Contract(JSON.parse(config.contractABI), config.contrac
 function list(req, res, next) {
   const { startDate = '1000-01-01', endDate = '9999-12-31'} = req.query;
   User.aggsList(startDate, endDate)
-    .then(aggs => {
-      var docs = JSON.parse(JSON.stringify(aggs));
+    .then(docs => {
       for (i in docs) {
         var tokens = 0;
         for (j in docs[i].tokens) {
