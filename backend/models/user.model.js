@@ -147,6 +147,55 @@ UserSchema.statics = {
         const err = new APIError('No such users exists!', httpStatus.NOT_FOUND);
         return Promise.reject(err);
       });
+  },
+
+  aggsList(startDate, endDate) {
+    var aggr = [];
+    aggr.push(
+    {
+        $lookup: {
+            from: 'participations', 
+            localField: '_id', 
+            foreignField: 'participant', 
+            as: 'countOfPartipations' 
+        }
+    },
+    { 
+        $lookup: {
+            from: 'rewards', 
+            localField: '_id', 
+            foreignField: 'rewardedUser', 
+            as: 'tokens'
+        }
+    },
+    { 
+      $project: { 
+        _id: 1,
+        email: 1,
+        name: 1,
+        status: 1,
+        role: 1,
+        createdAt: 1,
+        registeredAt: 1,
+        avatar: 1,
+        thumbnail: 1,
+        keyStore: 1,
+        tokens: 1,
+        countOfPartipations: {
+            $filter: {
+              input: "$countOfPartipations",
+              as: "countOfPartipation",
+              cond: { $and: [
+                { $gte: [ "$$countOfPartipation.createdAt", new Date(startDate) ] },
+                { $lte: [ "$$countOfPartipation.createdAt", new Date(endDate) ] }
+              ] }
+            }
+        }
+      }
+    }
+    )
+    return this.aggregate(aggr)
+    .exec();
   }
 };
 
