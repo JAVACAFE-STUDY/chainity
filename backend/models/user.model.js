@@ -153,20 +153,20 @@ UserSchema.statics = {
     var aggr = [];
     aggr.push(
     {
-        $lookup: {
-            from: 'participations', 
-            localField: '_id', 
-            foreignField: 'participant', 
-            as: 'countOfPartipations' 
-        }
+      $lookup: {
+        from: 'participations', 
+        localField: '_id', 
+        foreignField: 'participant', 
+        as: 'countOfPartipations' 
+      }
     },
     { 
-        $lookup: {
-            from: 'rewards', 
-            localField: '_id', 
-            foreignField: 'rewardedUser', 
-            as: 'tokens'
-        }
+      $lookup: {
+        from: 'rewards', 
+        localField: '_id', 
+        foreignField: 'rewardedUser', 
+        as: 'tokens'
+      }
     },
     { 
       $project: { 
@@ -182,14 +182,14 @@ UserSchema.statics = {
         keyStore: 1,
         tokens: 1,
         countOfPartipations: {
-            $filter: {
-              input: "$countOfPartipations",
-              as: "countOfPartipation",
-              cond: { $and: [
-                { $gte: [ "$$countOfPartipation.createdAt", new Date(startDate) ] },
-                { $lte: [ "$$countOfPartipation.createdAt", new Date(endDate) ] }
-              ] }
-            }
+          $filter: {
+            input: "$countOfPartipations",
+            as: "countOfPartipation",
+            cond: { $and: [
+              { $gte: [ "$$countOfPartipation.createdAt", new Date(startDate) ] },
+              { $lte: [ "$$countOfPartipation.createdAt", new Date(endDate) ] }
+            ] }
+          }
         }
       }
     }
