@@ -35,18 +35,15 @@ const IssueSchema = new mongoose.Schema({
     type: Date,
     required: false
   },
-  participants: [{ 
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-  }],
-  rewardedParticipants: [{ 
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-  }],
-  transactions: [{ 
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Transaction'
-  }],
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  eventType: {
+    type: String,
+    required: true
+  },
   isClosed: {
     type: Boolean,
     required: true
@@ -55,18 +52,9 @@ const IssueSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
-  createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
   closedAt: {
     type: Date,
     required: false
-  },
-  issueType: {
-    type: String,
-    required: true
   }
 });
 
@@ -85,11 +73,12 @@ IssueSchema.statics = {
    * @param {number} limit - Limit number of issues to be returned.
    * @returns {Promise<Issue[]>}
    */
-  list({ skip = 0, limit = 50 } = {}) {
+  list({ limit = 0, offset = 0 } = {}) {
     return this.find()
+    //   .populate('createdBy')
       .sort({ createdAt: -1 })
-      .skip(+skip)
       .limit(+limit)
+      .skip(+offset)
       .exec();
   },
 

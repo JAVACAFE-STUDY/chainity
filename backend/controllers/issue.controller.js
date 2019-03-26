@@ -15,9 +15,18 @@ var erc20 = new web3.eth.Contract(JSON.parse(config.contractABI), config.contrac
  * @returns {Issue[]}
  */
 function list(req, res, next) {
-  const { limit = 50, skip = 0 } = req.query;
-  Issue.list({ limit, skip })
-    .then(issues => res.json(issues))
+  const { limit = 0, offset = 0 } = req.query;
+  Issue.list({ limit, offset })
+    .then(events => {
+      var totalDocs = JSON.parse(JSON.stringify(events)).length;
+      let result = {
+        totalDocs : totalDocs,
+        limit: req.query.limit,
+        offset: req.query.offset,
+        docs: events
+      };
+      res.json(result);
+    })
     .catch(e => next(e));
 }
 
