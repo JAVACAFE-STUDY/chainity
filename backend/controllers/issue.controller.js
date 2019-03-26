@@ -20,7 +20,7 @@ function list(req, res, next) {
     .then(events => {
       var totalDocs = JSON.parse(JSON.stringify(events)).length;
       let result = {
-        totalDocs : totalDocs,
+        totalDocs: totalDocs,
         limit: req.query.limit,
         offset: req.query.offset,
         docs: events
