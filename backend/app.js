@@ -76,11 +76,4 @@ app.use((err, req, res, next) => // eslint-disable-line no-unused-vars
   })
 );
 
-// var Web3 = require('web3');
-// var web3 = new Web3(config.web3Provider);
-
-// web3.eth.getCoinbase().then(coinbase => {
-//   console.log("Coinbase:", coinbase)
-// });
-
 module.exports = app;
