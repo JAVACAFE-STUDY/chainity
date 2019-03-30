@@ -10,7 +10,7 @@ var erc20 = new web3.eth.Contract(JSON.parse(config.contractABI), config.contrac
 
 /**
  * Get issue list.
- * @property {number} req.query.skip - Number of issues to be skipped.
+ * @property {number} req.query.offset - Number of issues to be skipped.
  * @property {number} req.query.limit - Limit number of issues to be returned.
  * @returns {Issue[]}
  */
@@ -20,8 +20,8 @@ function list(req, res, next) {
     .then(events => {
       let result = {
         totalDocs: events.length,
-        limit: req.query.limit,
         offset: req.query.offset,
+        limit: req.query.limit,
         docs: events
       };
       res.json(result);
