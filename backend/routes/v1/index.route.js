@@ -13,14 +13,6 @@ const auth = expressJwt({secret: config.jwtSecret, requestProperty: 'decoded'});
 
 router.use('/groups/:groupId/login', loginRoutes);
 
-// router.use('/groups/:groupId/users', auth, userRoutes);
-router.use('/groups/:groupId/users', userRoutes);
-
-// router.use('/groups/:groupId/events', auth, eventRoutes);
-router.use('/groups/:groupId/events', eventRoutes);
-
-router.use('/groups/:groupId/aggs/participations', aggsRoutes);
-
 router.use('/groups/:groupId', groupRoutes);
 
 router.param('groupId', (req, res, next, id) => {
