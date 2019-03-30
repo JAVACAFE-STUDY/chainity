@@ -8,7 +8,6 @@ var cors = require('cors');
 var httpStatus = require('http-status');
 var expressValidation = require('express-validation');
 var helmet = require('helmet');
-var routes = require('./routes/index.route');
 var config = require('./config/config');
 var APIError = require('./helpers/APIError');
 var path = require('path');
@@ -42,7 +41,8 @@ app.use(cors());
 app.use(express.static(path.join(appRoot.path, 'public')));
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-app.use('/api', routes);
+app.use('/api', require('./routes/index.route'));
+app.use('/v1', require('./routes/v1/index.route'));
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(appRoot.path, 'public/index.html'));
@@ -75,12 +75,5 @@ app.use((err, req, res, next) => // eslint-disable-line no-unused-vars
     stack: config.env === 'development' ? err.stack : {}
   })
 );
-
-var Web3 = require('web3');
-var web3 = new Web3(config.web3Provider);
-
-web3.eth.getCoinbase().then(coinbase => {
-  console.log("Coinbase:", coinbase)
-});
 
 module.exports = app;

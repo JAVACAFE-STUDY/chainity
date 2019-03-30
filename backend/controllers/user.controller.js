@@ -108,18 +108,22 @@ function update(req, res, next) {
 
 /**
  * Get user list.
- * @property {number} req.query.skip - Number of users to be skipped.
+ * @property {number} req.query.offset - Number of users to be skipped.
  * @property {number} req.query.limit - Limit number of users to be returned.
  * @returns {User[]}
  */
 function list(req, res, next) {
-  const { limit = 50, skip = 0 } = req.query;
-  var q = {}
-  if(req.query.status) {
-    q.status = req.query.status
-  }
-  User.list({ limit, skip, q })
-    .then(users => res.json(users))
+  const { limit = 0, offset = 0, q = {} } = req.query;
+  User.list({ limit, offset, q })
+    .then(users => {
+      let result = {
+        totalDocs: users.length,
+        offset: req.query.offset,
+        limit: req.query.limit,
+        docs: users
+      };
+      res.json(result);
+    })
     .catch(e => next(e));
 }
 
