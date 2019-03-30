@@ -2,7 +2,7 @@ var express = require('express'),
     expressJwt = require('express-jwt');
 
 var config = require('../../config/config'),
-    authRoutes = require('./auth.route'),
+    loginRoutes = require('./login.route'),
     userRoutes = require('./user.route'),
     eventRoutes = require('./event.route'),
     aggsRoutes = require('./aggs.route'),
@@ -11,7 +11,7 @@ var config = require('../../config/config'),
 const router = express.Router();
 const auth = expressJwt({secret: config.jwtSecret, requestProperty: 'decoded'});
 
-router.use('/groups/:groupId/auth', authRoutes);
+router.use('/groups/:groupId/login', loginRoutes);
 
 // router.use('/groups/:groupId/users', auth, userRoutes);
 router.use('/groups/:groupId/users', userRoutes);
