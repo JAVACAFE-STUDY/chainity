@@ -4,8 +4,9 @@ var express = require('express'),
 var loginRoutes = require('./login.route'),
     userRoutes = require('./user.route'),
     eventRoutes = require('./event.route'),
-    participationRoutes = require('./participation.route'),
-    aggsRoutes = require('./aggs.route');
+    aggsRoutes = require('./aggs.route'),
+    rewardRoutes = require('./reward.route'),
+    participationRoutes = require('./participation.route');
 
 var paramValidation = require('../../config/param-validation'),
     groupCtrl = require('../../controllers/group.controller');
@@ -25,6 +26,8 @@ router.use('/:groupId/participations', participationRoutes)
 router.use('/:groupId/users', userRoutes);
 
 router.use('/:groupId/events', eventRoutes);
+
+router.use('/:groupId/rewards', rewardRoutes);
 
 router.use('/:groupId/aggs/participations', aggsRoutes);
 
