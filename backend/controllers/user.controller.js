@@ -112,19 +112,17 @@ function update(req, res, next) {
  * @property {number} req.query.limit - Limit number of users to be returned.
  * @returns {User[]}
  */
-function list(req, res, next) {
+async function list(req, res, next) {
   const { limit = 0, offset = 0, q = {} } = req.query;
-  User.list({ limit, offset, q })
-    .then(users => {
-      let result = {
-        totalDocs: users.length,
-        offset: req.query.offset,
-        limit: req.query.limit,
-        docs: users
-      };
-      res.json(result);
-    })
-    .catch(e => next(e));
+
+  let result = {
+    offset: req.query.offset,
+    limit: req.query.limit,
+    totalDocs: await User.count(),
+    docs: await User.list({ limit, offset, q })
+  };
+
+  res.json(result)
 }
 
 /**

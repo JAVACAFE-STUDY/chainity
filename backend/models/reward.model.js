@@ -60,8 +60,8 @@ RewardSchema.method({
 RewardSchema.statics = {
   /**
    * Get total reward tokens
-   * @param {ObjectId} id - The objectId of issue.
-   * @returns {Promise<Issue, APIError>}
+   * @param {ObjectId} id - The objectId of reward.
+   * @returns {Promise<Reward, APIError>}
    */
   getTotalRewardTokens() {
     return this.aggregate(
@@ -70,6 +70,19 @@ RewardSchema.statics = {
       ]
     )
     .exec();
+  },
+  /**
+   * @param {number} offset - Number of rewards to be skipped.
+   * @param {number} limit - Limit number of rewards to be returned.
+   * @returns {Promise<Reward[]>}
+   */
+  list({ limit = 0, offset = 0 } = {}) {
+    return this.find()
+    //   .populate('createdBy')
+      .sort({ createdAt: -1 })
+      .limit(+limit)
+      .skip(+offset)
+      .exec();
   }
 };
 

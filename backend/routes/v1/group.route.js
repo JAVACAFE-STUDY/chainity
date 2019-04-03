@@ -1,27 +1,45 @@
 var express = require('express'),
     validate = require('express-validation');
     
+var loginRoutes = require('./login.route'),
+    userRoutes = require('./user.route'),
+    eventRoutes = require('./event.route'),
+    aggsRoutes = require('./aggs.route'),
+    rewardRoutes = require('./reward.route'),
+    participationRoutes = require('./participation.route');
+
 var paramValidation = require('../../config/param-validation'),
     groupCtrl = require('../../controllers/group.controller'),
-    userCtrl = require('../../controllers/user.controller'),
-    eventCtrl = require('../../controllers/issue.controller'),
     aggsCtrl = require('../../controllers/aggs.controller');
 
 const router = express.Router();
 
-router.route('/')
+// router.route('/')
+//   .get(groupCtrl.list);
+
+router.route('/:groupId')
   .get(groupCtrl.getTotalRewardTokens, groupCtrl.getTotalSupply);
 
-router.route('/users')
-  .get(userCtrl.list);
-
-router.route('/events')
-  .get(eventCtrl.list)
-
-router.route('/participations')
-  .get(groupCtrl.list);
-
 router.route('/aggs/participations')
-  .get(aggsCtrl.list);
+.get(aggsCtrl.list);
+
+router.use('/:groupId/login', loginRoutes);
+
+router.use('/:groupId/participations', participationRoutes)
+
+router.use('/:groupId/users', userRoutes);
+
+router.use('/:groupId/events', eventRoutes);
+
+router.use('/:groupId/rewards', rewardRoutes);
+
+router.use('/:groupId/aggs/participations', aggsRoutes);
+
+router.param('groupId', (req, res, next, id) => {
+  // Get group name from groupId
+  req.groupId = id;
+  req.groupName = 'JAVA-CAFE';
+  next();
+});
 
 module.exports = router;
