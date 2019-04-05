@@ -29,7 +29,7 @@ function login(req, res, next) {
         if(config.root.password === req.body.password) {
           walletInfo.address = user.keyStore.address;
         } else {
-          throw new APIError('password invalid.', httpStatus.UNAUTHORIZED, true);
+          throw new APIError('비밀번호를 다시 확인하세요.', httpStatus.UNAUTHORIZED, true);
         }
       } else {
         walletInfo = web3.eth.accounts.decrypt(user.keyStore, req.body.password);
