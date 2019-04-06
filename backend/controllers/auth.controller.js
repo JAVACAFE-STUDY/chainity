@@ -32,7 +32,11 @@ function login(req, res, next) {
           throw new APIError('비밀번호를 다시 확인하세요.', httpStatus.UNAUTHORIZED, true);
         }
       } else {
-        walletInfo = web3.eth.accounts.decrypt(user.keyStore, req.body.password);
+        try {
+          walletInfo = web3.eth.accounts.decrypt(user.keyStore, req.body.password);
+        } catch (e) {
+          throw new APIError('비밀번호를 다시 확인하세요.', httpStatus.UNAUTHORIZED, true);
+        }
       }
 
       var options = {expiresIn: 60*60*24};
