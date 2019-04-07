@@ -16,7 +16,7 @@ router.route('/:eventId')
   .delete(eventCtrl.remove);
 
 router.route('/:eventId/participations')
-  .get(eventCtrl.getParticipations);
+  .get(eventCtrl.getEventParticipations);
 
 router.param('eventId', eventCtrl.load);
 

@@ -193,10 +193,9 @@ function addRewardedParticipants(req, res, next) {
  * @property {number} req.query.limit - Limit number of issues to be returned.
  * @returns {Participation[]}
  */
-async function getParticipations(req, res, next) {
+async function getEventParticipations(req, res, next) {
   const { limit = 0, offset = 0 } = req.query;
-  var ObjectId = (require('mongoose').Types.ObjectId);
-  q = { event: new ObjectId(req.eventId) };
+  const q = { 'event' : req.issue._id };
   
   let result = {
     offset: req.query.offset,
@@ -208,4 +207,4 @@ async function getParticipations(req, res, next) {
   res.json(result);
 }
 
-module.exports = { list, create, load, get, update, remove, addParticipant, removeParticipant, addRewardedParticipants, addTransaction, getParticipations };
+module.exports = { list, create, load, get, update, remove, addParticipant, removeParticipant, addRewardedParticipants, addTransaction, getEventParticipations };
