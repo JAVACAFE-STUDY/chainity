@@ -54,8 +54,8 @@ ParticipationSchema.statics = {
    * @param {number} limit - Limit number of issues to be returned.
    * @returns {Promise<Issue[]>}
    */
-  list({ limit = 0, offset = 0 } = {}) {
-    return this.find()
+  list({ limit = 0, offset = 0 , q = {}} = {}) {
+    return this.find(q)
     //   .populate('createdBy')
       .sort({ createdAt: -1 })
       .limit(+limit)

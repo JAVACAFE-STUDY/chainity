@@ -15,6 +15,9 @@ router.route('/:eventId')
   .put(eventCtrl.update)
   .delete(eventCtrl.remove);
 
+router.route('/:eventId/participations')
+  .get(eventCtrl.getParticipations);
+
 router.param('eventId', eventCtrl.load);
 
 module.exports = router;

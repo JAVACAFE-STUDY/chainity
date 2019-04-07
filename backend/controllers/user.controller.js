@@ -3,6 +3,7 @@ var fs= require('fs');
 var httpStatus = require('http-status');
 var APIError = require('../helpers/APIError');
 var User = require('../models/user.model');
+var Participation = require('../models/participation.model');
 var config = require('../config/config');
 var thumb = require('node-thumbnail').thumb;
 
@@ -191,4 +192,27 @@ function getSystem(req, res) {
     .catch(e => next(e));;
 }
 
-module.exports = { load, get, create, update, list, remove, activeList, addressList, uploadImage, getSystem };
+/**
+ * Get participations list.
+ * @property {number} req.query.offset - Number of issues to be skipped.
+ * @property {number} req.query.limit - Limit number of issues to be returned.
+ * @returns {Participation[]}
+ */
+async function getParticipations(req, res, next) {
+  const { limit = 0, offset = 0 } = req.query;
+  var ObjectId = (require('mongoose').Types.ObjectId);
+  q = { participant: new ObjectId(req.user._id) };
+
+  console.log(q);
+  
+  let result = {
+    offset: req.query.offset,
+    limit: req.query.limit,
+    totalDocs: await Participation.count(q),
+    docs: await Participation.list({ limit, offset, q })
+  };
+
+  res.json(result);
+}
+
+module.exports = { load, get, create, update, list, remove, activeList, addressList, uploadImage, getSystem, getParticipations };
