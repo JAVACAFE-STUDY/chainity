@@ -14,14 +14,8 @@ var paramValidation = require('../../config/param-validation'),
 
 const router = express.Router();
 
-// router.route('/')
-//   .get(groupCtrl.list);
-
 router.route('/:groupId')
   .get(groupCtrl.getTotalRewardTokens, groupCtrl.getTotalSupply);
-
-router.route('/aggs/participations')
-.get(aggsCtrl.list);
 
 router.use('/:groupId/login', loginRoutes);
 
