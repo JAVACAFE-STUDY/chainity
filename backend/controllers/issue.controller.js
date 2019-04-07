@@ -62,14 +62,12 @@ function create(req, res, next) {
  * Load issue and append to req.
  */
 function load(req, res, next, issueId) {
-  req.eventId = issueId;
-  return next();
-  // Issue.get(issueId)
-  //   .then((issue) => {
-  //     req.issue = issue;
-  //     return next();
-  //   }) 
-  //   .catch(e => next(e));
+  Issue.get(issueId)
+    .then((issue) => {
+      req.issue = issue;
+      return next();
+    }) 
+    .catch(e => next(e));
 }
 
 /**
