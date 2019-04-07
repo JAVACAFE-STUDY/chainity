@@ -29,6 +29,8 @@ function list(req, res, next) {
       docs.sort(function (a, b) {
         return a.countOfPartipations < b.countOfPartipations;
       });
+      // Delete if countOfPartipations is zero
+      docs = docs.filter(function(item){ return item.countOfPartipations !== 0; });
 
       res.json({ docs: docs });
     })

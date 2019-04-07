@@ -9,12 +9,10 @@ var loginRoutes = require('./login.route'),
     participationRoutes = require('./participation.route');
 
 var paramValidation = require('../../config/param-validation'),
-    groupCtrl = require('../../controllers/group.controller');
+    groupCtrl = require('../../controllers/group.controller'),
+    aggsCtrl = require('../../controllers/aggs.controller');
 
 const router = express.Router();
-
-// router.route('/')
-//   .get(groupCtrl.list);
 
 router.route('/:groupId')
   .get(groupCtrl.getTotalRewardTokens, groupCtrl.getTotalSupply);

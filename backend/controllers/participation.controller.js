@@ -6,19 +6,17 @@ var Participation = require('../models/participation.model');
  * @property {number} req.query.limit - Limit number of issues to be returned.
  * @returns {Issue[]}
  */
-function list(req, res, next) {
+async function list(req, res, next) {
   const { limit = 0, offset = 0 } = req.query;
-  Participation.list({ limit, offset })
-    .then(participations => {
-      let result = {
-        totalDocs: participations.length,
-        offset: req.query.offset,
-        limit: req.query.limit,
-        docs: participations
-      };
-      res.json(result);
-    })
-    .catch(e => next(e));
+
+  let result = {
+    offset: req.query.offset,
+    limit: req.query.limit,
+    totalDocs: await Participation.count(),
+    docs: await Participation.list({ limit, offset })
+  };
+
+  res.json(result);
 }
 
 module.exports = { list };

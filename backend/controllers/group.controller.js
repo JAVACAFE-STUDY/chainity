@@ -15,7 +15,7 @@ function getTotalRewardTokens(req, res, next) {
         _id: req.groupId,
         name: req.groupName,
         initialTokens: 0,
-        usedTokens: tokens[0].totalTokens
+        usedTokens: (tokens[0]) ? tokens[0].totalTokens : 0
       };
       next();
     })

@@ -15,6 +15,9 @@ router.route('/:userId')
   .put(validate(paramValidation.updateUser), userCtrl.update)
   .delete(userCtrl.remove);
 
+  router.route('/:userId/participations')
+  .get(userCtrl.getParticipations);
+
 router.param('userId', userCtrl.load);
 
 module.exports = router;
