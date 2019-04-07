@@ -81,7 +81,7 @@ UserSchema.statics = {
         if (user) {
           return user;
         }
-        const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
+        const err = new APIError('등록되지 않은 회원입니다.', httpStatus.NOT_FOUND);
         return Promise.reject(err);
       });
   },
@@ -98,7 +98,7 @@ UserSchema.statics = {
           console.log("model getSystem: " + user);
           return user;
         }
-        const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
+        const err = new APIError('등록되지 않은 회원입니다.', httpStatus.NOT_FOUND);
         return Promise.reject(err);
       });
   },
@@ -115,7 +115,7 @@ UserSchema.statics = {
         if (user) {
           return user;
         }
-        const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
+        const err = new APIError('등록되지 않은 회원입니다.', httpStatus.NOT_FOUND);
         return Promise.reject(err);
       });
   },
@@ -144,7 +144,7 @@ UserSchema.statics = {
         if(users) {
           return users;
         }
-        const err = new APIError('No such users exists!', httpStatus.NOT_FOUND);
+        const err = new APIError('등록되지 않은 회원입니다.', httpStatus.NOT_FOUND);
         return Promise.reject(err);
       });
   },
