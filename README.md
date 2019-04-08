@@ -2,12 +2,12 @@ English | [한국어](./docs/ko/README-ko.md)
 
 # Community rewards
 
-This is a platform that rewards members with tokens based on community activity. And Members are allowed to spend their tokens for membership fee.
-So it encourages members of your community to fully participate by giving reward and improve the success of your community.
+This is a platform that rewards members with tokens based on community activity. Members can use their tokens for membership fee.
+It encourages community members to fully participate by giving rewards and it can improve the community.
 
 ## Getting Started
 
-This is a dApp based on Ethreum block chain. So you need to join a network of Ethereum before running.
+This is a dApp based on Ethreum block chain. You need to join a network of Ethereum before running.
 
 ### Prerequisites
 
@@ -61,7 +61,7 @@ npm start
 
 ## Contributing
 
-Contributions, questions and comments are all welcome and encouraged. For code contributions submit a pull request.
+All contributions, questions and comments are welcome and encouraged. Code contributions can be done by requesting a pull request.
 
 ## License
 
@@ -69,5 +69,5 @@ This project is licensed under the MIT License
 
 ## Support Development
 
-If this project saved your valuable time in getting your service up, and you feel like buying me coffee, you can donate either at my ETH address: 7cef57fd7faa78c4132e7c748115528e187042a4
+If this project can save your valuable time for your service or you feel like buying me coffee, you can donate following this address: ETH address: 7cef57fd7faa78c4132e7c748115528e187042a4
 
