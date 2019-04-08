@@ -198,13 +198,9 @@ function getSystem(req, res) {
  * @property {number} req.query.limit - Limit number of issues to be returned.
  * @returns {Participation[]}
  */
-async function getParticipations(req, res, next) {
+async function getUserParticipations(req, res, next) {
   const { limit = 0, offset = 0 } = req.query;
-  var ObjectId = (require('mongoose').Types.ObjectId);
-  q = { participant: new ObjectId(req.user._id) };
-
-  console.log(q);
-  
+  const q = { 'participant' : req.user._id };
   let result = {
     offset: req.query.offset,
     limit: req.query.limit,
@@ -215,4 +211,4 @@ async function getParticipations(req, res, next) {
   res.json(result);
 }
 
-module.exports = { load, get, create, update, list, remove, activeList, addressList, uploadImage, getSystem, getParticipations };
+module.exports = { load, get, create, update, list, remove, activeList, addressList, uploadImage, getSystem, getUserParticipations };
