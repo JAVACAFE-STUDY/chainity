@@ -2,7 +2,7 @@ var express = require('express'),
     validate = require('express-validation');
     
 var paramValidation = require('../../config/param-validation'),
-    eventCtrl = require('../../controllers/issue.controller');
+    eventCtrl = require('../../controllers/event.controller');
 
 const router = express.Router();
 
@@ -17,6 +17,10 @@ router.route('/:eventId')
 
 router.route('/:eventId/participations')
   .get(eventCtrl.getEventParticipations);
+
+router.route('/:eventId/participations/:participationId')
+  .put(eventCtrl.addParticipation)
+  .delete(eventCtrl.removeParticipation);
 
 router.param('eventId', eventCtrl.load);
 
