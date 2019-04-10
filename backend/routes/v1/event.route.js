@@ -2,7 +2,8 @@ var express = require('express'),
     validate = require('express-validation');
     
 var paramValidation = require('../../config/param-validation'),
-    eventCtrl = require('../../controllers/event.controller');
+    eventCtrl = require('../../controllers/event.controller'),
+    participationCtrl = require('../../controllers/participation.controller');
 
 const router = express.Router();
 
@@ -16,7 +17,10 @@ router.route('/:eventId')
   .delete(eventCtrl.remove);
 
 router.route('/:eventId/participations')
-  .get(eventCtrl.getEventParticipations);
+  .get((req, res, next) => {
+    req.query.q = { 'event': req.event._id };
+    next();
+  }, participationCtrl.list);
 
 router.route('/:eventId/participations/:participationId')
   .put(eventCtrl.addParticipation)

@@ -2,7 +2,8 @@ var express = require('express'),
     validate = require('express-validation');
     
 var paramValidation = require('../../config/param-validation'),
-    userCtrl = require('../../controllers/user.controller');
+    userCtrl = require('../../controllers/user.controller')
+    participationCtrl = require('../../controllers/participation.controller');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -16,7 +17,10 @@ router.route('/:userId')
   .delete(userCtrl.remove);
 
 router.route('/:userId/participations')
-  .get(userCtrl.getUserParticipations);
+  .get((req, res, next) => {
+    req.query.q = { 'participant': req.user._id };
+    next();
+  }, participationCtrl.list);
 
 router.param('userId', userCtrl.load);
 

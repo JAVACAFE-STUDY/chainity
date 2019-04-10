@@ -187,24 +187,4 @@ function addRewardedParticipants(req, res, next) {
     .catch(e => next(e));
 }
 
-/**
- * Get participations list.
- * @property {number} req.query.offset - Number of issues to be skipped.
- * @property {number} req.query.limit - Limit number of issues to be returned.
- * @returns {Participation[]}
- */
-async function getEventParticipations(req, res, next) {
-  const { limit = 0, offset = 0 } = req.query;
-  const q = { 'event' : req.issue._id };
-  
-  let result = {
-    offset: req.query.offset,
-    limit: req.query.limit,
-    totalDocs: await Participation.count(q),
-    docs: await Participation.list({ limit, offset, q })
-  };
-
-  res.json(result);
-}
-
-module.exports = { list, create, load, get, update, remove, addParticipant, removeParticipant, addRewardedParticipants, addTransaction, getEventParticipations };
+module.exports = { list, create, load, get, update, remove, addParticipant, removeParticipant, addRewardedParticipants, addTransaction };
