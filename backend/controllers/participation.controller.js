@@ -7,13 +7,18 @@ var Participation = require('../models/participation.model');
  * @returns {Issue[]}
  */
 async function list(req, res, next) {
-  const { limit = 0, offset = 0 } = req.query;
+  const { limit = 0, offset = 0, q = {} } = req.query;
 
-  let result = {
-    offset: req.query.offset,
-    limit: req.query.limit,
-    totalDocs: await Participation.count(),
-    docs: await Participation.list({ limit, offset })
+  let docs = [];
+  if(limit > 0) {
+    docs = await Participation.list({ limit, offset, q });
+  }
+
+  const result = {
+    offset: offset,
+    limit: limit,
+    totalDocs: await Participation.count(q),
+    docs: docs
   };
 
   res.json(result);
