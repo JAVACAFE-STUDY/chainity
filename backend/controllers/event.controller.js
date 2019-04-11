@@ -15,13 +15,22 @@ var ObjectId = (require('mongoose').Types.ObjectId);
  * @returns {Event[]}
  */
 async function list(req, res, next) {
-  const { limit = 0, offset = 0 } = req.query;
+  if(req.query.keyword) {
+    req.query.q = { $text: { $search: req.query.keyword } }
+  }
+
+  const { limit = 0, offset = 0, q = {} } = req.query;
+
+  let docs = [];
+  if(limit > 0) {
+    docs = await Event.list({ limit, offset, q });
+  }
 
   const result = {
-    offset: req.query.offset,
-    limit: req.query.limit,
-    totalDocs: await Event.count(),
-    docs: await Event.list({ limit, offset })
+    offset: offset,
+    limit: limit,
+    totalDocs: await Event.count(q),
+    docs: docs
   };
 
   res.json(result);
