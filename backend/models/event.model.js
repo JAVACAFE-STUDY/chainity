@@ -57,6 +57,8 @@ const EventSchema = new mongoose.Schema({
   }
 });
 
+EventSchema.index({ title: "text", description: "text" });
+
 /**
  * Methods
  */
@@ -72,8 +74,8 @@ EventSchema.statics = {
    * @param {number} limit - Limit number of events to be returned.
    * @returns {Promise<Event[]>}
    */
-  list({ limit = 0, offset = 0 } = {}) {
-    return this.find()
+  list({ limit = 0, offset = 0, q = {} } = {}) {
+    return this.find(q)
     //   .populate('createdBy')
       .sort({ createdAt: -1 })
       .limit(+limit)
