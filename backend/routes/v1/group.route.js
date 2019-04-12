@@ -4,13 +4,13 @@ var express = require('express'),
 var loginRoutes = require('./login.route'),
     userRoutes = require('./user.route'),
     eventRoutes = require('./event.route'),
-    aggsRoutes = require('./aggs.route'),
+    aggRoutes = require('./agg.route'),
     rewardRoutes = require('./reward.route'),
     participationRoutes = require('./participation.route');
 
 var paramValidation = require('../../config/param-validation'),
     groupCtrl = require('../../controllers/group.controller'),
-    aggsCtrl = require('../../controllers/aggs.controller');
+    aggCtrl = require('../../controllers/agg.controller');
 
 const router = express.Router();
 
@@ -27,7 +27,7 @@ router.use('/:groupId/events', eventRoutes);
 
 router.use('/:groupId/rewards', rewardRoutes);
 
-router.use('/:groupId/aggs/participations', aggsRoutes);
+router.use('/:groupId/aggs', aggRoutes);
 
 router.param('groupId', (req, res, next, id) => {
   // Get group name from groupId
