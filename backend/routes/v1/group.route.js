@@ -1,4 +1,6 @@
 var express = require('express'),
+    expressJwt = require('express-jwt'),
+    config = require('../../config/config'),
     validate = require('express-validation');
     
 var loginRoutes = require('./login.route'),
@@ -13,6 +15,7 @@ var paramValidation = require('../../config/param-validation'),
     aggCtrl = require('../../controllers/agg.controller');
 
 const router = express.Router();
+const auth = expressJwt({secret: config.jwtSecret, requestProperty: 'decoded'});
 
 router.route('/:groupId')
   .get(groupCtrl.getTotalRewardTokens, groupCtrl.getTotalSupply);
@@ -23,7 +26,7 @@ router.use('/:groupId/participations', participationRoutes)
 
 router.use('/:groupId/users', userRoutes);
 
-router.use('/:groupId/events', eventRoutes);
+router.use('/:groupId/events', auth, eventRoutes);
 
 router.use('/:groupId/rewards', rewardRoutes);
 

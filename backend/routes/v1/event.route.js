@@ -21,7 +21,8 @@ router.route('/:eventId/participations')
   .get((req, res, next) => {
     req.query.q = { 'event': req.event._id };
     next();
-  }, participationCtrl.list);
+  }, participationCtrl.list)
+  .post(eventCtrl.addParticipation);
 
 router.route('/:eventId/rewards')
   .get((req, res, next) => {
@@ -30,7 +31,6 @@ router.route('/:eventId/rewards')
   }, rewardCtrl.list);
 
 router.route('/:eventId/participations/:participationId')
-  .put(eventCtrl.addParticipation)
   .delete(eventCtrl.removeParticipation);
 
 router.param('eventId', eventCtrl.load);

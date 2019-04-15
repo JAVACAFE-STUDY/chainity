@@ -132,14 +132,13 @@ function remove(req, res, next) {
 /**
  * Add participation
  * @property {string} req.event._id
- * @property {string} req.params.participationId
  * @property {string} req.event.createdBy
  * @returns {Event}
  */
 function addParticipation(req, res, next) {
   const participation = new Participation({
     event: req.event._id,
-    participant: new ObjectId(req.params.participationId),
+    participant: req.decoded._id,
     createdAt: Date.now(),
     createdBy: req.event.createdBy
   });
@@ -151,13 +150,12 @@ function addParticipation(req, res, next) {
 
 /**
  * Remove participation
- * @property {string} req.event._id
  * @property {string} req.params.participationId
  * @returns {Event}
  */
 function removeParticipation(req, res, next) {
-  const participant = new ObjectId(req.params.participationId);
-  const q = { event: req.event._id, participant: participant };
+  const participationId = new ObjectId(req.params.participationId);
+  const q = { _id: participationId };
 
   Participation.deleteOne(q)
     .then(removeParticipation => res.json(removeParticipation))
