@@ -3,7 +3,8 @@ var express = require('express'),
     
 var paramValidation = require('../../config/param-validation'),
     eventCtrl = require('../../controllers/event.controller'),
-    participationCtrl = require('../../controllers/participation.controller');
+    participationCtrl = require('../../controllers/participation.controller'),
+    rewardCtrl = require('../../controllers/reward.controller');
 
 const router = express.Router();
 
@@ -21,6 +22,12 @@ router.route('/:eventId/participations')
     req.query.q = { 'event': req.event._id };
     next();
   }, participationCtrl.list);
+
+router.route('/:eventId/rewards')
+  .get((req, res, next) => {
+    req.query.q = { 'event': req.event._id };
+    next();
+  }, rewardCtrl.list);
 
 router.route('/:eventId/participations/:participationId')
   .put(eventCtrl.addParticipation)
