@@ -149,7 +149,7 @@ UserSchema.statics = {
       });
   },
 
-  aggsList(startDate, endDate) {
+  aggList({ startDate, endDate} ) {
     var aggr = [];
     aggr.push(
     {

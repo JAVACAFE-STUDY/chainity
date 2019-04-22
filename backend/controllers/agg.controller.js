@@ -7,8 +7,8 @@ var User = require('../models/user.model');
  * @returns {User[]}
  */
 function aggParticipations(req, res, next) {
-  const { startDate = '1000-01-01', endDate = '9999-12-31'} = req.query;
-  User.aggsList(startDate, endDate)
+  const { startDate = '1000-01-01', endDate = '9999-12-31', limit = 0} = req.query;
+  User.aggList({ startDate, endDate })
     .then(docs => {
       for (i in docs) {
         var tokens = 0;
@@ -19,12 +19,16 @@ function aggParticipations(req, res, next) {
         docs[i].tokens = tokens;
         tokens = 0;
       }
-      // countOfPartipations desc sort
+      // Sort countOfPartipations descending 
       docs.sort(function (a, b) {
         return a.countOfPartipations < b.countOfPartipations;
       });
       // Delete if countOfPartipations is zero
       docs = docs.filter(function(item){ return item.countOfPartipations !== 0; });
+      // limit
+      if(limit > 0) {
+        docs = docs.splice(0, limit);
+      }
 
       res.json({ docs: docs });
     })
