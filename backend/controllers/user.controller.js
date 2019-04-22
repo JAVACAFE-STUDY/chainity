@@ -151,6 +151,10 @@ const upload = multer({
 }).single('file');
 
 function uploadImage(req, res, next) {
+  if(!fs.existsSync(config.imageUploadPath)){
+      fs.mkdirSync(config.imageUploadPath);
+  }
+
   upload(req, res, err => {
     if (err) {
       next(new APIError(err.message, httpStatus.BAD_REQUEST));
@@ -168,10 +172,7 @@ function uploadImage(req, res, next) {
         user.avatar = req.file.path.replace(config.imageUploadPath,'');
         user.thumbnail = files[0].dstPath.replace(config.imageUploadPath, '');
         User.update({_id: user.id}, user)
-          .then(() => res.json({
-            'avatar' : user.avatar,
-            'thumbnail': user.thumbnail
-          }))
+          .then(() => res.json({ user }))
           .catch(e => next(e));
       }).catch(function(e) {
         console.error( e.toString());

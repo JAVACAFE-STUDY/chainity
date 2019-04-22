@@ -29,6 +29,9 @@ router.route('/:userId/rewards')
     next();
   }, rewardCtrl.list);
 
+router.route('/:userId/avatar')
+  .post(userCtrl.uploadImage);
+
 router.param('userId', userCtrl.load);
 
 module.exports = router;
