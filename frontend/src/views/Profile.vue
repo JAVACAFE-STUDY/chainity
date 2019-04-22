@@ -61,7 +61,7 @@
               trigger="#pick-avatar"
               :labels="{submit: '완료', cancel: '취소'}"
               :upload-headers="{Authorization: 'Bearer '+$session.get('user-token')}"
-              :upload-url="$http.defaults.baseURL+'/v1/groups/1/users/' + user._id + '/avatar'" />
+              :upload-url="$http.defaults.baseURL+'/api/users/me/images/profile'" />
     <b-modal ref="modalRef" :title="'프로필 사진 업데이트 완료'" :busy="modal.busy" :header-bg-variant="'dark'" :header-text-variant="'light'" @ok="handleOk">
       <b-form @submit="onSubmit">
         <b-row>
