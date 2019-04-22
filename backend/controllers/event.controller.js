@@ -69,12 +69,12 @@ function create(req, res, next) {
 /**
  * Load event and append to req.
  */
-function load(req, res, next, eventId) {
-  Event.get({ _id: new ObjectId(req.params.eventId) })
+function load(req, res, next, id) {
+  Event.get(id)
     .then((event) => {
-      req.event = event;
+      req.event = event; // eslint-disable-line no-param-reassign
       return next();
-    }) 
+    })
     .catch(e => next(e));
 }
 

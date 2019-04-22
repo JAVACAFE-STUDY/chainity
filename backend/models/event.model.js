@@ -88,14 +88,14 @@ EventSchema.statics = {
    * @param {ObjectId} id - The objectId of event.
    * @returns {Promise<Event, APIError>}
    */
-  get(q) {
-    return this.findOne(q)
+  get(id) {
+    return this.findById(id)
       .exec()
       .then((event) => {
         if (event) {
           return event;
         }
-        const err = new APIError('No such event exists!', httpStatus.NOT_FOUND);
+        const err = new APIError('등록되지 않은 이벤트입니다.', httpStatus.NOT_FOUND);
         return Promise.reject(err);
       });
   }
