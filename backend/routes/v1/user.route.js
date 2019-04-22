@@ -30,7 +30,7 @@ router.route('/:userId/rewards')
   }, rewardCtrl.list);
 
 router.route('/:userId/avatar')
-  .post(userCtrl.uploadImage);
+  .put(userCtrl.uploadImage);
 
 router.param('userId', userCtrl.load);
 
