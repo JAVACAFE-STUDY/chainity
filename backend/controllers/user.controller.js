@@ -3,7 +3,6 @@ var fs= require('fs');
 var httpStatus = require('http-status');
 var APIError = require('../helpers/APIError');
 var User = require('../models/user.model');
-var Participation = require('../models/participation.model');
 var config = require('../config/config');
 var thumb = require('node-thumbnail').thumb;
 

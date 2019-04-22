@@ -1,12 +1,4 @@
 var Issue = require('../models/issue.model');
-var User = require('../models/user.model');
-var config = require('../config/config');
-var Tx = require('ethereumjs-tx');
-var Web3 = require('web3');
-var User = require('../models/user.model');
-
-var web3 = new Web3(new Web3.providers.HttpProvider(config.web3Provider));
-var erc20 = new web3.eth.Contract(JSON.parse(config.contractABI), config.contractAccount);
 
 /**
  * Get issue list.

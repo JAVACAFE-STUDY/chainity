@@ -22,10 +22,6 @@ const EventSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  maxNumberOfParticipants: {
-    type: Number,
-    required: false
-  },
   startDate: {
     type: Date,
     required: false
@@ -37,10 +33,6 @@ const EventSchema = new mongoose.Schema({
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
-  },
-  eventType: {
-    type: String,
     required: true
   },
   isClosed: {

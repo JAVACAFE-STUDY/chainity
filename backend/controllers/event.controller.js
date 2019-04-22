@@ -1,11 +1,7 @@
 var Event = require('../models/event.model');
 var Participation = require('../models/participation.model');
 var config = require('../config/config');
-var Tx = require('ethereumjs-tx');
-var Web3 = require('web3');
 
-var web3 = new Web3(new Web3.providers.HttpProvider(config.web3Provider));
-var erc20 = new web3.eth.Contract(JSON.parse(config.contractABI), config.contractAccount);
 var ObjectId = (require('mongoose').Types.ObjectId);
 
 /**
@@ -41,7 +37,6 @@ async function list(req, res, next) {
  * @property {string} req.body.title
  * @property {string} req.body.description
  * @property {string} req.body.tokens
- * @property {string} req.body.maxNumberOfParticipants
  * @property {string} req.body.startDate
  * @property {string} req.body.finishDate
  * @property {string} req.body.participants
@@ -52,11 +47,9 @@ function create(req, res, next) {
     title: req.body.title,
     description: req.body.description,
     tokens: req.body.tokens,
-    maxNumberOfParticipants: req.body.maxNumberOfParticipants,
     startDate: req.body.startDate,
     finishDate: req.body.finishDate,
     createdBy: req.decoded._id,
-    eventType: req.body.eventType,
     isClosed: false,
     createdAt: Date.now()
   });
@@ -96,9 +89,6 @@ function update(req, res, next) {
   }
   if (req.body.description != '') {
     event.description = req.body.description;
-  }
-  if (req.body.maxNumberOfParticipants != '') {
-    event.maxNumberOfParticipants = req.body.maxNumberOfParticipants;
   }
   if (req.body.startDate != '') {
     event.startDate = req.body.startDate;
