@@ -3,6 +3,7 @@ var fs= require('fs');
 var httpStatus = require('http-status');
 var APIError = require('../helpers/APIError');
 var User = require('../models/user.model');
+var Participation = require('../models/participation.model');
 var config = require('../config/config');
 var thumb = require('node-thumbnail').thumb;
 
@@ -112,19 +113,17 @@ function update(req, res, next) {
  * @property {number} req.query.limit - Limit number of users to be returned.
  * @returns {User[]}
  */
-function list(req, res, next) {
+async function list(req, res, next) {
   const { limit = 0, offset = 0, q = {} } = req.query;
-  User.list({ limit, offset, q })
-    .then(users => {
-      let result = {
-        totalDocs: users.length,
-        offset: req.query.offset,
-        limit: req.query.limit,
-        docs: users
-      };
-      res.json(result);
-    })
-    .catch(e => next(e));
+
+  let result = {
+    offset: req.query.offset,
+    limit: req.query.limit,
+    totalDocs: await User.count(),
+    docs: await User.list({ limit, offset, q })
+  };
+
+  res.json(result)
 }
 
 /**
@@ -152,6 +151,10 @@ const upload = multer({
 }).single('file');
 
 function uploadImage(req, res, next) {
+  if(!fs.existsSync(config.imageUploadPath)){
+      fs.mkdirSync(config.imageUploadPath);
+  }
+
   upload(req, res, err => {
     if (err) {
       next(new APIError(err.message, httpStatus.BAD_REQUEST));
@@ -169,10 +172,7 @@ function uploadImage(req, res, next) {
         user.avatar = req.file.path.replace(config.imageUploadPath,'');
         user.thumbnail = files[0].dstPath.replace(config.imageUploadPath, '');
         User.update({_id: user.id}, user)
-          .then(() => res.json({
-            'avatar' : user.avatar,
-            'thumbnail': user.thumbnail
-          }))
+          .then(() => res.json({ user }))
           .catch(e => next(e));
       }).catch(function(e) {
         console.error( e.toString());
