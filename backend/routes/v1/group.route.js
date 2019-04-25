@@ -22,15 +22,15 @@ router.route('/:groupId')
 
 router.use('/:groupId/login', loginRoutes);
 
-router.use('/:groupId/participations', participationRoutes)
+router.use('/:groupId/participations', auth, participationRoutes)
 
-router.use('/:groupId/users', userRoutes);
+router.use('/:groupId/users', auth, userRoutes);
 
 router.use('/:groupId/events', auth, eventRoutes);
 
-router.use('/:groupId/rewards', rewardRoutes);
+router.use('/:groupId/rewards', auth, rewardRoutes);
 
-router.use('/:groupId/aggs', aggRoutes);
+router.use('/:groupId/aggs', auth, aggRoutes);
 
 router.param('groupId', (req, res, next, id) => {
   // Get group name from groupId
