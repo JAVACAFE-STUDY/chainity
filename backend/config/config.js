@@ -88,8 +88,7 @@ const config = {
     }
   },
   systemAddress: envVars.SYSTEM_ADDRESS,
-  imageUploadPath: envVars.IMAGE_UPLOAD_PATH,
-  imageThumbnailUploadPath: envVars.IMAGE_THUMBNAIL_UPLOAD_PATH
+  imageUploadPath: envVars.IMAGE_UPLOAD_PATH
 };
 
 module.exports = config;
