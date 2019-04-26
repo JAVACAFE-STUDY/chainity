@@ -36,8 +36,7 @@ const RewardSchema = new mongoose.Schema({
   },
   tx: {
     type: String,
-    required: true,
-    unique : true
+    required: false
   }
 });
 
