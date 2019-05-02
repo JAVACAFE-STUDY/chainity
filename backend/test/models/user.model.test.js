@@ -1,41 +1,82 @@
-'use strict';
-var sinon = require('sinon');
-var chai = require('chai');
-var expect = chai.expect;
+var mongoose = require('mongoose');
+var Mockgoose = require('mockgoose').Mockgoose;
+var expect = require('chai').expect;
 
-require('sinon-mongoose');
-
+var mockgoose = new Mockgoose(mongoose);
 var User = require('../../models/user.model');
 
-describe("Post a new user", function(){
-    it("should create new post", function(done){
-        var UserMock = sinon.mock(new User({ email: "test@test.com",
-                                            // role: "user",
-                                            status: 1234}));
-        var user = UserMock.object;
-        var expectedResult = { status: true };
-        UserMock.expects('save').yields(null, expectedResult);
-        user.save(function (err, result) {
-            UserMock.verify();
-            UserMock.restore();
-            console.log(result)
-            expect(result.status).to.be.true;
+describe('User scheme test', function() {
+
+    before(function(done) {
+        mockgoose.prepareStorage().then(function() {
+            mongoose.set('useCreateIndex', true);
+            mongoose.connect('mongodb://example.com/TestingDB', { useNewUrlParser: true }, function(err) {
+                done(err);
+            });
+        });
+    });
+
+    after("Drop db", function(done) {
+        // Here is when the error is trigged
+        mockgoose.helper.reset().then(function() {
             done();
         });
     });
-    // Test will pass if the user is not saved
-    it("should return error, if post not saved", function(done){
-        var UserMock = sinon.mock(new User({ email: "test@test.com",
-                                            role: "user",
-                                            status: "active"}));
-        var user = UserMock.object;
-        var expectedResult = { status: false };
-        UserMock.expects('save').yields(expectedResult, null);
-        user.save(function (err, result) {
-            UserMock.verify();
-            UserMock.restore();
-            expect(err.status).to.not.be.true;
+
+    beforeEach(function(done) {
+        User.create({
+            email: 'test1@test.com',
+            role: 'system',
+            status: 'active'
+        })
+
+        User.create({
+            email: 'test2@test.com',
+            role: 'user',
+            status: 'pending'
+        })
+
+        done();
+    });
+
+    afterEach(function(done) {
+        mockgoose.helper.reset().then(function () {
             done();
         });
     });
+
+    describe('list()', function() {
+
+        it('User.list() should give all documents back', function(done) {
+            User.list()
+            .then(docs => {
+                expect(docs.length).to.equal(2);
+                done();
+            }).catch(e => {
+                done(e);
+            });
+        });
+
+        it('User.list({limit=0}) should give all documents back', function(done) {
+            User.list({limit:0})
+            .then(docs => {
+                expect(docs.length).to.equal(2);
+                done();
+            }).catch(e => {
+                done(e);
+            });
+        });
+
+        it('User.list({limit=1}) should give 1 document back', function(done) {
+            User.list({limit:1})
+            .then(docs => {
+                expect(docs.length).to.equal(1);
+                done();
+            }).catch(e => {
+                done(e);
+            });
+        });
+
+    });
+
 });
