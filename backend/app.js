@@ -1,4 +1,5 @@
 var express = require('express');
+var mongoose = require('mongoose');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
@@ -22,6 +23,14 @@ const app = express();
 if (config.env === 'development') {
   app.use(logger('dev'));
 }
+
+// connect mongodb by setting mongoose
+const mongoUrl = 'mongodb://' + config.mongo.host + ':' + config.mongo.port + '/' + config.env;
+mongoose.set('debug', config.mongooseDebug);
+mongoose.connect(mongoUrl);
+mongoose.connection.on('connected', function () {
+  console.log('Mongoose default connection open to ' + mongoUrl);
+});
 
 // parse body params and attache them to req.body
 app.use(bodyParser.json());
