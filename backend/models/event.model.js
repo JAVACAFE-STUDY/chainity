@@ -4,8 +4,6 @@ var httpStatus = require('http-status');
 var APIError = require('../helpers/APIError');
 var config = require('../config/config');
 
-mongoose.connect('mongodb://' + config.mongo.host + ':' + config.mongo.port);
-
 /**
  * Event Schema
  */
