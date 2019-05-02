@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www localhost 3000",
+    "start": "DEBUG=backend:* nodemon ./bin/www",
     "test": "NODE_ENV=test mocha --exit test/*.test.js test/**/*.test.js"
   },
   "dependencies": {

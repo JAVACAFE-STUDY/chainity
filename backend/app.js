@@ -1,6 +1,6 @@
 var express = require('express');
 var mongoose = require('mongoose');
-var logger = require('morgan');
+var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var compress = require('compression');
@@ -14,22 +14,29 @@ var APIError = require('./helpers/APIError');
 var path = require('path');
 var appRoot = require('app-root-path');
 var favicon = require('serve-favicon');
+var debug = require('debug')('backend:app');
 
 var swaggerUi = require('swagger-ui-express');
 var swaggerDocument = require('./swagger.json');
 
 const app = express();
 
+debug('NODE_ENV=%s', config.env)
+
 if (config.env === 'development') {
-  app.use(logger('dev'));
+  app.use(morgan('dev'));
+} else {
+  app.use(morgan('combined'));
 }
 
 // connect mongodb by setting mongoose
 const mongoUrl = 'mongodb://' + config.mongo.host + ':' + config.mongo.port + '/' + config.env;
-mongoose.set('debug', config.mongooseDebug);
-mongoose.connect(mongoUrl);
+if (config.env === 'development') {
+  mongoose.set('debug', config.mongooseDebug);
+}
+mongoose.connect(mongoUrl, { useNewUrlParser: true });
 mongoose.connection.on('connected', function () {
-  console.log('Mongoose default connection open to ' + mongoUrl);
+  debug('Mongoose default connection open to ' + mongoUrl);
 });
 
 // parse body params and attache them to req.body
