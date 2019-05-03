@@ -14,7 +14,7 @@ var APIError = require('./helpers/APIError');
 var path = require('path');
 var appRoot = require('app-root-path');
 var favicon = require('serve-favicon');
-var debug = require('debug')('backend:app');
+var debug = require('debug')('api:app');
 
 var swaggerUi = require('swagger-ui-express');
 var swaggerDocument = require('./swagger.json');

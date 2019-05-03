@@ -1,9 +1,10 @@
 {
-  "name": "backend",
+  "name": "api",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "DEBUG=backend:* nodemon ./bin/www",
+    "start": "pm2-dev start ecosystem.config.js",
+    "deploy": "npm install && pm2 startOrRestart ecosystem.config.js -i 2 --env production",
     "test": "NODE_ENV=test mocha --timeout 120000 --exit test/**/*.test.js"
   },
   "dependencies": {
@@ -33,6 +34,7 @@
     "mysql": "2.15.0",
     "node-thumbnail": "^0.14.0",
     "nodemailer": "^4.6.4",
+    "pm2": "^3.5.0",
     "qs": "^6.5.2",
     "serve-favicon": "^2.3.2",
     "swagger-jsdoc": "^1.9.7",
@@ -46,7 +48,6 @@
     "mockgoose": "^8.0.1",
     "mongodb-topology-manager": "^2.1.0",
     "mongoose": "^5.5.5",
-    "nodemon": "^1.19.0",
     "should": "^13.2.3",
     "sinon": "^7.3.2",
     "sinon-as-promised": "^4.0.3",
