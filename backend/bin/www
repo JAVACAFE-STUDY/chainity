@@ -6,8 +6,10 @@
 
 var app = require('../app');
 var debug = require('debug')('api:server');
+const http = require('http');
 const https = require('https');
 const fs = require('fs');
+const config = require('../config/config');
 
 /**
  * Get port from environment and store in Express.
@@ -17,13 +19,18 @@ var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
- * Create HTTP server.
+ * Create https server.
  */
-var options = {
-	key: fs.readFileSync('/root/letsencrypt/live/javacafe.co.kr/privkey.pem'),
-	cert: fs.readFileSync('/root/letsencrypt/live/javacafe.co.kr/fullchain.pem')
-};
-var server = https.createServer(options, app);
+var server;
+if (config.env === 'development') {
+  server = http.createServer(app);
+} else {
+  var options = {
+    key: fs.readFileSync('/root/letsencrypt/live/javacafe.co.kr/privkey.pem'),
+    cert: fs.readFileSync('/root/letsencrypt/live/javacafe.co.kr/fullchain.pem')
+  };
+  server = https.createServer(options, app);
+}
 
 /**
  * Listen on provided port, on all network interfaces.
