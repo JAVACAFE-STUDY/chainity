@@ -5,6 +5,7 @@
   "scripts": {
     "start": "pm2-dev start ecosystem.config.js",
     "deploy": "npm install && pm2 startOrRestart ecosystem.config.js -i 2 --env production",
+    "deploy:docker": "npm install && pm2-docker start ecosystem.config.js -i 2 --env production",
     "test": "NODE_ENV=test mocha --timeout 120000 --exit test/**/*.test.js"
   },
   "dependencies": {
