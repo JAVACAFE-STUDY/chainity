@@ -8,12 +8,10 @@ var crypto = require('crypto');
 var ejs = require('ejs');
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-         user: config.smtp.user,
-         pass: config.smtp.pass
-     }
- });
+  sendmail: true,
+  newline: 'windows',
+  logger: false
+});
 
  const encode = function(_id, email) {
   var cipher = crypto.createCipher('aes-256-cbc', 'CHANGE_THIS_TO_SOMETHING_RANDOM') // TODO
@@ -43,13 +41,16 @@ function sendInvitation(req, res, next) {
         next(err);
     } else {
       var mailOptions = {
-        from: 'no-reply@community.com', // sender address
+        from: config.smtp.user, // sender address
         to: req.receiver.email, // list of receivers
         subject: 'JAVACAFE 초대장', // Subject line
         html: data
       };
       
       transporter.sendMail(mailOptions, function (err, info) {
+        // console.log('Preview URL: ' + nodemailer.getTestMessageUrl(info));
+        // console.log('Message sent successfully as %s', info.messageId);
+        
         if(err)
           next(err);
         else
