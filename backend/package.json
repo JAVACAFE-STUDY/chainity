@@ -1,14 +1,17 @@
 {
-  "name": "backend",
+  "name": "api",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www localhost 3000"
+    "start": "pm2-dev start ecosystem.config.js",
+    "deploy": "npm install && pm2 startOrRestart ecosystem.config.js -i 2 --env production",
+    "deploy:docker": "npm install && pm2-docker start ecosystem.config.js -i 2 --env production",
+    "test": "NODE_ENV=test mocha --timeout 120000 --exit test/**/*.test.js"
   },
   "dependencies": {
     "app-root-path": "^2.0.1",
     "axios": "^0.18.0",
-    "body-parser": "^1.16.1",
+    "body-parser": "^1.19.0",
     "compression": "^1.7.2",
     "connect-history-api-fallback": "^1.3.0",
     "cookie-parser": "^1.4.3",
@@ -32,14 +35,24 @@
     "mysql": "2.15.0",
     "node-thumbnail": "^0.14.0",
     "nodemailer": "^4.6.4",
+    "pm2": "^3.5.0",
     "qs": "^6.5.2",
     "serve-favicon": "^2.3.2",
     "swagger-jsdoc": "^1.9.7",
     "swagger-node-express": "^2.1.3",
     "swagger-ui-express": "^3.0.9",
-    "web3": "^1.0.0-beta.34"
+    "web3": "^1.0.0-beta.53"
   },
   "devDependencies": {
-    "nodemon": "^1.11.0"
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4",
+    "mockgoose": "^8.0.1",
+    "mongodb-topology-manager": "^2.1.0",
+    "mongoose": "^5.5.5",
+    "should": "^13.2.3",
+    "sinon": "^7.3.2",
+    "sinon-as-promised": "^4.0.3",
+    "sinon-mongoose": "^2.3.0",
+    "sinon-test": "^2.4.0"
   }
 }

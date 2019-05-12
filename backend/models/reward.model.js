@@ -5,8 +5,6 @@ var APIError = require('../helpers/APIError');
 var config = require('../config/config');
 var ObjectID = require('mongodb').ObjectID
 
-mongoose.connect('mongodb://' + config.mongo.host + ':' + config.mongo.port);
-
 /**
  * Reward Schema
  */
