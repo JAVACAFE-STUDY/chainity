@@ -20,10 +20,12 @@ const envVarsSchema = Joi.object({
     }),
   JWT_SECRET: Joi.string().required()
     .description('JWT Secret required to sign'),
-  SMTP_USER: Joi.string().email().required()
-  .description('SMTP user required to send gmail'),
+  SMTP_USER_EMAIL: Joi.string().email().required()
+    .description('SMTP user email required to send mail'),
+  SMTP_USER: Joi.string().required()
+    .description('SMTP user required to send mail'),
   SMTP_PASSWORD: Joi.required()
-    .description('SMTP password required to send gmail'),
+    .description('SMTP password required to send mail'),
   WEB3_PROVIDER: Joi.required()
     .description('Web3 provier required to connect etherem network'),
   CONTRACT_ACCOUNT: Joi.required()
@@ -67,6 +69,7 @@ const config = {
     port: envVars.MONGO_PORT
   },
   smtp: {
+    userEmail: envVars.SMTP_USER_EMAIL,
     user: envVars.SMTP_USER,
     pass: envVars.SMTP_PASSWORD
   },

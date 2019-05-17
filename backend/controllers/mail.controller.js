@@ -8,9 +8,13 @@ var crypto = require('crypto');
 var ejs = require('ejs');
 
 const transporter = nodemailer.createTransport({
-  sendmail: true,
-  newline: 'windows',
-  logger: false
+  host: "smtp.daum.net",
+  port: 465,
+  secure: true,
+  auth: {
+    user: config.smtp.user,
+    pass: config.smtp.pass
+  }
 });
 
  const encode = function(_id, email) {
@@ -34,14 +38,14 @@ function sendInvitation(req, res, next) {
     'invitationFrom': invitationFrom, 
     'invitationLink': invitationLink,
     'groupName': 'JAVACAFE',
-    'contact': config.smtp.user
+    'contact': config.smtp.userEmail
   }, function (err, data) {
     if (err) {
         console.error(err);
         next(err);
     } else {
       var mailOptions = {
-        from: config.smtp.user, // sender address
+        from: config.smtp.userEmail, // sender address
         to: req.receiver.email, // list of receivers
         subject: 'JAVACAFE 초대장', // Subject line
         html: data
