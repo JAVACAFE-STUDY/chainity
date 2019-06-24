@@ -7,7 +7,7 @@ It encourages community members to fully participate by giving rewards and it ca
 
 ## Demo
 
-####[Live Service](https://chainity.co.kr)
+[Live Service](https://chainity.co.kr)
 
 ## Projects
 
