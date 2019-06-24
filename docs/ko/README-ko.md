@@ -1,7 +1,17 @@
-# Community rewards
+# Chainity - Blockchain + Community
 양질의 정보 공유를 원하는 커뮤니티 멤버들을 위한 블록체인 기반의 커뮤니티 활동 보상 플랫폼
 
 커뮤니티 멤버의 활동 또는 참여를 독려하기 위한 핵심 요소는 각 커뮤니티 멤버의 기여도를 일관되게 반영할 수 있는 공정한 회계 제도이다. Community rewards는 커뮤니티 멤버의 개인 기여도를 정확하고 투명하게 보상하고자 이더리움 블록체인 기반의 DApp(탈중앙 애플리케이션)으로 제공되는 서비스이다.
+
+## 홈페이지
+
+#### [Live Service](https://chainity.co.kr)
+
+## 관련 프로젝트
+
+- [chainity-api](https://github.com/JAVACAFE-STUDY/chainity-api) - Chainity API Server
+- [chainity-web](https://github.com/JAVACAFE-STUDY/chainity-web) -  Chainity Web Page
+- [chainity-landing](https://github.com/JAVACAFE-STUDY/chainity-landing) - Chainity Landing Page
 
 ## 핵심 목표
 커뮤니티 멤버들 중에서 기여도가 높은 사람들을 암호화폐로 보상함으로써 커뮤니티 활동을 적극 장려하는 것이 목표
